@@ -1,10 +1,7 @@
 import {useEffect} from 'react'
 import Button from '@mui/material/Button';
 import { TypeAnimation } from 'react-type-animation';
-import { LuBrain } from "react-icons/lu";
-import { FaRegHeart } from "react-icons/fa6";
-import { IoBookOutline } from "react-icons/io5";
-import { MdOutlinePeopleAlt } from "react-icons/md";
+
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -13,39 +10,48 @@ import Typography from '@mui/material/Typography';
 import { PiUsersThreeDuotone } from "react-icons/pi";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import "../index.css"
+import { CgProfile } from "react-icons/cg";
+import { IoIosMusicalNote } from "react-icons/io";
+import { BsPeopleFill } from "react-icons/bs";
+import { FaAlignLeft } from "react-icons/fa";
+
+import { FaArrowRight } from "react-icons/fa";
+import { IoPersonAddOutline } from "react-icons/io5";
+import { AiOutlineStock } from "react-icons/ai";
+import { IoMdCloudDone } from "react-icons/io";
 
 
 
 const Home = () => {
   const features = [
   {
-    icon: <LuBrain size={28} />,
-    title: 'Cognitive Tools',
-    subtitle: 'Train your brain',
-    content: 'Enhance mental clarity and focus with structured exercises.',
+    icon: <CgProfile size={28} />,
+    title: 'AI Health Recommendations',
+    subtitle: 'AI Health Recommendations',
+    content: 'Get personalized tips based on your mood patterns.',
   },
   {
-    icon: <FaRegHeart size={28} />,
-    title: 'Emotional Support',
-    subtitle: 'Heartful care',
-    content: 'Track your emotions and get guided emotional check-ins.',
+    icon: <IoIosMusicalNote size={28} />,
+    title: 'Calming Library',
+    subtitle: 'Calming Library',
+    content: 'Access music, ASMR, meditations, and videos.',
   },
   {
-    icon: <IoBookOutline size={28} />,
-    title: 'Knowledge Base',
-    subtitle: 'Grow with info',
-    content: 'Access curated resources to understand mental wellness.',
+    icon: <BsPeopleFill size={28} />,
+    title: 'Community Support',
+    subtitle: 'Community Support',
+    content: 'Join peer groups and share your mental health journey.',
   },
   {
-    icon: <MdOutlinePeopleAlt size={28} />,
-    title: 'Community',
-    subtitle: 'You’re not alone',
-    content: 'Join a safe space to share, learn, and grow together.',
+    icon: <FaAlignLeft size={28} />,
+    title: 'Gamified Healing',
+    subtitle: 'Gamified Healing',
+    content: 'Track mood and earn rewards by completing wellness challenges.',
   },
 ];
-
 useEffect(() => {
-  AOS.init({ duration: 2000 });
+  AOS.init({ duration: 1000 });
 }, []);
   return (
     <>
@@ -58,7 +64,7 @@ useEffect(() => {
             <h1 className='text-3xl font-bold h-1/3 text-shadow-lg sm:min-h-1/6'>
               <TypeAnimation
                 sequence={[
-                  'Your Journey to Mental Wellness Starts Here ...',
+                  'Take Charge of Your Mental Wellness',
                   1500,
                   'Track Your Moods, Thoughts & Patterns.....',
                   1500,
@@ -75,54 +81,36 @@ useEffect(() => {
             </h1>
 
             <p className='my-3 text-shadow-lg'>
-              Monitor your emotions, engage with helpful tools, and find your balance.
+           Track moods, explore calming resources, and connect with a
+supportive community
             </p>
-<div className="my-4 w-full h-1/6">
-  <Button
-    variant="contained"
-    sx={{
-      mr: '0.5rem',
-      mb: { xs: 0, sm: 2 ,lg:0}, 
-      mt:{sm:2,lg:0}
-    }}
-  >
-    Start Your Journey
-  </Button>
-  <Button variant="outlined">Learn more</Button>
+<div className="flex space-x-4">
+ 
+
+
+  <button className="px-6 py-2 rounded-full bg-green-500 text-white hover:bg-green-600 transition">
+  Get started
+  </button>
 </div>
+<p className='my-3 text-shadow-lg'>
+"Healing begins with awareness."
+            </p>
 
           </div>
         </div>
 
      <div className=" h-full w-full flex items-center justify-center relative">
-  <div className=' rounded-full h-52 w-52 z-10 overflow-hidden shadow-lg shadow-blue-500/50 lg:h-64 lg:w-64  ' data-aos ="fade-up">
-    <img
-      className='animate-up-down h-full w-full object-cover '
-      src="https://cdn.dribbble.com/userupload/23752520/file/original-f9b3884991741374306b32688589fcc4.gif"
-      alt="Animated Illustration"
-    />
-  </div>
-
-  <div className='absolute bottom-0 w-full h-32 sm:hidden '>
-    <img
-      className='h-full w-full object-cover '
-      src="https://help.fanruan.com/finereport-en10.0/uploads/20201230/1609295170644784.gif"
-      alt="Bottom Animated"
-    />
-  </div>
+ 
+  
 </div>
-<div className='absolute bottom-0 w-full h-32  hidden sm:block'>
-    <img
-      className='h-full w-full object-cover '
-      src="https://help.fanruan.com/finereport-en10.0/uploads/20201230/1609295170644784.gif"
-      alt="Bottom Animated"
-    />
-  </div>
+
       </section>
+
+
 
   <section className=" w-full  bg-gray-50">
       <div className=" w-full h-1/2 flex flex-col items-center justify-center text-center lg:h-1/6">
-        <h1 className="text-3xl font-bold text-shadow-lg mb-2">Key Features</h1>
+        <h1 className="text-3xl font-bold text-shadow-lg mb-2">Why MindfullMe?</h1>
         <p className="my-3 text-shadow-lg max-w-xl p-4">
           Discover how MindfullMe can help you on your mental health journey
         </p>
@@ -132,7 +120,7 @@ useEffect(() => {
        {features.map((feature, index) => (
   <Box
     key={index}
-    data-aos="zoom-in-up"
+    data-aos="fade"
     data-aos-delay={index * 200} // Each card zooms in with a slight delay
     sx={{
       minWidth: 230,
@@ -143,15 +131,13 @@ useEffect(() => {
       },
     }}
   >
-    <Card variant="outlined" sx={{ height: '100%' }} className="text-shadow-lg shadow-xl">
+    <Card variant="outlined" sx={{ height: '100%' ,textAlign:"center" ,bgcolor:"#f5f5f5",border:"none"}} className=" ">
       <CardContent>
-        <div className="flex items-center gap-2 mb-2 text-indigo-600">
+        <div className="flex items-center gap-2 mb-2 text-green-400 justify-center">
           {feature.icon}
-          <Typography sx={{ fontSize: 16, fontWeight: 600 }} gutterBottom>
-            {feature.title}
-          </Typography>
+          
         </div>
-        <Typography variant="h6" component="div" sx={{ mb: 1, fontWeight: 'bold' }}>
+        <Typography variant="h6" component="div" sx={{ mb: 1, fontWeight: 'bold', whiteSpace:"nowrap", fontSize:{md:"1.2vmax" }}}>
           {feature.subtitle}
         </Typography>
         <Typography variant="body2" color="text.secondary">
@@ -166,127 +152,159 @@ useEffect(() => {
     </section>
 
 
+<section  className='w-full h-[60vh] flex gap-y-8 justify-center items-center flex-col bg-gray-100 '>
+ 
+ <h1  className='text_style '>Track Your Mood Journey</h1>
+ <button className='button_css2'>Try Mood Tracker</button>
+</section>
+
+
+<section className="w-full p-4 mt-10" data-aos="fade">
+  
+  <h1 className="text_style flex justify-center p-8">Resource Highlights</h1>
+
+
+  <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    {[
+      {
+        title: "Meditation Music",
+        desc: "Calming sounds to help you relax and focus.",
+        img: "https://i.ytimg.com/vi/jWWuT2MchtQ/maxresdefault.jpg"
+      },
+      {
+        title: "ASMR Playlist",
+        desc: "Soothing sounds to help you sleep better.",
+        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ3lUpzqbrZtnHQ7Yh8ISIQRaC85LiT-m3ZBt4sxoAaazQ-bfj"
+      },
+      {
+        title: "Calming Visuals",
+        desc: "Beautiful scenes to ease your mind.",
+        img: "https://rukminim2.flixcart.com/image/850/1000/krayqa80/wallpaper/b/d/k/91-58-pp-design-226-print-panda-original-imag54gbvfuqfqqz.jpeg?q=20&crop=false"
+      },
+      {
+        title: "Breathing Exercises",
+        desc: "Guided techniques for stress relief.",
+        img: "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSMGmEMB7QyXqIrN16krCaE2mQtMj_6j6OzemhPMjzUj1RJbd2z"
+      }
+    ].map((item, index) => (
+      <div
+        key={index}
+        className="rounded-xl shadow-md overflow-hidden bg-white flex flex-col group transition-transform"
+      >
+        <img
+          src={item.img}
+          alt={item.title}
+          className="w-full h-40 object-cover"
+        />
+        <div className="p-4 bg-white flex flex-col justify-center h-40 transform transition duration-300 group-hover:-translate-y-36">
+          <h2 className="text-lg font-semibold mb-1">{item.title}</h2>
+          <p className="text-gray-700 text-sm">{item.desc}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+
+
+  <div className="flex justify-center mt-8">
+    <button className="px-6 py-2  text-green-500 font-semibold rounded-full   transition">
+      View Full Library
+    </button>
+  </div>
+</section>
+
+
+
+
+
+
 <section className="w-full bg-gray-50">
   <div className="w-full flex flex-col items-center justify-center text-center py-10">
-    <h1 className="text-3xl font-bold text-shadow-lg mb-2">Hear from Our Users</h1>
-    <p className="my-3 text-shadow-lg max-w-xl p-4">
-      Discover how MindfullMe is helping people improve their mental wellbeing
-    </p>
-  </div>
-
-  <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 items-start justify-center">
+    <h1 className="text-3xl font-bold text-shadow-lg mb-2">Community Testimonials</h1>
    
-    <div className="bg-white p-6 rounded-lg shadow-lg text-shadow-md " data-aos="slide-right">
-      <div className="text-indigo-600 text-8xl flex items-center justify-center mb-2">
-        <PiUsersThreeDuotone />
-      </div>
-      <p className="text-gray-800 mb-4">
-        “MindfullMe has completely changed how I manage my anxiety. The daily check-ins and personalized
-        recommendations have made a real difference in my life.”
-      </p>
-      <div className="flex items-center gap-3 mt-4">
-        <div className="w-10 h-10 rounded-full bg-gray-200"> 
-          <img className='object-cover rounded-full items-center justify-center flex w-10 h-10' src="https://media.istockphoto.com/id/1338134319/photo/portrait-of-young-indian-businesswoman-or-school-teacher-pose-indoors.jpg?s=612x612&w=0&k=20&c=Dw1nKFtnU_Bfm2I3OPQxBmSKe9NtSzux6bHqa9lVZ7A=" alt="" />
+  </div>
 
-        </div>
-        <div>
-          <p className="font-semibold">Sarah J.</p>
-          <p className="text-sm text-gray-500">Teacher</p>
-        </div>
-      </div>
-    </div>
-
-
-    <div className="bg-white p-6 rounded-lg shadow-lg text-shadow-md" data-aos="zoom-in-up">
-      <div className="text-indigo-600  text-8xl flex items-center justify-center  mb-2">
-        <PiUsersThreeDuotone />
-      </div>
-      <p className="text-gray-800 mb-4">
-        “As someone who was skeptical about mental health apps, I'm amazed by how helpful the AI
-        recommendations have been. They're surprisingly insightful and practical.”
-      </p>
-      <div className="flex items-center gap-3 mt-4">
-        <div className="w-10 h-10 rounded-full bg-gray-200">
-          <img className='object-cover rounded-full items-center justify-center flex w-10 h-10' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSO5vE_RWSGYC-HoSM4wh1Xuw7CBJect-_0Kg&s" alt="" />
-
-        </div>
-        <div>
-          <p className="font-semibold">Michael T.</p>
-          <p className="text-sm text-gray-500">Software Engineer</p>
+  <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+    {[
+      {
+        text: "The guided meditations have been a game changer for my anxiety. I use them every morning.",
+        author: "-Riya, 19"
+      },
+      {
+        text: "I love the community aspect. It's comforting to know others are on similar journeys.",
+        author: "-Marcus, 27"
+      },
+      {
+        text: "MindfulMe helped me build a habit of checking in with myself every day. I'm more aware of my emotions now",
+        author: "-Elena, 32"
+      }
+    ].map((testimonial, idx) => (
+      <div
+        key={idx}
+        className="bg-white p-6 rounded-lg shadow-lg text-shadow-md h-full flex flex-col justify-between"
+        data-aos="fade"
+      >
+        <p className="text-gray-800 mb-4">{testimonial.text}</p>
+        <div className="flex items-center gap-3 mt-4">
+          <p className="font-semibold">{testimonial.author}</p>
         </div>
       </div>
-    </div>
-
-    
-    <div className="bg-white p-6 rounded-lg shadow-lg text-shadow-md" data-aos="slide-left">
-      <div className="text-indigo-600  text-8xl flex items-center justify-center  mb-2">
-        <PiUsersThreeDuotone />
-      </div>
-      <p className="text-gray-800 mb-4">
-        “The community feature has been a game-changer for me. Connecting with others going through similar
-        experiences makes me feel less alone in my journey.”
-      </p>
-      <div className="flex items-center gap-3 mt-4">
-        <div className="w-10 h-10 rounded-full bg-gray-200">
-          <img className='object-cover rounded-full items-center justify-center flex w-10 h-10' src="https://media.istockphoto.com/id/1468678624/photo/nurse-hospital-employee-and-portrait-of-black-man-in-a-healthcare-wellness-and-clinic-feeling.jpg?s=612x612&w=0&k=20&c=AGQPyeEitUPVm3ud_h5_yVX4NKY9mVyXbFf50ZIEtQI=" alt="" />
-        </div>
-        <div>
-          <p className="font-semibold">Aisha P.</p>
-          <p className="text-sm text-gray-500">Healthcare Worker</p>
-        </div>
-      </div>
-    </div>
+    ))}
   </div>
 </section>
 
 
-<section className='w-full h-[90vh] mt-10'>
 
-<div className='w-full  h-1/2 items-center justify-end flex  flex-col  z-50 absolute' data-aos="fade">
- <h1 className="text-3xl font-bold text-shadow-lg mb-2">Start Your Journey Today</h1>
-        <p className="my-3 text-shadow-lg max-w-xl p-2 w-4/6">
-      Join thousands of users improving their mental wellbeing with MindfullMe
-        </p>
+<section className="w-full h-screen  flex flex-col items-center justify-end  bg-white  md:mt-0  " data-aos="fade" data-offset="1000">
+  <h1 className="text-2xl font-bold mb-10">How It Works</h1>
 
-        <div className="my-4 w-full h-10/12 mx-auto    items-center justify-center flex flex-row sm:w-4/5 sm:h-1/6">
-  <Button
-    variant="contained"
-    sx={{
-      mr: '0.5rem',
-      mb: { xs: 0, sm: 2 ,lg:0}, 
-      mt:{sm:2,lg:0}
-    }}
-  >
-    Start Your Journey
-  </Button>
-  <Button variant="outlined">Learn more</Button>
-</div>
+  <div className="flex flex-col md:flex-row items-center justify-center gap-12 w-full max-w-5xl mb-16 px-4">
+
+    <div className="flex flex-col items-center text-center">
+      <IoPersonAddOutline className="text-green-500 text-4xl mb-4" />
+      <h2 className="font-semibold text-lg mb-1">Sign Up</h2>
+      <p className="text-sm text-gray-600">Create your account in seconds</p>
+    </div>
+
+  
+    <div className="hidden md:block text-green-500 text-2xl">
+      <FaArrowRight />
+    </div>
 
 
-</div>
-<div className='w-full  h-full flex items-center justify-center  '>
-<div className='hidden sm:absolute  sm:right-0 sm:mb-72   lg:block '>
-
-<img
-  src="https://images.everydayhealth.com/images/healthy-living/fitness/stress-relief-yoga-sun-salutation.gif?sfvrsn=424917ae_3"
-  className="h-72 mix-blend-multiply  "
-  alt="Transparentish"
-/>
-
-</div>
+    <div className="flex flex-col items-center text-center">
+      <AiOutlineStock className="text-green-500 text-4xl mb-4" />
+      <h2 className="font-semibold text-lg mb-1">Track Your Mood</h2>
+      <p className="text-sm text-gray-600">Log how you feel daily</p>
+    </div>
 
 
-
-    <img
-      className='h-full w-full object-cover '
-      src="https://help.fanruan.com/finereport-en10.0/uploads/20201230/1609295170644784.gif"
-     
-    />
-</div>
+    <div className="hidden md:block text-green-500 text-2xl">
+      <FaArrowRight />
+    </div>
 
 
+    <div className="flex flex-col items-center text-center">
+      <IoMdCloudDone className="text-green-500 text-4xl mb-4" />
+      <h2 className="font-semibold text-lg mb-1">Get Suggestions</h2>
+      <p className="text-sm text-gray-600">Receive personalized resources</p>
+    </div>
+  </div>
+
+ 
+  <div className="w-full h-2/5 bg-[#9691A1] py-6 text-white text-center flex flex-col justify-center items-center gap-2" >
+    <h1 className="text-lg md:text-2xl font-bold mb-4">Stay informed about mental wellness</h1>
+    <form className="flex justify-center items-center gap-2 px-4">
+      <input
+        type="email"
+        placeholder="Your email"
+        className="px-4 py-2 rounded-l-full rounded-r-none  bg-white w-64 text-black focus:outline-none" 
+      />
+      <button className="bg-green-500 rounded-l-none -ml-2  text-white px-4 py-2 rounded-r-full">
+        Subscribe
+      </button>
+    </form>
+  </div>
 </section>
-
 
     </>
   );

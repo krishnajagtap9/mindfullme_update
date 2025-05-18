@@ -52,7 +52,7 @@ export default function TemporaryDrawer() {
   return (
     <div>
       <Button onClick={toggleDrawer(true)}>
-        <MenuIcon sx={{ color: 'white' }} />
+        <MenuIcon sx={{ color: 'black' }} />
       </Button>
       <Drawer open={open} onClose={toggleDrawer(false)}>
         {DrawerList}

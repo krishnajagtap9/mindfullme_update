@@ -4,63 +4,57 @@ import { LuBrain } from "react-icons/lu";
 const Footer = () => {
   return (
  <>
- <section className='w-full grid sm:grid-cols-3 lg:grid-cols-4 gap-2   ml-2.5 mt-7 mb-4 ' data-aos="fade">
+<footer className="w-full bg-[#2C2F33] text-white px-4 py-10">
+  <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-sm text-gray-300">
+    {/* MindfulMe */}
+    <div>
+      <h2 className="text-white font-semibold mb-3">MindfulMe</h2>
+      <ul className="space-y-2">
+        <li>About Us</li>
+        <li>Contact</li>
+        <li>Blog</li>
+        <li>Careers</li>
+      </ul>
+    </div>
 
-<div className='w-full sm:w-64 '>
-    <h1 className='flex  font-bold text-2xl items-center justify-items-start mb-2 '><LuBrain /> Mindfullme</h1>
-    <p className=''>Your companion for mental wellness and personal growth.</p>
-</div>
+    {/* Resources */}
+    <div>
+      <h2 className="text-white font-semibold mb-3">Resources</h2>
+      <ul className="space-y-2">
+        <li>Library</li>
+        <li>Games</li>
+        <li>AI Tools</li>
+        <li>Mood Tracker</li>
+      </ul>
+    </div>
 
-<div >
-    <h1 className='mb-3 text-shadow-lg font-mideum'>Platform</h1>
-   <ol className='text-gray-600'>
-    <li>About us</li>
-    <li>Contact </li>
-    <li>Support</li>
-    <li>Privacy Policy</li>
-    <li>Terms of Services</li>
-   </ol>
-</div>
+    {/* Support */}
+    <div>
+      <h2 className="text-white font-semibold mb-3">Support</h2>
+      <ul className="space-y-2">
+        <li>FAQs</li>
+        <li>Community Guidelines</li>
+        <li>Help Center</li>
+        <li>Privacy Policy</li>
+      </ul>
+    </div>
 
-<div >
-    <h1 className='mb-3 text-shadow-lg font-mideum'>Features</h1>
-   <ol className='text-gray-600'>
-    <li>Dashboard</li>
-    <li>Ai Recomandatition</li>
-    <li>Resource Library</li>
-    <li>Community</li>
-    <li>Games</li>
-   </ol>
-</div>
+    {/* Connect */}
+    <div>
+      <h2 className="text-white font-semibold mb-3">Connect</h2>
+      <ul className="flex flex-wrap gap-4">
+        <li>Instagram</li>
+        <li>LinkedIn</li>
+        <li>YouTube</li>
+        <li className="text-gray-500">Discord</li>
+      </ul>
+    </div>
+  </div>
 
-
-<div >
-    <h1 className='mb-3 text-shadow-lg font-mideum'>Connect</h1>
-   <ol className='text-gray-600'>
-    <li>Twitter</li>
-    <li>Instagram </li>
-    <li>Facebook</li>
-    <li>Linkdin</li>
-    <li>youtube</li>
-   </ol>
-</div>
-
-
-
-
-
-
-
-
- </section>
-<hr className='sm:w-4/5 m-auto' />
-
-<section className='flex w-full h-16 items-center justify-center text-shadow-lg ml-3'>
-    <div><p> ©  2025 MindfullMe. All rights reserved</p></div>
-    <div className=' flex justify-end w-1/2'><p className='flex'>Accessibility
-Sitemap
-Cookie Policy</p></div>
-</section>
+  <div className="mt-8 text-center text-sm text-gray-500">
+    © 2023 MindfulMe. All rights reserved.
+  </div>
+</footer>
  
  </>
   )

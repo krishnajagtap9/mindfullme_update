@@ -4,153 +4,119 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
-import {Link} from "react-router-dom"
-import  NavResponsive_Drawer from "../pages/NavResponsive_Drawer"
-import { colors } from '@mui/material';
+import { Link } from 'react-router-dom';
+import NavResponsive_Drawer from '../pages/NavResponsive_Drawer';
+import StarIcon from '@mui/icons-material/Star';
 
 const linkStyle = {
-  textDecoration: "none",
-
+  textDecoration: 'none',
 };
 
 const pages = [
   <Link to="/" style={linkStyle}>Home</Link>,
-  <Link to="/daily_log" style={linkStyle}>Daily Logs</Link>,
-  <Link to="/Resource_Library" style={linkStyle}>Resource Library</Link>,
+  <Link to="/Library" style={linkStyle}>Library</Link>,
+  <Link to="/Games" style={linkStyle}>Games</Link>,
   <Link to="/Community" style={linkStyle}>Community</Link>,
-  <Link to="/Crisis_suport" style={linkStyle}>Crisis Support</Link>,
+  <Link to="/support" style={linkStyle}>Support</Link>,
   <Link to="/sign-in" style={linkStyle}>Sign In</Link>,
-  <Link to="/sign-up" style={linkStyle}>Sign Up</Link>
+  <Link to="/sign-up" style={linkStyle}>Sign Up</Link>,
 ];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
   return (
-    <AppBar position="static sticky top-0  z-[999]">
+    <AppBar position="static sticky"  sx={{ 
+    backgroundColor: 'white', 
+    boxShadow: 1,
+    top: 0, 
+    zIndex: (theme) => theme.zIndex.drawer + 1 
+  }}>
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            Mindfullme
-          </Typography>
+        <Toolbar disableGutters sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+          
+    
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography
+              variant="h6"
+              noWrap
+              component={Link}
+              to="/"
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                fontWeight: { xs: 400, md: 700 },
+                color: 'green',
+                textDecoration: 'none',
+                fontSize: { xs: '0.9rem', md: '1.2rem', lg: '1.6rem' },
+              }}
+            >
+              <StarIcon sx={{ color: 'green', mr: 1, fontSize: { xs: '1rem', md: '1.5rem' } }} />
+              Mindfullme
+            </Typography>
+          </Box>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none'  } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' }, justifyContent: 'center' }}>
             <IconButton
               size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
+              aria-label="menu"
               onClick={handleOpenNavMenu}
-              color="white"
+              color="inherit"
             >
-            
-             <NavResponsive_Drawer  />
+              <NavResponsive_Drawer />
             </IconButton>
-           
-             
-            
           </Box>
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+
+    
+          <Box
             sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
               flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
+              display: { xs: 'none', md: 'flex' },
+              justifyContent: 'center',
+         
             }}
           >
-            Mindfullme
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' ,justifyContent:"flex-end" } }}>
-            {pages.map((page) => (
+            {pages.map((page, index) => (
               <Button
-                key={page}
+                key={index}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2,color:"white", display: 'block' }}
+                sx={{ my: 2, color: 'black', display: 'block', textTransform: 'none' }}
               >
                 {page}
               </Button>
             ))}
           </Box>
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+
+          {/* Right-aligned Login/Sign Up */}
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 2,
+              ml: 'auto',
+            }}
+          >
+            <button className="text-xs px-2 py-1 rounded-full border-2 border-green-500 text-green-500 hover:bg-green-50 transition md:px-6 md:py-2">
+              Login
+            </button>
+            <button className="text-xs px-2 py-1 rounded-full bg-green-500 text-white hover:bg-green-600 transition md:px-6 md:py-2">
+              Sign Up
+            </button>
           </Box>
         </Toolbar>
       </Container>
     </AppBar>
   );
 }
+
 export default ResponsiveAppBar;
+
