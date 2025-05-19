@@ -16,10 +16,8 @@ const linkStyle = {
 
 const pages = [
   <Link to="/" style={linkStyle}>Home</Link>,
-  <Link to="/Library" style={linkStyle}>Library</Link>,
-  <Link to="/Games" style={linkStyle}>Games</Link>,
-  <Link to="/Community" style={linkStyle}>Community</Link>,
-  <Link to="/support" style={linkStyle}>Support</Link>,
+  <Link to="/about" style={linkStyle}>About</Link>,
+  <Link to="/Contact" style={linkStyle}>Contact </Link>,
   <Link to="/sign-in" style={linkStyle}>Sign In</Link>,
   <Link to="/sign-up" style={linkStyle}>Sign Up</Link>,
 ];

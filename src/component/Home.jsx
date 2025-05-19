@@ -1,4 +1,4 @@
-import {useEffect} from 'react'
+import {useEffect,useState} from 'react'
 import Button from '@mui/material/Button';
 import { TypeAnimation } from 'react-type-animation';
 
@@ -20,10 +20,30 @@ import { FaArrowRight } from "react-icons/fa";
 import { IoPersonAddOutline } from "react-icons/io5";
 import { AiOutlineStock } from "react-icons/ai";
 import { IoMdCloudDone } from "react-icons/io";
+import Image1 from '../images/image1.png';
+import Image2 from '../images/image2.png';
+import Image3 from '../images/image3.png';
+import Image4 from '../images/image4.png';
+import Image5 from '../images/image5.png';
+import Image6 from '../images/image6.png';
+import Image7 from '../images/image7.png';
+
+
 
 
 
 const Home = () => {
+const images = [Image1, Image2, Image3, Image4, Image5, Image6, Image7];
+ const [currentImage, setCurrentImage] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % images.length);
+    }, 3000); // Change image every 3 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
   const features = [
   {
     icon: <CgProfile size={28} />,
@@ -56,56 +76,51 @@ useEffect(() => {
   return (
     <>
     
-      <section className=" max-w-full h-screen flex flex-col sm:flex-row">
-        
-        <div className=" h-full w-full flex items-center justify-center ">
-          <div className='w-4/5  h-3/4 lg:h-3/6 ' data-aos="fade">
-            
-            <h1 className='text-3xl font-bold h-1/3 text-shadow-lg sm:min-h-1/6'>
-              <TypeAnimation
-                sequence={[
-                  'Take Charge of Your Mental Wellness',
-                  1500,
-                  'Track Your Moods, Thoughts & Patterns.....',
-                  1500,
-                  'Get Personalized AI Recommendations',
-                  1500,
-                  'Join a Supportive Community ...',
-                  1500,
-                ]}
-                wrapper="span"
-                speed={50}
-                style={{ display: 'inline-block' }}
-                repeat={Infinity}
-              />
-            </h1>
+<section className="max-w-full h-screen flex flex-col sm:flex-row">
+  <div className="h-full w-full flex items-center justify-center">
+    <div className="w-4/5 h-3/4 lg:h-3/6" data-aos="fade">
+      <h1 className="text-3xl font-bold h-1/3 text-shadow-lg sm:min-h-1/6">
+        <TypeAnimation
+          sequence={[
+            'Take Charge of Your Mental Wellness',
+            1500,
+            'Track Your Moods, Thoughts & Patterns.....',
+            1500,
+            'Get Personalized AI Recommendations',
+            1500,
+            'Join a Supportive Community ...',
+            1500,
+          ]}
+          wrapper="span"
+          speed={50}
+          style={{ display: 'inline-block' }}
+          repeat={Infinity}
+        />
+      </h1>
 
-            <p className='my-3 text-shadow-lg'>
-           Track moods, explore calming resources, and connect with a
-supportive community
-            </p>
-<div className="flex space-x-4">
- 
+      <p className="my-3 text-shadow-lg">
+        Track moods, explore calming resources, and connect with a supportive community
+      </p>
 
+      <div className="flex space-x-4">
+        <button className="px-6 py-2 rounded-full bg-green-500 text-white hover:bg-green-600 transition">
+          Get started
+        </button>
+      </div>
 
-  <button className="px-6 py-2 rounded-full bg-green-500 text-white hover:bg-green-600 transition">
-  Get started
-  </button>
-</div>
-<p className='my-3 text-shadow-lg'>
-"Healing begins with awareness."
-            </p>
+      <p className="my-3 text-shadow-lg">"Healing begins with awareness."</p>
+    </div>
+  </div>
 
-          </div>
-        </div>
-
-     <div className=" h-full w-full flex items-center justify-center relative">
- 
-  
-</div>
-
-      </section>
-
+  <div className="h-full w-full flex items-center justify-center relative">
+    <img
+      src={images[currentImage]}
+      alt="Slideshow"
+      className="w-4/5 h-4/5 object-contain rounded-2xl shadow-lg transition-opacity duration-1000 ease-in-out"
+      key={currentImage}
+    />
+  </div>
+</section>
 
 
   <section className=" w-full  bg-gray-50">
