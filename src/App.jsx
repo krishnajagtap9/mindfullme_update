@@ -9,6 +9,7 @@ import About from './component/About.jsx';
 import Footer from './component/Footer.jsx';
 import Contact from './component/Contact.jsx';
 import Sign from './component/Sign/login.jsx';
+import ScrollToTop from './Scrolltotop.jsx';
 
 function App() {
  
@@ -16,7 +17,9 @@ function App() {
   return (
     <>
     <Nav/>
+    <ScrollToTop />
      <Routes>
+      
    <Route path='/' element={<Home/>} />
    <Route path='/About' element={<About/>} />
    <Route path='/Contact' element={<Contact/>} />
