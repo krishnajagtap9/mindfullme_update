@@ -7,7 +7,6 @@ import Home from './component/Home.jsx';
 import About from './component/About.jsx';
 import Footer from './component/Footer.jsx';
 import Contact from './component/Contact.jsx';
-import Sign from './component/Sign/Login.jsx';
 import ScrollToTop from './Scrolltotop.jsx';
 import Need_login from './pages/Need_login.jsx';
 import Login from './component/Sign/Login.jsx';
