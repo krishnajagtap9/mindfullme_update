@@ -79,7 +79,7 @@ useEffect(() => {
 <section className="max-w-full h-screen flex flex-col sm:flex-row">
   <div className="h-full w-full flex items-center justify-center">
     <div className="w-4/5 h-3/4 lg:h-3/6" data-aos="fade">
-      <h1 className="text-3xl font-bold h-1/3 text-shadow-lg sm:min-h-1/6">
+      <h1 className="text-3xl font-bold h-32 text-shadow-lg sm:min-h-1/6">
         <TypeAnimation
           sequence={[
             'Take Charge of Your Mental Wellness',
@@ -116,7 +116,7 @@ useEffect(() => {
     <img
       src={images[currentImage]}
       alt="Slideshow"
-      className="w-4/5 h-4/5 object-contain rounded-2xl shadow-lg transition-opacity duration-1000 ease-in-out"
+      className="w-4/5 h-4/5 object-contain rounded-2xl transition-opacity duration-1000 ease-in-out"
       key={currentImage}
     />
   </div>

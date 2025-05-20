@@ -8,34 +8,36 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 import { Link } from 'react-router-dom';
 
 export default function TemporaryDrawer() {
   const [open, setOpen] = React.useState(false);
 
-  const toggleDrawer = (newOpen) => () => {
-    setOpen(newOpen);
+  const toggleDrawer = () => {
+    setOpen((prevOpen) => !prevOpen);
   };
 
   const linkStyle = {
     textDecoration: 'none',
     color: 'inherit',
     width: '100%',
-    display: 'block'
+    display: 'block',
   };
 
   const pages = [
     { name: 'Home', path: '/' },
-    { name: 'Daily Logs', path: '/daily_log' },
-    { name: 'Resource Library', path: '/Resource_Library' },
-    { name: 'Community', path: '/Community' },
-    { name: 'Crisis Support', path: '/Crisis_suport' },
-    { name: 'Sign In', path: '/sign-in' },
-    { name: 'Sign Up', path: '/sign-up' },
+    { name: 'About', path: '/About' },
+    { name: 'Contact', path: '/Contact' },
+    { name: 'Sign', path: '/sign' },
   ];
 
   const DrawerList = (
-    <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
+    <Box
+      sx={{ width: 250, marginTop: '80px' }}
+      role="presentation"
+      onClick={toggleDrawer}
+    >
       <List>
         {pages.map((page) => (
           <ListItem key={page.name} disablePadding>
@@ -51,10 +53,14 @@ export default function TemporaryDrawer() {
 
   return (
     <div>
-      <Button onClick={toggleDrawer(true)}>
-        <MenuIcon sx={{ color: 'black' }} />
+      <Button onClick={toggleDrawer}>
+        {open ? (
+          <CloseIcon sx={{ color: 'black' }} />
+        ) : (
+          <MenuIcon sx={{ color: 'black' }} />
+        )}
       </Button>
-      <Drawer open={open} onClose={toggleDrawer(false)}>
+      <Drawer open={open} onClose={toggleDrawer}>
         {DrawerList}
       </Drawer>
     </div>

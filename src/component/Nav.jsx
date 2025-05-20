@@ -9,6 +9,11 @@ import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 import NavResponsive_Drawer from '../pages/NavResponsive_Drawer';
 import StarIcon from '@mui/icons-material/Star';
+import { useUser, SignOutButton } from '@clerk/clerk-react';
+
+
+
+import { SignInButton, SignUpButton } from '@clerk/clerk-react';
 
 const linkStyle = {
   textDecoration: 'none',
@@ -18,8 +23,7 @@ const pages = [
   <Link to="/" style={linkStyle}>Home</Link>,
   <Link to="/about" style={linkStyle}>About</Link>,
   <Link to="/Contact" style={linkStyle}>Contact </Link>,
-  <Link to="/sign-in" style={linkStyle}>Sign In</Link>,
-  <Link to="/sign-up" style={linkStyle}>Sign Up</Link>,
+
 ];
 
 function ResponsiveAppBar() {
@@ -33,17 +37,17 @@ function ResponsiveAppBar() {
     setAnchorElNav(null);
   };
 
+  const { isSignedIn } = useUser();
   return (
-    <AppBar position="static sticky"  sx={{ 
-    backgroundColor: 'white', 
-    boxShadow: 1,
-    top: 0, 
-    zIndex: (theme) => theme.zIndex.drawer + 1 
-  }}>
+    <AppBar position="static sticky" sx={{ 
+      backgroundColor: 'white', 
+      boxShadow: 1,
+      top: 0, 
+      zIndex: (theme) => theme.zIndex.drawer + 1 
+    }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
           
-    
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography
               variant="h6"
@@ -75,13 +79,11 @@ function ResponsiveAppBar() {
             </IconButton>
           </Box>
 
-    
           <Box
             sx={{
               flexGrow: 1,
               display: { xs: 'none', md: 'flex' },
               justifyContent: 'center',
-         
             }}
           >
             {pages.map((page, index) => (
@@ -95,21 +97,34 @@ function ResponsiveAppBar() {
             ))}
           </Box>
 
-          {/* Right-aligned Login/Sign Up */}
-          <Box
-            sx={{
-              display: 'flex',
-              gap: 2,
-              ml: 'auto',
-            }}
-          >
-            <button className="text-xs px-2 py-1 rounded-full border-2 border-green-500 text-green-500 hover:bg-green-50 transition md:px-6 md:py-2">
-              Login
-            </button>
-            <button className="text-xs px-2 py-1 rounded-full bg-green-500 text-white hover:bg-green-600 transition md:px-6 md:py-2">
-              Sign Up
-            </button>
-          </Box>
+         <Box
+  sx={{
+    display: 'flex',
+    gap: 2,
+    ml: 'auto',
+  }}
+>
+  {isSignedIn ? (
+    <SignOutButton>
+      <button className="text-xs px-2 py-1 rounded-full border-2 border-red-500 text-red-500 hover:bg-red-50 transition md:px-6 md:py-2">
+        Logout
+      </button>
+    </SignOutButton>
+  ) : (
+    <>
+      <Link to="/login?mode=signin" style={linkStyle}>
+        <button className="text-xs px-2 py-1 rounded-full border-2 border-green-500 text-green-500 hover:bg-green-50 transition md:px-6 md:py-2">
+          Login
+        </button>
+      </Link>
+      <Link to="/login?mode=signup" style={linkStyle}>
+        <button className="text-xs px-2 py-1 rounded-full bg-green-500 text-white hover:bg-green-600 transition md:px-6 md:py-2">
+          Sign Up
+        </button>
+      </Link>
+    </>
+  )}
+</Box>
         </Toolbar>
       </Container>
     </AppBar>
@@ -117,4 +132,3 @@ function ResponsiveAppBar() {
 }
 
 export default ResponsiveAppBar;
-

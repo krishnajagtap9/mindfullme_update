@@ -46,7 +46,7 @@ const About = () => {
   return (
     <>
     
-        <section className=" max-w-full h-screen flex flex-col-reverse sm:flex-row md:flex-row  ">
+        <section className=" max-w-full h-screen flex flex-col-reverse sm:flex-row md:flex-row   ">
         
         <div className=" h-screen w-full flex items-center justify-center  bg-[#DFF5E8]">
           <div className='w-4/5  h-3/4 lg:h-3/6  ' data-aos="fade">
@@ -74,7 +74,7 @@ tools.
           </div>
         </div>
 
-     <div className=" h-full w-full flex items-center justify-center relative">
+     <div className=" h-full w-full flex items-center justify-center relative " data-aos="fade">
  
   <img className='w-full h-full object-contain' src="https://rehabtechsolutions.com/wp-content/uploads/2024/09/placeholder.jpg" alt="" />
 </div>
@@ -111,6 +111,7 @@ tools.
       className="absolute w-2/4 h-3/4 object-contain border shadow-md rounded-md hover:z-40 hover:scale-110 transition-transform duration-300 ease-in-out cursor-pointer sm:w-4/6  sm:h-3/5 lg:h-9/12 lg:w-[60%]"
       src="https://rehabtechsolutions.com/wp-content/uploads/2024/09/placeholder.jpg"
       alt=""
+      data-aos="zoom-in"
     />
     
     {/* Bottom Left Horizontal Image (middle one that scales) */}
@@ -118,6 +119,8 @@ tools.
       className="absolute w-1/4 lg:w-2/5 h-1/3 object-contain border shadow-md rounded-md bottom-12 left-12 z-20 hover:z-20 hover:scale-110 transition-transform duration-300 ease-in-out cursor-pointer sm:min-w-[45%] sm:left-0 sm:bottom-20"
       src="https://rehabtechsolutions.com/wp-content/uploads/2024/09/placeholder.jpg"
       alt=""
+          data-aos="fade"
+          data-aos-delay="200"
     />
 
   
@@ -125,6 +128,8 @@ tools.
       className="absolute w-1/4 h-1/3 object-contain border shadow-md rounded-md top-20 md:top-43  right-12 z-30 hover:z-20 hover:scale-110 transition-transform duration-300 ease-in-out cursor-pointer  sm:h-1/4 sm:top-40 sm:right-5 lg:h-1/3 lg:top-35"
       src="https://rehabtechsolutions.com/wp-content/uploads/2024/09/placeholder.jpg"
       alt=""
+      data-aos="fade"
+          data-aos-delay="200"
     />
   </div>
 </section>
@@ -136,15 +141,15 @@ tools.
 
 
 
-<section className="bg-gray-50 py-16 px-4 text-center">
+<section className="bg-gray-50 py-16 px-4 text-center" >
       <h2 className="text-4xl font-semibold mb-4 text-black text-shadow-lg">Our Journey</h2>
       <p className="text-gray-600 max-w-2xl mx-auto mb-16 md:text-2xl">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
       </p>
 
-      <div className="flex flex-col md:flex-row items-center justify-center gap-16">
+      <div className="flex flex-col md:flex-row items-center justify-center gap-16" >
         {/* Step 1 */}
-        <div className="flex flex-col items-center text-center md:text-2xl">
+        <div className="flex flex-col items-center text-center md:text-2xl" data-aos="fade">
           <div className="bg-gray-200 rounded-2xl p-4 mb-4">
             <FaMapMarkerAlt className="text-green-500 text-5xl" />
           </div>
@@ -156,7 +161,7 @@ tools.
         <div className="hidden md:block w-16 h-1 bg-gray-300 rounded-full"></div>
 
         {/* Step 2 */}
-        <div className="flex flex-col items-center text-center md:text-2xl">
+        <div className="flex flex-col items-center text-center md:text-2xl" data-aos="fade">
           <div className="bg-gray-200 rounded-2xl p-4 mb-4">
             <FaCalendarAlt className="text-green-500 text-5xl" />
           </div>
@@ -168,7 +173,7 @@ tools.
         <div className="hidden md:block w-16 h-1 bg-gray-300 rounded-full"></div>
 
         {/* Step 3 */}
-        <div className="flex flex-col items-center text-center md:text-2xl">
+        <div className="flex flex-col items-center text-center md:text-2xl" data-aos="fade">
           <div className="bg-gray-200 rounded-2xl p-4 mb-4">
             <FaCar className="text-green-500 text-5xl" />
           </div>
@@ -181,7 +186,7 @@ tools.
 
 
 <section className="w-full p-4 mt-10" data-aos="fade">
-  <h1 className="text_style flex justify-center p-25">Meet the KodRish Team</h1>
+  <h1 className="text_style flex justify-center p-25 text-nowrap">Meet Our Team</h1>
 
   <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
     {[
@@ -275,14 +280,14 @@ tools.
 
       <div className="mt-12 flex flex-col md:flex-row items-center justify-between gap-20 md:gap-50">
    
-        <div className="w-full md:w-1/2 bg-slate-300 aspect-square flex items-center justify-center">
+        <div className="w-full md:w-1/2 bg-slate-300 aspect-square flex items-center justify-center" data-aos="zoom-in">
           <img src=" https://i.pinimg.com/236x/eb/80/0a/eb800a3f92e7a2d131c747b77256b03e.jpg" alt="" />
         </div>
 
    
         <div className="w-full md:w-1/2 flex flex-col gap-8 text-left">
        
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4" data-aos="fade">
             <div className="w-8 h-8 border-2 border-gray-400 rounded-md"></div>
             <div>
               <h3 className="text-lg font-semibold text-gray-900 md:text-2xl">Empathy</h3>
@@ -291,7 +296,7 @@ tools.
           </div>
 
   
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4" data-aos="fade">
             <div className="w-8 h-8 bg-gray-400 rounded-md flex items-center justify-center">
               <span className="text-white text-sm">🏷️</span>
             </div>
@@ -301,7 +306,7 @@ tools.
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4" data-aos="fade">
             <div className="w-8 h-8 bg-gray-300 rounded-md "></div>
             <div>
               <h3 className="text-lg font-semibold text-gray-900 md:text-2xl">Engagement</h3>
