@@ -167,9 +167,9 @@ useEffect(() => {
     </section>
 
 
-<section  className='w-full h-[60vh] flex gap-y-8 justify-center items-center flex-col bg-gray-100 '>
+<section  className='w-full h-[60vh] flex gap-y-8 justify-center items-center text-center flex-col bg-gray-100 '>
  
- <h1  className='text_style '>Track Your Mood Journey</h1>
+ <h1  className='text-3xl font-bold text-shadow-lg   '>Track Your Mood Journey</h1>
  <button className='button_css2'>Try Mood Tracker</button>
 </section>
 
