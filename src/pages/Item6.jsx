@@ -112,7 +112,7 @@ const Item6 = () => {
             <div className="flex gap-5 text-sm text-gray-600 mt-3">
               <span className="flex items-center gap-1"><FaHeart /> {post.likes}</span>
               <span className="flex items-center gap-1"><FaComment /> {post.comments}</span>
-              <span className="flex items-center gap-1"><FaBookmark /> Save</span>
+              <span className="flex items-center gap-1"><FaBookmark /> Save </span>
             </div>
           </div>
         ))}
