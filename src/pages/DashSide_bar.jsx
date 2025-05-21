@@ -14,7 +14,7 @@ import Item2 from './Item2';
 import Item3 from './Item3';
 import Item4 from './Item4';
 import Item5 from './Item5';
-import Item6 from './item6';
+// import Item6 from './item6';
 
 
 // Icons
@@ -146,7 +146,7 @@ export default function VerticalTabs() {
     { label: 'Library', icon: <MdOutlineLocalLibrary />, component: <Item4 /> },
     { label: 'Mood Tracker', icon: <TbMoodPlus />, component: <Item5 /> },
     { label: 'AI Suggestion', icon: <LuBot />, component: <Item5 /> },
-    { label: 'Community', icon: <MdPeopleAlt />, component: <Item6 /> },
+    { label: 'Community', icon: <MdPeopleAlt />, component: <Item1 /> },
     { label: 'Games', icon: <CgGames />, component: <Item2 /> },
     { label: 'Support', icon: <IoSettingsOutline />, component: <Item3 /> },
   ];
