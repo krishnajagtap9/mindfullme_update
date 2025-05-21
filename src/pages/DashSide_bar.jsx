@@ -144,7 +144,6 @@ export default function VerticalTabs() {
   const tabsData = [
     { label: 'Dashboard', icon: <FaHome />, component: <Item1 /> },
     { label: 'Library', icon: <MdOutlineLocalLibrary />, component: <Item4 /> },
-    { label: 'Mood Tracker', icon: <TbMoodPlus />, component: <Item5 /> },
     { label: 'AI Suggestion', icon: <LuBot />, component: <Item5 /> },
     { label: 'Community', icon: <MdPeopleAlt />, component: <Item6 /> },
     { label: 'Games', icon: <CgGames />, component: <Item2 /> },

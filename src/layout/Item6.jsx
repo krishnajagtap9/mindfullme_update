@@ -59,7 +59,6 @@ const Item6 = () => {
           ></textarea>
           <div className="flex justify-between mt-2 flex-wrap gap-2 ">
             <div className="flex gap-2 flex-wrap">
-              <button className="px-3 py-1 bg-gray-100 rounded text-sm hover:bg-gray-200 transition flex justify-center items-center gap-2"><MdOutlinePhotoCamera/> Add Image</button>
               <button className="px-3 py-1 bg-gray-100 rounded text-sm hover:bg-gray-200 transition flex justify-center items-center gap-2"><LuSmilePlus/> Add Mood</button>
 
               <button className="px-3 py-1 bg-gray-100 rounded text-sm hover:bg-gray-200 transition"># Add Tag</button>
