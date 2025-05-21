@@ -228,8 +228,8 @@ export default function VerticalTabs() {
                   <Item1 />
                 ) : (
                   <Typography>
-                    This is the content for the {tab.label} section. You can place your specific
-                    components and information here.
+                    {/* This is the content for the {tab.label} section. You can place your specific
+                    components and information here. */}
                   </Typography>
                 )}
               </>
