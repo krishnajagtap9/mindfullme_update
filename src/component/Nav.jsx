@@ -13,81 +13,91 @@ import { useUser, SignOutButton } from '@clerk/clerk-react';
 
 const linkStyle = {
   textDecoration: 'none',
+  color: 'inherit',
 };
 
 const pages = [
-  <Link to="/" style={linkStyle}>Home</Link>,
-  <Link to="/about" style={linkStyle}>About</Link>,
-  <Link to="/Contact" style={linkStyle}>Contact </Link>,
+  { label: 'Home', path: '/' },
+  { label: 'About', path: '/about' },
+  { label: 'Contact', path: '/Contact' },
 ];
 
 function ResponsiveAppBar() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
   const { isSignedIn } = useUser();
 
   return (
-    <AppBar position="static sticky" sx={{
-      backgroundColor: 'white',
-      boxShadow: 1,
-      top: 0,
-      zIndex: (theme) => theme.zIndex.drawer + 1
-    }}>
+    <AppBar
+      position="sticky"
+      elevation={1}
+      sx={{
+        backgroundColor: '#ffffff',
+        borderBottom: '1px solid #e0e0e0',
+        zIndex: (theme) => theme.zIndex.drawer + 1,
+      }}
+    >
       <Container maxWidth="xl">
-        <Toolbar disableGutters sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+        <Toolbar disableGutters sx={{ width: '100%', display: 'flex' }}>
 
+          {/* Logo / Brand */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography
-              variant="h6"
-              noWrap
               component={Link}
               to="/"
+              variant="h6"
               sx={{
+                fontWeight: 700,
                 display: 'flex',
                 alignItems: 'center',
-                fontWeight: { xs: 400, md: 700 },
-                color: 'green',
                 textDecoration: 'none',
-                fontSize: { xs: '1.4rem', md: '1.2rem', lg: '1.6rem' },
+                color: 'green',
+                fontSize: { xs: '1.3rem', md: '1.5rem' },
               }}
             >
-              <StarIcon sx={{ color: 'green', mr: 3, fontSize: { xs: '2rem', md: '1.5rem' } }} />
+              <StarIcon sx={{ color: 'green', mr: 1 }} />
               Mindfullme
             </Typography>
           </Box>
 
-          <Box sx={{ flexGrow: 1, display: { xs: isSignedIn ? 'none' : 'flex', md: 'none' }, justifyContent: 'center' }}>
+          {/* Mobile Menu Icon */}
+          <Box
+            sx={{
+              display: { xs: isSignedIn ? 'none' : 'flex', md: 'none' },
+              flexGrow: 1,
+              justifyContent: 'flex-end',
+            }}
+          >
             <IconButton
               size="large"
-              aria-label="menu"
-              onClick={handleOpenNavMenu}
+              edge="start"
               color="inherit"
+              aria-label="menu"
             >
               <NavResponsive_Drawer />
             </IconButton>
           </Box>
 
+          {/* Desktop Nav Links */}
           <Box
             sx={{
               flexGrow: 1,
               display: { xs: 'none', md: 'flex' },
               justifyContent: 'center',
+              gap: 2,
             }}
           >
             {isSignedIn ? (
               <Button
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'black', display: 'block', textTransform: 'none' }}
                 component={Link}
                 to="/dashboard"
+                sx={{
+                  color: '#333',
+                  fontWeight: 500,
+                  textTransform: 'none',
+                  '&:hover': {
+                    color: 'green',
+                    backgroundColor: 'transparent',
+                  },
+                }}
               >
                 Dashboard
               </Button>
@@ -95,40 +105,79 @@ function ResponsiveAppBar() {
               pages.map((page, index) => (
                 <Button
                   key={index}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: 'black', display: 'block', textTransform: 'none' }}
+                  component={Link}
+                  to={page.path}
+                  sx={{
+                    color: '#333',
+                    fontWeight: 500,
+                    textTransform: 'none',
+                    '&:hover': {
+                      color: 'green',
+                      backgroundColor: 'transparent',
+                    },
+                  }}
                 >
-                  {page}
+                  {page.label}
                 </Button>
               ))
             )}
           </Box>
 
-          <Box
-            sx={{
-              display: 'flex',
-              gap: 2,
-              ml: 'auto',
-            }}
-          >
+          {/* Auth Buttons */}
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 2, ml: 'auto' }}>
             {isSignedIn ? (
               <SignOutButton>
-                <button className="text-xs px-2 py-1 rounded-full border-2 border-red-500 text-red-500 hover:bg-red-50 transition md:px-6 md:py-2">
+                <Button
+                  variant="outlined"
+                  sx={{
+                    borderColor: '#f44336',
+                    color: '#f44336',
+                    textTransform: 'none',
+                    fontWeight: 500,
+                    '&:hover': {
+                      backgroundColor: '#fdecea',
+                      borderColor: '#d32f2f',
+                    },
+                  }}
+                >
                   Logout
-                </button>
+                </Button>
               </SignOutButton>
             ) : (
               <>
-                <Link to="/login?mode=signin" style={linkStyle}>
-                  <button className="text-xs px-2 py-1 rounded-full border-2 border-green-500 text-green-500 hover:bg-green-50 transition md:px-6 md:py-2">
-                    Login
-                  </button>
-                </Link>
-                <Link to="/login?mode=signup" style={linkStyle}>
-                  <button className="text-xs px-2 py-1 rounded-full bg-green-500 text-white hover:bg-green-600 transition md:px-6 md:py-2">
-                    Sign Up
-                  </button>
-                </Link>
+                <Button
+                  component={Link}
+                  to="/login?mode=signin"
+                  variant="outlined"
+                  sx={{
+                    borderColor: 'green',
+                    color: 'green',
+                    textTransform: 'none',
+                    fontWeight: 500,
+                    '&:hover': {
+                      backgroundColor: '#e8f5e9',
+                      borderColor: 'darkgreen',
+                    },
+                  }}
+                >
+                  Login
+                </Button>
+                <Button
+                  component={Link}
+                  to="/login?mode=signup"
+                  variant="contained"
+                  sx={{
+                    backgroundColor: 'green',
+                    color: '#fff',
+                    textTransform: 'none',
+                    fontWeight: 500,
+                    '&:hover': {
+                      backgroundColor: '#2e7d32',
+                    },
+                  }}
+                >
+                  Sign Up
+                </Button>
               </>
             )}
           </Box>
