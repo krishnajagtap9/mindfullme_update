@@ -7,8 +7,15 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 import { useTheme, useMediaQuery } from '@mui/material';
-
+import Item6 from './item6';
+// Import all your Item components
 import Item1 from './Item1';
+import Item2 from './Item2';
+import Item3 from './Item3';
+import Item4 from './Item4';
+import Item5 from './Item5';
+// import Item7 from './Item7';
+
 
 // Icons
 import { FaHome } from 'react-icons/fa';
@@ -135,13 +142,13 @@ export default function VerticalTabs() {
   };
 
   const tabsData = [
-    { label: 'Dashboard', icon: <FaHome /> },
-    { label: 'Library', icon: <MdOutlineLocalLibrary /> },
-    { label: 'Mood Tracker', icon: <TbMoodPlus /> },
-    { label: 'AI Suggestion', icon: <LuBot /> },
-    { label: 'Community', icon: <MdPeopleAlt /> },
-    { label: 'Games', icon: <CgGames /> },
-    { label: 'Support', icon: <IoSettingsOutline /> },
+    { label: 'Dashboard', icon: <FaHome />, component: <Item1 /> },
+    { label: 'Library', icon: <MdOutlineLocalLibrary />, component: <Item4 /> },
+    { label: 'Mood Tracker', icon: <TbMoodPlus />, component: <Item5 /> },
+    { label: 'AI Suggestion', icon: <LuBot />, component: <Item5 /> },
+    { label: 'Community', icon: <MdPeopleAlt />, component: <Item6 /> },
+    { label: 'Games', icon: <CgGames />, component: <Item2 /> },
+    { label: 'Support', icon: <IoSettingsOutline />, component: <Item3 /> },
   ];
 
   const showTabs = isLargeScreen || showTabsState;
@@ -150,24 +157,24 @@ export default function VerticalTabs() {
     <ThemeProvider theme={customTheme}>
       <Box sx={{ display: 'flex', height: '100vh', backgroundColor:"white" }}>
         {!isLargeScreen && (
-  <IconButton
-    onClick={toggleTabs}
-    sx={{
-      position: 'fixed',
-      top: 12,
-      left: 18,
-      zIndex: 1201,
-      backgroundColor: 'white',
-      border: '1px solid #ccc',
-      '&:hover': {
-        backgroundColor: '#f0f0f0',
-      },
-      display: 'block',
-    }}
-  >
-    {showTabsState ? <AiOutlineClose size={18} /> : <FiMenu size={18} />}
-  </IconButton>
-)}
+          <IconButton
+            onClick={toggleTabs}
+            sx={{
+              position: 'fixed',
+              top: 12,
+              left: 18,
+              zIndex: 1201,
+              backgroundColor: 'white',
+              border: '1px solid #ccc',
+              '&:hover': {
+                backgroundColor: '#f0f0f0',
+              },
+              display: 'block',
+            }}
+          >
+            {showTabsState ? <AiOutlineClose size={18} /> : <FiMenu size={18} />}
+          </IconButton>
+        )}
 
         {showTabs && (
           <Box
@@ -215,7 +222,7 @@ export default function VerticalTabs() {
         <Box
           sx={{
             flexGrow: 1,
-            bgcolor: 'bright-white',
+            bgcolor: '#F0F0F0',
             height: '100vh',
             overflow: 'hidden',
           }}
@@ -224,14 +231,7 @@ export default function VerticalTabs() {
             <TabPanel key={index} value={value} index={index}>
               <>
                 <Typography component="span" sx={{ display: 'none' }} label={tab.label} />
-                {tab.label === 'Dashboard' ? (
-                  <Item1 />
-                ) : (
-                  <Typography>
-                   {tab.label} 
-                    
-                  </Typography>
-                )}
+                {tab.component}
               </>
             </TabPanel>
           ))}

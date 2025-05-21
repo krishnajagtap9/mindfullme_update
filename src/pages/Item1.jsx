@@ -27,15 +27,13 @@ import { LuBot } from "react-icons/lu";
 
 export default function Dashboard() {
   return (
-    <div className="p-4 sm:p-6 lg:p-8 min-h-screen bg-gray-50 font-sans">
-      {/* Top Bar */}
+    <div className="p-4 sm:p-6 lg:p-8 min-h-screen font-sans bg-[#F0F0F0]">
       <div className="bg-green-100 py-4 px-4 sm:px-8 flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0 rounded-lg shadow-md mb-6">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Good Morning, Krish 👋</h1>
           <span className="text-sm text-gray-600">Ready to check in and care for your mind today?</span>
         </div>
         <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full md:w-auto">
-          {/* <FaLeaf className="text-green-600 text-2xl self-start sm:self-center" /> */}
           <button className="w-full sm:w-auto bg-green-600 text-white px-4 py-2 rounded-full flex justify-center items-center space-x-2 shadow-md hover:bg-green-700 transition duration-300">
             <LuSmilePlus />
             <span>Start Daily Check-in</span>
@@ -217,22 +215,7 @@ export default function Dashboard() {
           ))}
         </ul>
       </div>
-<hr  className='mt-6'/>
-   <div className="mt-12 px-4 text-xs text-gray-500 ">
-  <div className="flex flex-col items-center  sm:flex-row w-full justify-between text-[1rem]">
-      <div className="flex space-x-4">
-      <a href="#" className="hover:text-green-500">Privacy</a>
-      <a href="#" className="hover:text-green-500">Terms</a>
-      <a href="#" className="hover:text-green-500">Feedback</a>
-      <a href="#" className="hover:text-green-500">Contact</a>
-    </div>
 
-
-    <div className="mb-2 sm:mb-0 sm:mr-4">MindfulMe • Heal. Grow. Connect.</div>
-
-  
-  </div>
-</div>
     </div>
   );
 }
