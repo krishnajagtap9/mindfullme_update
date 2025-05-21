@@ -166,7 +166,7 @@ export default function MentalWellnessLibrary() {
   );
 
   return (
-    <div className=" min-h-screen px-6 py-10">
+    <div className=" min-h-screen px-6 py-10 border">
       <div className="max-w-7xl mx-auto bg-[#F0F0F0]">
         {/* Header */}
         <h1 className="md:text-4xl  text-2xl font-extrabold mb-2 text-gray-900 tracking-wide">
