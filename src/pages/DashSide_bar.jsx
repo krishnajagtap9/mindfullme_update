@@ -7,14 +7,14 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 import { useTheme, useMediaQuery } from '@mui/material';
-import Item6 from './item6';
+
 // Import all your Item components
 import Item1 from './Item1';
 import Item2 from './Item2';
 import Item3 from './Item3';
 import Item4 from './Item4';
 import Item5 from './Item5';
-// import Item7 from './Item7';
+import Item6 from './item6';
 
 
 // Icons
