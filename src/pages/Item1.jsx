@@ -1,0 +1,238 @@
+import React from 'react';
+import "../index.css"; // Assuming this imports any base Tailwind CSS setup
+
+// React Icons imports
+import {
+  FaCloudSun,
+  FaLeaf,
+  FaPlay,
+  FaRegLightbulb,
+  FaGripfire, // Used for streak icon
+  FaChevronRight
+} from 'react-icons/fa';
+import {
+  MdOutlineFavoriteBorder,
+  MdOutlineMenuBook,
+  MdOutlineHeadphones,
+  MdOutlineBedtime,
+  MdOutlineMail
+} from 'react-icons/md';
+import { LuSmilePlus, LuBrain } from "react-icons/lu"; // LuBrain for Memory Match
+import { RiFocus2Line } from "react-icons/ri"; // Focus Trainer
+import { IoMdHappy } from "react-icons/io"; // Emotion Recognition
+import { MdPeopleOutline } from "react-icons/md";
+import { FaCalendar } from "react-icons/fa";
+import { IoDocumentTextOutline } from "react-icons/io5";
+import { LuBot } from "react-icons/lu";
+
+export default function Dashboard() {
+  return (
+    <div className="p-4 sm:p-6 lg:p-8 min-h-screen bg-gray-50 font-sans">
+      {/* Top Bar */}
+      <div className="bg-green-100 py-4 px-4 sm:px-8 flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0 rounded-lg shadow-md mb-6">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Good Morning, Krish 👋</h1>
+          <span className="text-sm text-gray-600">Ready to check in and care for your mind today?</span>
+        </div>
+        <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full md:w-auto">
+          {/* <FaLeaf className="text-green-600 text-2xl self-start sm:self-center" /> */}
+          <button className="w-full sm:w-auto bg-green-600 text-white px-4 py-2 rounded-full flex justify-center items-center space-x-2 shadow-md hover:bg-green-700 transition duration-300">
+            <LuSmilePlus />
+            <span>Start Daily Check-in</span>
+          </button>
+          <button className="w-full sm:w-auto bg-green-500 text-white px-4 py-2 rounded-full flex justify-center items-center space-x-2 shadow-md hover:bg-green-600 transition duration-300">
+            <MdOutlineMail />
+            <span>Upgrade to Pro</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+        {/* Your Weekly Progress */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Your Weekly Progress</h2>
+          <p className="text-gray-600 mb-6">Track your mood patterns over time</p>
+          <div className="h-32 bg-gray-100 rounded-md flex items-center justify-center text-gray-400">
+      
+          </div>
+          <div className="mt-6 flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-6 text-gray-700 text-sm">
+            <div className="flex items-center space-x-2">
+              <IoDocumentTextOutline className="text-green-500" />
+              <span>12 mood entries this week</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <FaGripfire className="text-orange-500" />
+              <span>5-day check-in streak</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Today's Suggestion */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className='bg-[#ebfff2] w-full flex justify-center items-start p-4 rounded-md mb-4  flex-col'>  
+ <h2 className="text-xl font-semibold text-gray-800 mb-4  flex justify-center items-center gap-2 "><LuBot />Today's Suggestion</h2>
+          <p className="text-gray-600 mb-6">AI-powered recommendation for your wellbeing</p>
+
+          </div>
+         
+          <blockquote className="italic text-gray-700  border-green-500 pl-4 py-2">
+            "Take a 10-minute walk outside and listen to a nature playlist. Research shows that combining light exercise with nature sounds can significantly reduce stress hormones."
+          </blockquote>
+          <div className="mt-6 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+            <button className="border border-gray-300 text-gray-700 px-4 py-2 rounded-full flex items-center justify-center space-x-2 hover:bg-gray-100 transition duration-300">
+              <MdOutlineFavoriteBorder />
+              <span>Save</span>
+            </button>
+            <button className="border border-gray-300 text-gray-700 px-4 py-2 rounded-full flex items-center justify-center space-x-2 hover:bg-gray-100 transition duration-300">
+              <FaRegLightbulb />
+              <span>Regenerate</span>
+            </button>
+            <button className="bg-green-600 text-white px-6 py-2 rounded-full flex items-center justify-center space-x-2 shadow-md hover:bg-green-700 transition duration-300">
+              <FaPlay />
+              <span>Try Now</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Calming Resources */}
+      <div className="p-4 sm:p-8 mt-6 bg-white rounded-lg shadow-md">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 space-y-2 sm:space-y-0">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Calming Resources</h2>
+          <button className="text-green-600 flex items-center space-x-1 hover:underline">
+            <span>Go to Library</span>
+            <FaChevronRight />
+          </button>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
+          {/* Resource Cards */}
+          {[
+            { icon: <MdOutlineHeadphones className="text-purple-600 text-2xl" />, title: "Lo-Fi Music", desc: "Calm beats for focus and relaxation", bg: "bg-purple-100" },
+            { icon: <FaCloudSun className="text-blue-600 text-2xl" />, title: "Rain Sounds", desc: "Soothing ambient rain for sleep", bg: "bg-blue-100" },
+            { icon: <FaLeaf className="text-green-600 text-2xl" />, title: "Guided Meditation", desc: "10-minute mindfulness sessions", bg: "bg-green-100" },
+            { icon: <MdOutlineMenuBook className="text-yellow-600 text-2xl" />, title: "Self-help Reads", desc: "Articles and book summaries", bg: "bg-yellow-100" },
+            { icon: <MdOutlineBedtime className="text-indigo-600 text-2xl" />, title: "Sleep Stories", desc: "Calming narratives for bedtime", bg: "bg-indigo-100" },
+          ].map((res, i) => (
+            <div key={i} className="bg-white p-6 rounded-lg shadow-md flex flex-col items-start text-center">
+              <div className={`${res.bg} p-3 rounded-full mb-4`}>
+                {res.icon}
+              </div>
+              <h3 className="font-semibold text-gray-800 text-lg mb-1">{res.title}</h3>
+              <p className="text-gray-600 text-sm">{res.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Games & Community */}
+      <div className="p-4 sm:p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Games Section - Updated Content */}
+        <div className="bg-white rounded-lg shadow-md p-6 flex flex-col">
+          <h2 className="text-lg md:text-2xl font-bold mb-4 text-gray-800">Games for Mental Flexibility</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 flex-grow">
+            {/* Memory Match Card */}
+            <div className="bg-gray-50 rounded-lg shadow-sm p-4 text-center flex flex-col items-center justify-between">
+              <div className="bg-blue-100 rounded-full p-3 shadow-md mb-2">
+                <LuBrain className="text-blue-600 text-3xl" />
+              </div>
+              <h3 className="font-semibold text-gray-700 text-base sm:text-lg mb-1">Memory Match</h3>
+              <p className="text-sm text-gray-600">
+                Train your memory with card matching
+              </p>
+            </div>
+
+            {/* Focus Trainer Card */}
+            <div className="bg-gray-50 rounded-lg shadow-sm p-4 text-center flex flex-col items-center justify-between">
+              <div className="bg-purple-100 rounded-full p-3 shadow-md mb-2">
+                <RiFocus2Line className="text-purple-600 text-3xl" />
+              </div>
+              <h3 className="font-semibold text-gray-700 text-base sm:text-lg mb-1">Focus Trainer</h3>
+              <p className="text-sm text-gray-600">
+                Improve concentration with timed exercises
+              </p>
+            </div>
+
+            {/* Emotion Recognition Card */}
+            <div className="bg-gray-50 rounded-lg shadow-sm p-4 text-center flex flex-col items-center justify-between">
+              <div className="bg-green-100 rounded-full p-3 shadow-md mb-2">
+                <IoMdHappy className="text-green-600 text-3xl" />
+              </div>
+              <h3 className="font-semibold text-gray-700 text-base sm:text-lg mb-1">Emotion Recognition</h3>
+              <p className="text-sm text-gray-600">
+                Practice identifying emotional expressions
+              </p>
+            </div>
+          </div>
+          <div className='w-full flex justify-center items-center mt-6'>
+            <button className="w-fit sm:w-auto px-6 py-3 rounded-md bg-green-500 text-white font-medium hover:bg-green-600 transition-all duration-300 shadow-lg">
+              Play Now
+            </button>
+          </div>
+        </div>
+
+        {/* Community Posts */}
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-lg md:text-2xl font-bold mb-4 text-gray-800 flex flex-nowrap justify-start gap-4 items-center"> <MdPeopleOutline />What Others Are Talking About</h2>
+          <ul className="flex-grow">
+            {[
+              { title: "How do you handle social anxiety?", meta: "24 replies · Active 2 hours ago" },
+              { title: "My favorite ASMR picks", meta: "18 replies · Active 5 hours ago" },
+              { title: "Mindfulness techniques for beginners", meta: "32 replies · Active 1 day ago" },
+            ].map((item, i) => (
+              <React.Fragment key={item.title}>
+                <li className="py-2 border-2 border-gray-200 rounded-md cursor-pointer px-2 hover:border-green-400 transition duration-200">
+                  <p className="font-medium text-gray-700">{item.title}</p>
+                  <p className="text-sm text-gray-500">{item.meta}</p>
+                </li>
+                {i < 2 && <hr className="my-2 border-gray-200" />}
+              </React.Fragment>
+            ))}
+          </ul>
+          <div className='flex justify-center items-center '>
+ <button className="mt-6  w-fit px-6 py-3 rounded-md border border-gray-300 text-gray-700 font-medium hover:bg-gray-100 transition-all duration-300 shadow-sm">
+            Join the Discussion
+          </button>
+          </div>
+         
+        </div>
+      </div>
+
+      {/* Events */}
+      <div className="p-4 sm:p-8 mt-6 bg-white rounded-lg shadow-md">
+        <h2 className="text-lg sm:text-xl font-semibold mb-4 text-gray-800 md:text-2xl md:font-bold  flex justify-start gap-2 items-center"> <FaCalendar/>Upcoming Events & Reminders</h2>
+        <ul>
+          {[
+            { title: "📅 Group Session – Mindful Monday", time: "Today at 7:00 AM" },
+            { title: "📝 Journal before 10 PM tonight", time: "Today at 10:00 PM" },
+            { title: "📊 Weekly Progress Review", time: "Tomorrow at 9:00 AM" },
+          ].map((item, i) => (
+            <React.Fragment key={i}>
+              <li className="py-2 border-2 border-gray-200 rounded-md cursor-pointer px-2 hover:border-green-400 transition duration-200">
+                <p className="font-medium text-gray-700">{item.title}</p>
+                <p className="text-sm text-gray-500">{item.time}</p>
+              </li>
+              {i < 2 && <hr className="my-2 border-gray-200" />}
+            </React.Fragment>
+          ))}
+        </ul>
+      </div>
+<hr  className='mt-6'/>
+   <div className="mt-12 px-4 text-xs text-gray-500 ">
+  <div className="flex flex-col items-center  sm:flex-row w-full justify-between text-[1rem]">
+      <div className="flex space-x-4">
+      <a href="#" className="hover:text-green-500">Privacy</a>
+      <a href="#" className="hover:text-green-500">Terms</a>
+      <a href="#" className="hover:text-green-500">Feedback</a>
+      <a href="#" className="hover:text-green-500">Contact</a>
+    </div>
+
+
+    <div className="mb-2 sm:mb-0 sm:mr-4">MindfulMe • Heal. Grow. Connect.</div>
+
+  
+  </div>
+</div>
+    </div>
+  );
+}

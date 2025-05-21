@@ -1,5 +1,6 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { SignedIn, SignedOut } from '@clerk/clerk-react';
+import React, { useEffect } from 'react';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { SignedIn, SignedOut, useClerk } from '@clerk/clerk-react';
 
 import './App.css';
 import Nav from './component/Nav.jsx';
@@ -8,39 +9,87 @@ import About from './component/About.jsx';
 import Footer from './component/Footer.jsx';
 import Contact from './component/Contact.jsx';
 import ScrollToTop from './Scrolltotop.jsx';
-import Need_login from './pages/Need_login.jsx';
 import Login from './component/Login.jsx';
+import Dashboard from './component/Dashboard.jsx';
 
 function App() {
+  const navigate = useNavigate();
+  const { isSignedIn } = useClerk();
+
+  useEffect(() => {
+    const checkAuthAndNavigate = () => {
+      if (isSignedIn) {
+        // If signed in, always go to /dashboard, no matter what the user tries to access
+        if (window.location.pathname !== '/dashboard') {
+          navigate('/dashboard');
+        }
+      } else {
+        // If signed out, allow access to public routes, and redirect from dashboard
+        if (window.location.pathname === '/dashboard') {
+          navigate('/login'); // Or any other page you want the user to go
+        }
+      }
+    };
+
+    checkAuthAndNavigate();
+  }, [isSignedIn, navigate]);
+
   return (
     <>
       <Nav />
       <ScrollToTop />
 
       <Routes>
-        
-                <Route path='/login' element={<Login/>} />
-
+        {/* Public Routes (only accessible when signed out) */}
         <Route
-          path='/*'
+          path='/login'
+          element={
+            <SignedOut>
+              <Login />
+            </SignedOut>
+          }
+        />
+        <Route
+          path='/'
+          element={
+            <SignedOut>
+              <Home />
+            </SignedOut>
+          }
+        />
+        <Route
+          path='/about'
+          element={
+            <SignedOut>
+              <About />
+            </SignedOut>
+          }
+        />
+        <Route
+          path='/contact'
+          element={
+             <SignedOut>
+              <Contact />
+            </SignedOut>
+          }
+        />
+
+        {/* Protected Dashboard Route (only accessible when signed in) */}
+        <Route
+          path='/dashboard'
           element={
             <SignedIn>
-              <Routes>
-        <Route path='/' element={<Home />} />
-
-                <Route path='/About' element={<About />} />
-                <Route path='/Contact' element={<Contact />} />
-                <Route path='/need_login' element={<Need_login />} />
-              </Routes>
+              <Dashboard />
             </SignedIn>
           }
         />
 
+        {/* Redirect all other routes to login when signed out */}
         <Route
           path='/*'
           element={
             <SignedOut>
-              <Navigate to='/need_login' />
+              <Navigate to='/login' />
             </SignedOut>
           }
         />
