@@ -7,9 +7,8 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
-mongoose.connect(
-  "mongodb+srv://jagtapkrishna987:5kA0Jaosy92EruIU@community.nilj4fs.mongodb.net/community_mindfullme?retryWrites=true&w=majority&appName=community"
-)
+mongoose
+  .connect("mongodb+srv://jagtapkrishna987:5kA0Jaosy92EruIU@community.nilj4fs.mongodb.net/community_mindfullme?retryWrites=true&w=majority&appName=community")
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.log(err));
 
@@ -18,6 +17,7 @@ const commentSchema = new mongoose.Schema({
   name: String,
   text: String,
   time: Date,
+  imageUrl: String, // optional: profile image for commenter
 });
 
 // Post Schema
@@ -25,6 +25,7 @@ const postSchema = new mongoose.Schema(
   {
     name: String,
     text: String,
+    imageUrl: String, // profile image of poster
     tags: [String],
     likes: { type: Number, default: 0 },
     comments: { type: [commentSchema], default: [] },
@@ -48,6 +49,7 @@ app.post("/posts", async (req, res) => {
       name: req.body.name,
       text: req.body.text,
       tags: req.body.tags || [],
+      imageUrl: req.body.imageUrl || "", // store image
     });
     await post.save();
     res.json(post);
@@ -73,11 +75,11 @@ app.patch("/posts/:id/like", async (req, res) => {
 // Add a comment to a post
 app.post("/posts/:id/comment", async (req, res) => {
   try {
-    const { name, text } = req.body;
+    const { name, text, imageUrl } = req.body;
     const post = await Post.findById(req.params.id);
     if (!post) return res.status(404).json({ error: "Post not found" });
 
-    const newComment = { name, text, time: new Date() };
+    const newComment = { name, text, time: new Date(), imageUrl };
     post.comments.push(newComment);
     post.commentsCount = post.comments.length;
 

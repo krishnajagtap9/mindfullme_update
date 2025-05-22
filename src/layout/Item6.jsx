@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { FaUserCircle, FaHeart, FaComment, FaBookmark } from "react-icons/fa";
+import {
+  FaUserCircle,
+  FaHeart,
+  FaComment,
+  FaBookmark,
+} from "react-icons/fa";
 import { LuSmilePlus } from "react-icons/lu";
 import { useUser } from "@clerk/clerk-react";
 import moment from "moment";
 
 const Item6 = () => {
-  const { user } = useUser();
+  const { user, isLoaded, isSignedIn } = useUser();
   const userName = user?.fullName || "Anonymous";
+  const userProfileImageUrl = user?.imageUrl || "";
 
   const [posts, setPosts] = useState([]);
   const [newPost, setNewPost] = useState("");
   const [commentInputs, setCommentInputs] = useState({});
-  const [savedPosts, setSavedPosts] = useState([]);
 
   useEffect(() => {
     fetchPosts();
@@ -22,16 +27,19 @@ const Item6 = () => {
     axios
       .get("http://localhost:5000/posts")
       .then((res) => setPosts(res.data))
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err));
   };
 
   const handlePost = () => {
     if (!newPost.trim()) return;
+
     const postData = {
       name: userName,
       text: newPost,
       tags: ["General"],
+      imageUrl: userProfileImageUrl,
     };
+
     axios.post("http://localhost:5000/posts", postData).then((res) => {
       setPosts([res.data, ...posts]);
       setNewPost("");
@@ -50,11 +58,12 @@ const Item6 = () => {
 
   const handleCommentSubmit = (postId) => {
     const commentText = commentInputs[postId];
-    if (!commentText || !commentText.trim()) return;
+    if (!commentText?.trim()) return;
 
     const commentData = {
       name: userName,
       text: commentText,
+      imageUrl: userProfileImageUrl,
     };
 
     axios
@@ -65,10 +74,25 @@ const Item6 = () => {
       });
   };
 
+  if (!isLoaded) return <div className="p-4 text-center">Loading user data...</div>;
+  if (!isSignedIn) return <div className="p-4 text-center text-gray-600">Please sign in to create and view posts.</div>;
+
   return (
     <div className="flex flex-col min-h-screen p-4 gap-4 bg-[#F0F0F0]">
       {/* Create Post */}
       <div className="p-4 rounded-lg shadow-md bg-white">
+        <div className="flex items-center gap-3 mb-3">
+          {userProfileImageUrl ? (
+            <img
+              src={userProfileImageUrl}
+              alt="User Profile"
+              className="w-10 h-10 rounded-full object-cover"
+            />
+          ) : (
+            <FaUserCircle className="text-gray-400 text-3xl" />
+          )}
+          <span className="font-semibold text-gray-800">{userName}</span>
+        </div>
         <textarea
           value={newPost}
           onChange={(e) => setNewPost(e.target.value)}
@@ -91,22 +115,36 @@ const Item6 = () => {
         </div>
       </div>
 
-      {/* Posts */}
+      {/* Posts List */}
       {posts.map((post) => (
         <div key={post._id} className="bg-white p-4 rounded-lg shadow-md">
-          <p className="font-semibold text-gray-800">
-            {post.name}
-            <span className="text-sm text-gray-500 ml-2">
-              {moment(post.createdAt).fromNow()}
-            </span>
-          </p>
+          <div className="flex items-center gap-3 mb-2">
+            <img
+              src={
+                post.imageUrl
+                  ? post.imageUrl
+                  : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                      post.name
+                    )}&background=random`
+              }
+              className="w-9 h-9 rounded-full object-cover"
+              alt="Post Author"
+            />
+            <div>
+              <p className="font-semibold text-gray-800">{post.name}</p>
+              <p className="text-xs text-gray-500">
+                {moment(post.createdAt).fromNow()}
+              </p>
+            </div>
+          </div>
+
           <p className="mt-2 text-gray-700 text-sm">{post.text}</p>
 
           {/* Tags */}
           <div className="flex flex-wrap gap-2 mt-2">
-            {post.tags?.map((tag, j) => (
+            {post.tags?.map((tag, i) => (
               <span
-                key={j}
+                key={i}
                 className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full"
               >
                 #{tag}
@@ -122,11 +160,9 @@ const Item6 = () => {
             >
               <FaHeart /> {post.likes}
             </button>
-
             <span className="flex items-center gap-1">
               <FaComment /> {post.commentsCount}
             </span>
-
             <button className="flex items-center gap-1 hover:text-yellow-500 transition">
               <FaBookmark /> Save
             </button>
@@ -138,9 +174,7 @@ const Item6 = () => {
               type="text"
               placeholder="Add a comment..."
               value={commentInputs[post._id] || ""}
-              onChange={(e) =>
-                handleCommentChange(post._id, e.target.value)
-              }
+              onChange={(e) => handleCommentChange(post._id, e.target.value)}
               className="w-full border border-gray-300 rounded p-1 text-sm"
             />
             <button
@@ -153,12 +187,27 @@ const Item6 = () => {
 
           {/* Show Comments */}
           <div className="mt-3 space-y-2">
-            {post.comments.slice().reverse().map((cmt, idx) => (
-              <div key={idx} className="border-t pt-2 text-sm text-gray-700">
-                <span className="font-semibold">{cmt.name}:</span>{" "}
-                {cmt.text}
-                <div className="text-xs text-gray-500">
-                  {moment(cmt.time).fromNow()}
+            {post.comments.slice().reverse().map((cmt, i) => (
+              <div key={i} className="flex items-start gap-2">
+                <img
+                  src={
+                    cmt.imageUrl
+                      ? cmt.imageUrl
+                      : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                          cmt.name
+                        )}&background=random`
+                  }
+                  alt="Commenter"
+                  className="w-6 h-6 rounded-full mt-1"
+                />
+                <div>
+                  <p className="text-sm">
+                    <span className="font-semibold">{cmt.name}</span>:{" "}
+                    {cmt.text}
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    {moment(cmt.time).fromNow()}
+                  </p>
                 </div>
               </div>
             ))}
