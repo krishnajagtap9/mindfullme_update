@@ -44,6 +44,7 @@ const PostSchema = new mongoose.Schema({
   userId: String,
   likes: [String],
   comments: [CommentSchema],
+  savedBy: [String], // <-- Add this line
 }, { timestamps: true });
 
 const Post = mongoose.model('Post', PostSchema);
@@ -184,6 +185,53 @@ app.delete('/api/posts/:id', async (req, res) => {
     res.status(500).json({ error: 'Failed to delete post' });
   }
 });
+
+
+
+
+
+app.patch('/api/posts/:id/save', async (req, res) => {
+  try {
+    const { userId } = req.body;
+    if (!userId) return res.status(400).json({ error: 'User ID required' });
+
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ error: 'Post not found' });
+
+    const alreadySaved = post.savedBy.includes(userId);
+    if (alreadySaved) {
+      post.savedBy = post.savedBy.filter(id => id !== userId);
+    } else {
+      post.savedBy.push(userId);
+    }
+    await post.save();
+
+    const postObject = post.toObject();
+    postObject.likes = post.likes.length;
+    postObject.commentsCount = post.comments.reduce((acc, c) => acc + 1 + c.replies.length, 0);
+    postObject.savedBy = post.savedBy;
+    res.json(postObject);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to toggle save' });
+  }
+});
+
+// Get all posts saved by a user
+app.get('/api/posts/saved/:userId', async (req, res) => {
+  try {
+    const posts = await Post.find({ savedBy: req.params.userId }).sort({ createdAt: -1 });
+    const postsWithCounts = posts.map(post => ({
+      ...post.toObject(),
+      commentsCount: post.comments.reduce((acc, c) => acc + 1 + c.replies.length, 0),
+      likes: post.likes.length,
+      savedBy: post.savedBy,
+    }));
+    res.json(postsWithCounts);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch saved posts' });
+  }
+});
+
 
 // Start server
 const PORT = process.env.PORT || 5000;

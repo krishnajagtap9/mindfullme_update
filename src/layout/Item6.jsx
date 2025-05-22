@@ -5,6 +5,7 @@ import {
   FaHeart,
   FaComment,
   FaBookmark,
+  FaRegBookmark,
   FaReply,
   FaTrash,
   FaEdit,
@@ -37,7 +38,9 @@ const emojiList = [
   "🎉",
 ];
 
+// Use your deployed API or local as needed
 const API_URL = "https://mindfullme-update-q1z8.onrender.com/api/posts";
+// const API_URL = "http://localhost:5000/api/posts";
 
 const Item6 = () => {
   const { user, isLoaded, isSignedIn } = useUser();
@@ -50,6 +53,7 @@ const Item6 = () => {
   const [commentInputs, setCommentInputs] = useState({});
   const [replyInputs, setReplyInputs] = useState({});
   const [likedPosts, setLikedPosts] = useState({});
+  const [savedMap, setSavedMap] = useState({});
   const [postTags, setPostTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -57,7 +61,7 @@ const Item6 = () => {
   const [editingPostId, setEditingPostId] = useState(null);
   const [editPostText, setEditPostText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState("newest"); // newest, trending, description
+  const [sortBy, setSortBy] = useState("newest");
 
   useEffect(() => {
     if (userId) {
@@ -72,15 +76,17 @@ const Item6 = () => {
       .then((res) => {
         setPosts(res.data);
         const initialLikedPosts = {};
+        const initialSavedMap = {};
         res.data.forEach((post) => {
-          if (
-            (Array.isArray(post.likes) && post.likes.includes(userId)) ||
-            (typeof post.likes === "number" && post.likes > 0)
-          ) {
+          if (Array.isArray(post.likes) && post.likes.includes(userId)) {
             initialLikedPosts[post._id] = true;
+          }
+          if (Array.isArray(post.savedBy) && post.savedBy.includes(userId)) {
+            initialSavedMap[post._id] = true;
           }
         });
         setLikedPosts(initialLikedPosts);
+        setSavedMap(initialSavedMap);
       })
       .catch((err) => console.error(err));
   };
@@ -88,9 +94,8 @@ const Item6 = () => {
   // Like/Unlike feature
   const handleLike = (postId) => {
     const liked = likedPosts[postId];
-    const url = `${API_URL}/${postId}/like`;
     axios
-      .patch(url, { userId })
+      .patch(`${API_URL}/${postId}/like`, { userId })
       .then((res) => {
         setPosts((prev) =>
           prev.map((post) => (post._id === postId ? res.data : post))
@@ -98,6 +103,26 @@ const Item6 = () => {
         setLikedPosts((prev) => ({ ...prev, [postId]: !liked }));
       })
       .catch((err) => console.error(err));
+  };
+
+  // Save/Unsave feature (reference: Item7.jsx)
+  const handleSave = (postId, isSaved) => {
+    if (!userId) {
+      alert("Please log in to save posts.");
+      return;
+    }
+    axios
+      .patch(`${API_URL}/${postId}/save`, { userId })
+      .then((res) => {
+        setSavedMap((prev) => ({ ...prev, [postId]: !isSaved }));
+        setPosts((prev) =>
+          prev.map((post) => (post._id === postId ? res.data : post))
+        );
+      })
+      .catch((err) => {
+        console.error("Error saving/unsaving post:", err);
+        alert("Failed to save/unsave post. Please try again.");
+      });
   };
 
   const handlePost = () => {
@@ -277,8 +302,6 @@ const Item6 = () => {
 
   return (
     <div className="flex flex-col min-h-screen p-4 gap-4 bg-[#F0F0F0]">
-   
-
       {/* Create Post */}
       <div className="p-4 rounded-lg shadow-md bg-white">
         <div className="flex items-center gap-3 mb-3">
@@ -375,57 +398,56 @@ const Item6 = () => {
         </div>
       </div>
 
+      <div className="flex flex-col md:flex-row gap-4 mb-6 p-4 bg-white rounded-lg shadow-md">
+        {/* Search Input */}
+        <div className="relative flex-1">
+          <input
+            type="text"
+            placeholder="Search discussions..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700 placeholder-gray-400 transition duration-200 ease-in-out text-sm"
+          />
+          <svg
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            width="20"
+            height="20"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+        </div>
 
-<div className="flex flex-col md:flex-row gap-4 mb-6 p-4 bg-white rounded-lg shadow-md">
-  {/* Search Input */}
-  <div className="relative flex-1">
-    <input
-      type="text"
-      placeholder="Search discussions..."
-      value={searchTerm}
-      onChange={handleSearchChange}
-      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700 placeholder-gray-400 transition duration-200 ease-in-out text-sm"
-    />
-    <svg
-      className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      width="20"
-      height="20"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-      />
-    </svg>
-  </div>
-
-  {/* Sort Select */}
-  <div className="relative">
-    <select
-      value={sortBy}
-      onChange={handleSortChange}
-      className="appearance-none w-full md:w-auto pr-8 pl-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out cursor-pointer text-sm"
-    >
-      <option value="newest">Sort by: Newest</option>
-      <option value="trending">Most Trending</option>
-      <option value="description">By Description</option>
-    </select>
-    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-      <svg
-        className="fill-current h-4 w-4"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 20 20"
-      >
-        <path d="M9.293 12.95l.707.707 3.536-3.536L12.536 9.293 10 11.828l-2.536-2.535z" />
-      </svg>
-    </div>
-  </div>
-</div>
+        {/* Sort Select */}
+        <div className="relative">
+          <select
+            value={sortBy}
+            onChange={handleSortChange}
+            className="appearance-none w-full md:w-auto pr-8 pl-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out cursor-pointer text-sm"
+          >
+            <option value="newest">Sort by: Newest</option>
+            <option value="trending">Most Trending</option>
+            <option value="description">By Description</option>
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+            <svg
+              className="fill-current h-4 w-4"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+            >
+              <path d="M9.293 12.95l.707.707 3.536-3.536L12.536 9.293 10 11.828l-2.536-2.535z" />
+            </svg>
+          </div>
+        </div>
+      </div>
 
       {/* Posts List */}
       {filteredPosts.map((post) => (
@@ -522,8 +544,15 @@ const Item6 = () => {
             <span className="flex items-center gap-1">
               <FaComment /> {post.commentsCount}
             </span>
-            <button className="flex items-center gap-1 hover:text-yellow-500 transition">
-              <FaBookmark /> Save
+            <button
+              onClick={() => handleSave(post._id, !!savedMap[post._id])}
+              className={`flex items-center gap-1 transition ${
+                savedMap[post._id] ? "text-yellow-500" : "hover:text-yellow-500"
+              }`}
+              title={savedMap[post._id] ? "Unsave" : "Save"}
+            >
+              {savedMap[post._id] ? <FaBookmark /> : <FaRegBookmark />}{" "}
+              {savedMap[post._id] ? "Saved" : "Save"}
             </button>
           </div>
 

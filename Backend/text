@@ -17,3 +17,9 @@ View full code sample
 Show Password
 
 mongodb+srv://jagtapkrishna987:5kA0Jaosy92EruIU@community.nilj4fs.mongodb.net/?retryWrites=true&w=majority&appName=community
+
+
+
+
+
+const API_URL = "https://mindfullme-update-q1z8.onrender.com/api/posts";
