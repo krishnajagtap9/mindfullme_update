@@ -31,7 +31,6 @@ import Image7 from '../images/image7.png';
 
 
 
-
 const Home = () => {
 const images = [Image1, Image2, Image3, Image4, Image5, Image6, Image7];
  const [currentImage, setCurrentImage] = useState(0);
