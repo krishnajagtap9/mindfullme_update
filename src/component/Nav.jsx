@@ -58,7 +58,7 @@ function ResponsiveAppBar() {
             </Typography>
           </Box>
 
-          {/* Mobile Menu Icon - Hide if signed in */}
+          {/* Mobile Menu Icon - Hide if signed in (already implemented correctly) */}
           <Box
             sx={{
               display: { xs: isSignedIn ? 'none' : 'flex', md: 'none' },
@@ -145,7 +145,8 @@ function ResponsiveAppBar() {
                 </Button>
               </SignOutButton>
             ) : (
-              <>
+              // This block only renders when isSignedIn is FALSE
+              <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 2 }}> {/* Modified line */}
                 <Button
                   component={Link}
                   to="/login?mode=signin"
@@ -179,7 +180,7 @@ function ResponsiveAppBar() {
                 >
                   Sign Up
                 </Button>
-              </>
+              </Box>
             )}
           </Box>
         </Toolbar>
