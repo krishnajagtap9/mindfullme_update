@@ -25,7 +25,7 @@ const Item6 = () => {
 
   const fetchPosts = () => {
     axios
-      .get("http://localhost:5000/posts")
+      .get("https://mindfullme-update-q1z8.onrender.com/posts")
       .then((res) => setPosts(res.data))
       .catch((err) => console.error(err));
   };
@@ -40,16 +40,20 @@ const Item6 = () => {
       imageUrl: userProfileImageUrl,
     };
 
-    axios.post("http://localhost:5000/posts", postData).then((res) => {
-      setPosts([res.data, ...posts]);
-      setNewPost("");
-    });
+    axios
+      .post("https://mindfullme-update-q1z8.onrender.com/posts", postData)
+      .then((res) => {
+        setPosts([res.data, ...posts]);
+        setNewPost("");
+      });
   };
 
   const handleLike = (postId) => {
-    axios.patch(`http://localhost:5000/posts/${postId}/like`).then((res) => {
-      setPosts(posts.map((post) => (post._id === postId ? res.data : post)));
-    });
+    axios
+      .patch(`https://mindfullme-update-q1z8.onrender.com/posts/${postId}/like`)
+      .then((res) => {
+        setPosts(posts.map((post) => (post._id === postId ? res.data : post)));
+      });
   };
 
   const handleCommentChange = (postId, text) => {
@@ -67,15 +71,21 @@ const Item6 = () => {
     };
 
     axios
-      .post(`http://localhost:5000/posts/${postId}/comment`, commentData)
+      .post(`https://mindfullme-update-q1z8.onrender.com/posts/${postId}/comment`, commentData)
       .then((res) => {
         setPosts(posts.map((post) => (post._id === postId ? res.data : post)));
         setCommentInputs({ ...commentInputs, [postId]: "" });
       });
   };
 
-  if (!isLoaded) return <div className="p-4 text-center">Loading user data...</div>;
-  if (!isSignedIn) return <div className="p-4 text-center text-gray-600">Please sign in to create and view posts.</div>;
+  if (!isLoaded)
+    return <div className="p-4 text-center">Loading user data...</div>;
+  if (!isSignedIn)
+    return (
+      <div className="p-4 text-center text-gray-600">
+        Please sign in to create and view posts.
+      </div>
+    );
 
   return (
     <div className="flex flex-col min-h-screen p-4 gap-4 bg-[#F0F0F0]">
@@ -123,9 +133,7 @@ const Item6 = () => {
               src={
                 post.imageUrl
                   ? post.imageUrl
-                  : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                      post.name
-                    )}&background=random`
+                  : `https://ui-avatars.com/api/?name=${encodeURIComponent(post.name)}&background=random`
               }
               className="w-9 h-9 rounded-full object-cover"
               alt="Post Author"
@@ -187,15 +195,13 @@ const Item6 = () => {
 
           {/* Show Comments */}
           <div className="mt-3 space-y-2">
-            {post.comments.slice().reverse().map((cmt, i) => (
+            {post.comments?.slice().reverse().map((cmt, i) => (
               <div key={i} className="flex items-start gap-2">
                 <img
                   src={
                     cmt.imageUrl
                       ? cmt.imageUrl
-                      : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                          cmt.name
-                        )}&background=random`
+                      : `https://ui-avatars.com/api/?name=${encodeURIComponent(cmt.name)}&background=random`
                   }
                   alt="Commenter"
                   className="w-6 h-6 rounded-full mt-1"
