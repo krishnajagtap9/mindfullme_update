@@ -9,13 +9,13 @@ app.use(express.json());
 
 mongoose.set('strictQuery', false);
 
-// Connect to MongoDB Atlas
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
+// Connect to MongoDB Atlas (No deprecated options)
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('✅ MongoDB connected successfully'))
-  .catch(err => console.error('❌ MongoDB connection error:', err));
+  .catch(err => {
+    console.error('❌ MongoDB connection error:', err);
+    process.exit(1); // Optional: Exit if DB fails
+  });
 
 // Schemas
 const ReplySchema = new mongoose.Schema({
@@ -43,7 +43,7 @@ const PostSchema = new mongoose.Schema({
   imageUrl: String,
   userId: String,
   likes: [String],
-  comments: [CommentSchema]
+  comments: [CommentSchema],
 }, { timestamps: true });
 
 const Post = mongoose.model('Post', PostSchema);
@@ -65,7 +65,7 @@ app.get('/api/posts', async (req, res) => {
   }
 });
 
-// Create a new post
+// Create post
 app.post('/api/posts', async (req, res) => {
   try {
     const { name, text, tags, imageUrl, userId } = req.body;
@@ -80,7 +80,7 @@ app.post('/api/posts', async (req, res) => {
   }
 });
 
-// Toggle like
+// Like toggle
 app.patch('/api/posts/:id/like', async (req, res) => {
   try {
     const { userId } = req.body;
@@ -184,5 +184,5 @@ app.patch('/api/posts/:id', async (req, res) => {
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
