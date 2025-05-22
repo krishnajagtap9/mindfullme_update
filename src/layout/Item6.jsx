@@ -11,6 +11,7 @@ import {
   FaEdit,
   FaCheck,
   FaTimes,
+  FaPlus,
 } from "react-icons/fa";
 import { LuSmilePlus } from "react-icons/lu";
 import { useUser } from "@clerk/clerk-react";
@@ -38,7 +39,6 @@ const emojiList = [
   "🎉",
 ];
 
-// Use your deployed API or local as needed
 const API_URL = "https://mindfullme-update-q1z8.onrender.com/api/posts";
 // const API_URL = "http://localhost:5000/api/posts";
 
@@ -62,6 +62,9 @@ const Item6 = () => {
   const [editPostText, setEditPostText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("newest");
+
+  // Modal state for create post
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   useEffect(() => {
     if (userId) {
@@ -91,7 +94,6 @@ const Item6 = () => {
       .catch((err) => console.error(err));
   };
 
-  // Like/Unlike feature
   const handleLike = (postId) => {
     const liked = likedPosts[postId];
     axios
@@ -105,7 +107,6 @@ const Item6 = () => {
       .catch((err) => console.error(err));
   };
 
-  // Save/Unsave feature (reference: Item7.jsx)
   const handleSave = (postId, isSaved) => {
     if (!userId) {
       alert("Please log in to save posts.");
@@ -152,6 +153,7 @@ const Item6 = () => {
         setTagInput("");
         setSelectedEmoji("");
         setShowEmojiPicker(false);
+        setShowCreateModal(false);
       })
       .catch((err) => console.error(err));
   };
@@ -204,7 +206,6 @@ const Item6 = () => {
       .catch((err) => console.error(err));
   };
 
-  // --- Tag Handling Functions ---
   const handleAddSuggestedTag = (tag) => {
     if (!postTags.includes(tag)) {
       setPostTags([...postTags, tag]);
@@ -219,7 +220,6 @@ const Item6 = () => {
     setTagInput(e.target.value);
   };
 
-  // --- Post Delete ---
   const handleDeletePost = (postId) => {
     if (!window.confirm("Are you sure you want to delete this post?")) return;
     axios
@@ -230,7 +230,6 @@ const Item6 = () => {
       .catch((err) => console.error(err));
   };
 
-  // --- Post Edit ---
   const handleEditPost = (post) => {
     setEditingPostId(post._id);
     setEditPostText(post.text);
@@ -255,13 +254,11 @@ const Item6 = () => {
     setEditPostText("");
   };
 
-  // --- Emoji Picker for Share ---
   const handleShareEmoji = (emoji) => {
     setSelectedEmoji(emoji);
     setShowEmojiPicker(false);
   };
 
-  // --- Search and Sort ---
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -270,7 +267,6 @@ const Item6 = () => {
     setSortBy(e.target.value);
   };
 
-  // --- Filtered and Sorted Posts ---
   let filteredPosts = posts.filter((post) =>
     post.text?.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -302,9 +298,124 @@ const Item6 = () => {
 
   return (
     <div className="flex flex-col min-h-screen p-4 gap-4 bg-[#F0F0F0]">
-  
+      {/* Sticky + Button */}
+      <button
+        className="fixed bottom-8 right-8 z-50 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg w-14 h-14 flex items-center justify-center text-3xl transition"
+        onClick={() => setShowCreateModal(true)}
+        title="Create Post"
+        style={{ boxShadow: "0 4px 16px rgba(0,0,0,0.15)" }}
+      >
+        <FaPlus />
+      </button>
 
-   <div className="flex flex-col md:flex-row gap-4 mb-6 p-4 bg-white rounded-lg shadow-md">
+      {/* Create Post Modal */}
+      {showCreateModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-opacity-60">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl"
+              onClick={() => setShowCreateModal(false)}
+              title="Close"
+            >
+              <FaTimes />
+            </button>
+            <div className="flex items-center gap-3 mb-3">
+              {userProfileImageUrl ? (
+                <img
+                  src={userProfileImageUrl}
+                  alt="User Profile"
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+              ) : (
+                <FaUserCircle className="text-gray-400 text-3xl" />
+              )}
+              <span className="font-semibold text-gray-800">{userName}</span>
+            </div>
+            <textarea
+              value={newPost}
+              onChange={(e) => setNewPost(e.target.value)}
+              className="w-full border border-gray-300 rounded p-2 resize-none text-sm"
+              rows="3"
+              placeholder="What's on your mind?"
+            />
+            {/* Tag Input and Suggested Tags */}
+            <div className="mt-3">
+              <input
+                type="text"
+                placeholder="Add tags (e.g., #MentalHealth, #Support)"
+                value={tagInput}
+                onChange={handleTagInputChange}
+                className="w-full border border-gray-300 rounded p-2 text-sm"
+              />
+              <div className="flex flex-wrap gap-2 mt-2">
+                {suggestedTags.map((tag) => (
+                  <button
+                    key={tag}
+                    onClick={() => handleAddSuggestedTag(tag)}
+                    className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs hover:bg-blue-200 transition"
+                  >
+                    #{tag}
+                  </button>
+                ))}
+              </div>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {postTags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs flex items-center"
+                  >
+                    #{tag}
+                    <button
+                      onClick={() => handleRemoveTag(tag)}
+                      className="ml-1 text-red-500 hover:text-red-700"
+                    >
+                      &times;
+                    </button>
+                  </span>
+                ))}
+              </div>
+            </div>
+            {/* End Tag Input and Suggested Tags */}
+
+            <div className="flex justify-between mt-2 flex-wrap gap-2">
+              <div className="flex gap-2 flex-wrap relative max-w-full">
+                <button
+                  type="button"
+                  className="px-3 py-1 bg-gray-100 rounded text-sm hover:bg-gray-200 transition flex items-center gap-2"
+                  onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                >
+                  <LuSmilePlus /> Share Emoji
+                </button>
+                {showEmojiPicker && (
+                  <div className="flex gap-1 mt-2 max-w-full flex-wrap overflow-auto max-h-32">
+                    {emojiList.map((emoji) => (
+                      <button
+                        key={emoji}
+                        type="button"
+                        className="text-xl"
+                        onClick={() => handleShareEmoji(emoji)}
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {selectedEmoji && (
+                  <span className="ml-2 text-xl">{selectedEmoji}</span>
+                )}
+              </div>
+              <button
+                onClick={handlePost}
+                className="px-4 py-1 bg-green-500 text-white rounded text-sm hover:bg-green-600 transition"
+              >
+                Post
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="flex flex-col md:flex-row gap-4 mb-6 p-4 bg-white rounded-lg shadow-md">
         {/* Search Input */}
         <div className="relative flex-1">
           <input
@@ -354,109 +465,6 @@ const Item6 = () => {
           </div>
         </div>
       </div>
-  
-  
-  
-  
-  
-      {/* Create Post */}
-
-      <div className="p-4 rounded-lg shadow-md bg-white">
-        <div className="flex items-center gap-3 mb-3">
-          {userProfileImageUrl ? (
-            <img
-              src={userProfileImageUrl}
-              alt="User Profile"
-              className="w-10 h-10 rounded-full object-cover"
-            />
-          ) : (
-            <FaUserCircle className="text-gray-400 text-3xl" />
-          )}
-          <span className="font-semibold text-gray-800">{userName}</span>
-        </div>
-        <textarea
-          value={newPost}
-          onChange={(e) => setNewPost(e.target.value)}
-          className="w-full border border-gray-300 rounded p-2 resize-none text-sm"
-          rows="3"
-          placeholder="What's on your mind?"
-        />
-        {/* Tag Input and Suggested Tags */}
-        <div className="mt-3">
-          <input
-            type="text"
-            placeholder="Add tags (e.g., #MentalHealth, #Support)"
-            value={tagInput}
-            onChange={handleTagInputChange}
-            className="w-full border border-gray-300 rounded p-2 text-sm"
-          />
-          <div className="flex flex-wrap gap-2 mt-2">
-            {suggestedTags.map((tag) => (
-              <button
-                key={tag}
-                onClick={() => handleAddSuggestedTag(tag)}
-                className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs hover:bg-blue-200 transition"
-              >
-                #{tag}
-              </button>
-            ))}
-          </div>
-          <div className="flex flex-wrap gap-2 mt-2">
-            {postTags.map((tag) => (
-              <span
-                key={tag}
-                className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs flex items-center"
-              >
-                #{tag}
-                <button
-                  onClick={() => handleRemoveTag(tag)}
-                  className="ml-1 text-red-500 hover:text-red-700"
-                >
-                  &times;
-                </button>
-              </span>
-            ))}
-          </div>
-        </div>
-        {/* End Tag Input and Suggested Tags */}
-
-        <div className="flex justify-between mt-2 flex-wrap gap-2">
-          <div className="flex gap-2 flex-wrap relative max-w-full">
-            <button
-              type="button"
-              className="px-3 py-1 bg-gray-100 rounded text-sm hover:bg-gray-200 transition flex items-center gap-2"
-              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-            >
-              <LuSmilePlus /> Share Emoji
-            </button>
-            {showEmojiPicker && (
-              <div className="flex gap-1 mt-2 max-w-full flex-wrap overflow-auto max-h-32">
-                {emojiList.map((emoji) => (
-                  <button
-                    key={emoji}
-                    type="button"
-                    className="text-xl"
-                    onClick={() => handleShareEmoji(emoji)}
-                  >
-                    {emoji}
-                  </button>
-                ))}
-              </div>
-            )}
-            {selectedEmoji && (
-              <span className="ml-2 text-xl">{selectedEmoji}</span>
-            )}
-          </div>
-          <button
-            onClick={handlePost}
-            className="px-4 py-1 bg-green-500 text-white rounded text-sm hover:bg-green-600 transition"
-          >
-            Post
-          </button>
-        </div>
-      </div>
-
-     
 
       {/* Posts List */}
       {filteredPosts.map((post) => (
@@ -479,7 +487,6 @@ const Item6 = () => {
                 {moment(post.createdAt).fromNow()}
               </p>
             </div>
-            {/* Edit/Delete Buttons */}
             {post.userId === userId && (
               <div className="ml-auto flex gap-2">
                 <button
@@ -500,7 +507,6 @@ const Item6 = () => {
             )}
           </div>
 
-          {/* Edit Mode */}
           {editingPostId === post._id ? (
             <div className="flex flex-col gap-2">
               <textarea
@@ -528,7 +534,6 @@ const Item6 = () => {
             <p className="mt-2 text-gray-700 text-sm">{post.text}</p>
           )}
 
-          {/* Tags */}
           <div className="flex flex-wrap gap-2 mt-2">
             {post.tags?.map((tag, i) => (
               <span
@@ -540,7 +545,6 @@ const Item6 = () => {
             ))}
           </div>
 
-          {/* Post Actions */}
           <div className="flex gap-5 text-sm text-gray-600 mt-3">
             <button
               onClick={() => handleLike(post._id)}
@@ -565,7 +569,6 @@ const Item6 = () => {
             </button>
           </div>
 
-          {/* Comment Input */}
           <div className="mt-3">
             <input
               type="text"
@@ -582,7 +585,6 @@ const Item6 = () => {
             </button>
           </div>
 
-          {/* Show Comments */}
           <div className="mt-3 space-y-2">
             {post.comments &&
               post.comments.slice().reverse().map((cmt, i) => (
