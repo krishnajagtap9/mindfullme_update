@@ -37,7 +37,6 @@ function ResponsiveAppBar() {
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ width: '100%', display: 'flex' }}>
-
           {/* Logo / Brand */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography
@@ -51,7 +50,7 @@ function ResponsiveAppBar() {
                 textDecoration: 'none',
                 color: 'green',
                 fontSize: { xs: '1.3rem', md: '1.5rem' },
-                marginLeft:2
+                marginLeft: 2,
               }}
             >
               <StarIcon sx={{ color: 'green', mr: 1 }} />
@@ -59,7 +58,7 @@ function ResponsiveAppBar() {
             </Typography>
           </Box>
 
-          {/* Mobile Menu Icon */}
+          {/* Mobile Menu Icon - Hide if signed in */}
           <Box
             sx={{
               display: { xs: isSignedIn ? 'none' : 'flex', md: 'none' },
@@ -86,6 +85,7 @@ function ResponsiveAppBar() {
               gap: 2,
             }}
           >
+            {/* Conditional rendering for desktop navigation links */}
             {isSignedIn ? (
               <Button
                 component={Link}
@@ -125,7 +125,7 @@ function ResponsiveAppBar() {
           </Box>
 
           {/* Auth Buttons */}
-          <Box sx={{ display: {  md: 'flex' }, gap: 2, ml: 'auto' }}>
+          <Box sx={{ display: { md: 'flex' }, gap: 2, ml: 'auto' }}>
             {isSignedIn ? (
               <SignOutButton>
                 <Button
