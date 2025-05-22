@@ -302,7 +302,65 @@ const Item6 = () => {
 
   return (
     <div className="flex flex-col min-h-screen p-4 gap-4 bg-[#F0F0F0]">
+  
+
+   <div className="flex flex-col md:flex-row gap-4 mb-6 p-4 bg-white rounded-lg shadow-md">
+        {/* Search Input */}
+        <div className="relative flex-1">
+          <input
+            type="text"
+            placeholder="Search discussions..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700 placeholder-gray-400 transition duration-200 ease-in-out text-sm"
+          />
+          <svg
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            width="20"
+            height="20"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+        </div>
+
+        {/* Sort Select */}
+        <div className="relative">
+          <select
+            value={sortBy}
+            onChange={handleSortChange}
+            className="appearance-none w-full md:w-auto pr-8 pl-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out cursor-pointer text-sm"
+          >
+            <option value="newest">Sort by: Newest</option>
+            <option value="trending">Most Trending</option>
+            <option value="description">By Description</option>
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+            <svg
+              className="fill-current h-4 w-4"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+            >
+              <path d="M9.293 12.95l.707.707 3.536-3.536L12.536 9.293 10 11.828l-2.536-2.535z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+  
+  
+  
+  
+  
       {/* Create Post */}
+
       <div className="p-4 rounded-lg shadow-md bg-white">
         <div className="flex items-center gap-3 mb-3">
           {userProfileImageUrl ? (
@@ -398,56 +456,7 @@ const Item6 = () => {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-4 mb-6 p-4 bg-white rounded-lg shadow-md">
-        {/* Search Input */}
-        <div className="relative flex-1">
-          <input
-            type="text"
-            placeholder="Search discussions..."
-            value={searchTerm}
-            onChange={handleSearchChange}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700 placeholder-gray-400 transition duration-200 ease-in-out text-sm"
-          />
-          <svg
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            width="20"
-            height="20"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
-        </div>
-
-        {/* Sort Select */}
-        <div className="relative">
-          <select
-            value={sortBy}
-            onChange={handleSortChange}
-            className="appearance-none w-full md:w-auto pr-8 pl-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out cursor-pointer text-sm"
-          >
-            <option value="newest">Sort by: Newest</option>
-            <option value="trending">Most Trending</option>
-            <option value="description">By Description</option>
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-            <svg
-              className="fill-current h-4 w-4"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-            >
-              <path d="M9.293 12.95l.707.707 3.536-3.536L12.536 9.293 10 11.828l-2.536-2.535z" />
-            </svg>
-          </div>
-        </div>
-      </div>
+     
 
       {/* Posts List */}
       {filteredPosts.map((post) => (
