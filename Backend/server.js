@@ -1,93 +1,193 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connection
-mongoose
-  .connect("mongodb+srv://jagtapkrishna987:5kA0Jaosy92EruIU@community.nilj4fs.mongodb.net/community_mindfullme?retryWrites=true&w=majority&appName=community")
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.log(err));
+mongoose.set('strictQuery', false);
 
-// Comment Schema
-const commentSchema = new mongoose.Schema({
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/communityDB')
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.error('MongoDB connection error:', err));
+
+// Schemas
+const ReplySchema = new mongoose.Schema({
   name: String,
   text: String,
-  time: Date,
-  imageUrl: String, // optional: profile image for commenter
+  imageUrl: String,
+  userId: String,
+  time: { type: Date, default: Date.now },
 });
 
-// Post Schema
-const postSchema = new mongoose.Schema(
-  {
-    name: String,
-    text: String,
-    imageUrl: String, // profile image of poster
-    tags: [String],
-    likes: { type: Number, default: 0 },
-    comments: { type: [commentSchema], default: [] },
-    commentsCount: { type: Number, default: 0 },
-  },
-  { timestamps: true }
-);
+const CommentSchema = new mongoose.Schema({
+  _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
+  name: String,
+  text: String,
+  imageUrl: String,
+  userId: String,
+  time: { type: Date, default: Date.now },
+  replies: [ReplySchema],
+});
 
-const Post = mongoose.model("Post", postSchema);
+const PostSchema = new mongoose.Schema({
+  name: String,
+  text: String,
+  tags: [String],
+  imageUrl: String,
+  userId: String,
+  likes: [String],
+  comments: [CommentSchema]
+}, { timestamps: true });
+
+const Post = mongoose.model('Post', PostSchema);
+
+// Routes
 
 // Get all posts
-app.get("/posts", async (req, res) => {
-  const posts = await Post.find().sort({ createdAt: -1 });
-  res.json(posts);
+app.get('/api/posts', async (req, res) => {
+  try {
+    const posts = await Post.find().sort({ createdAt: -1 });
+    const postsWithCounts = posts.map(post => ({
+      ...post.toObject(),
+      commentsCount: post.comments.reduce((acc, c) => acc + 1 + c.replies.length, 0),
+      likes: post.likes.length,
+    }));
+    res.json(postsWithCounts);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch posts' });
+  }
 });
 
 // Create a new post
-app.post("/posts", async (req, res) => {
+app.post('/api/posts', async (req, res) => {
   try {
-    const post = new Post({
-      name: req.body.name,
-      text: req.body.text,
-      tags: req.body.tags || [],
-      imageUrl: req.body.imageUrl || "", // store image
-    });
+    const { name, text, tags, imageUrl, userId } = req.body;
+    const post = new Post({ name, text, tags: tags || [], imageUrl, userId, likes: [], comments: [] });
     await post.save();
-    res.json(post);
+    const postObject = post.toObject();
+    postObject.commentsCount = 0;
+    postObject.likes = 0;
+    res.json(postObject);
   } catch (err) {
-    res.status(500).json({ error: "Failed to create post" });
+    res.status(500).json({ error: 'Failed to create post' });
   }
 });
 
-// Like a post
-app.patch("/posts/:id/like", async (req, res) => {
+// Toggle like
+app.patch('/api/posts/:id/like', async (req, res) => {
   try {
-    const post = await Post.findByIdAndUpdate(
-      req.params.id,
-      { $inc: { likes: 1 } },
-      { new: true }
-    );
-    res.json(post);
-  } catch (err) {
-    res.status(500).json({ error: "Unable to like post" });
-  }
-});
+    const { userId } = req.body;
+    if (!userId) return res.status(400).json({ error: 'User ID required' });
 
-// Add a comment to a post
-app.post("/posts/:id/comment", async (req, res) => {
-  try {
-    const { name, text, imageUrl } = req.body;
     const post = await Post.findById(req.params.id);
-    if (!post) return res.status(404).json({ error: "Post not found" });
+    if (!post) return res.status(404).json({ error: 'Post not found' });
 
-    const newComment = { name, text, time: new Date(), imageUrl };
-    post.comments.push(newComment);
-    post.commentsCount = post.comments.length;
+    const liked = post.likes.includes(userId);
+    post.likes = liked ? post.likes.filter(id => id !== userId) : [...post.likes, userId];
 
     await post.save();
-    res.json(post);
+
+    const postObject = post.toObject();
+    postObject.likes = post.likes.length;
+    postObject.commentsCount = post.comments.reduce((acc, c) => acc + 1 + c.replies.length, 0);
+    res.json(postObject);
   } catch (err) {
-    res.status(500).json({ error: "Unable to add comment" });
+    res.status(500).json({ error: 'Failed to toggle like' });
   }
 });
 
-app.listen(5000, () => console.log("Server running on http://localhost:5000"));
+// Add comment
+app.post('/api/posts/:id/comment', async (req, res) => {
+  try {
+    const { name, text, imageUrl, userId } = req.body;
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ error: 'Post not found' });
+
+    post.comments.push({ name, text, imageUrl, userId, replies: [] });
+    await post.save();
+
+    const postObject = post.toObject();
+    postObject.likes = post.likes.length;
+    postObject.commentsCount = post.comments.reduce((acc, c) => acc + 1 + c.replies.length, 0);
+    res.json(postObject);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to add comment' });
+  }
+});
+
+// Add reply
+app.post('/api/posts/:postId/comments/:commentId/reply', async (req, res) => {
+  try {
+    const { name, text, imageUrl, userId } = req.body;
+    const post = await Post.findById(req.params.postId);
+    if (!post) return res.status(404).json({ error: 'Post not found' });
+
+    const comment = post.comments.id(req.params.commentId);
+    if (!comment) return res.status(404).json({ error: 'Comment not found' });
+
+    comment.replies.push({ name, text, imageUrl, userId });
+    await post.save();
+
+    const postObject = post.toObject();
+    postObject.likes = post.likes.length;
+    postObject.commentsCount = post.comments.reduce((acc, c) => acc + 1 + c.replies.length, 0);
+    res.json(postObject);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to add reply' });
+  }
+});
+
+// Delete post
+app.delete('/api/posts/:id', async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ error: 'Post not found' });
+    if (post.userId !== userId) return res.status(403).json({ error: 'Unauthorized' });
+
+    await post.remove();
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete post' });
+  }
+});
+
+// Update post
+app.patch('/api/posts/:id', async (req, res) => {
+  try {
+    const { userId, text, tags } = req.body;
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ error: 'Post not found' });
+    if (post.userId !== userId) return res.status(403).json({ error: 'Unauthorized' });
+
+    if (text !== undefined) post.text = text;
+    if (tags !== undefined) post.tags = tags;
+
+    await post.save();
+
+    const postObject = post.toObject();
+    postObject.likes = post.likes.length;
+    postObject.commentsCount = post.comments.reduce((acc, c) => acc + 1 + c.replies.length, 0);
+    res.json(postObject);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update post' });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+// Start server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
