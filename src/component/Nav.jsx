@@ -51,6 +51,7 @@ function ResponsiveAppBar() {
                 textDecoration: 'none',
                 color: 'green',
                 fontSize: { xs: '1.3rem', md: '1.5rem' },
+                marginLeft:2
               }}
             >
               <StarIcon sx={{ color: 'green', mr: 1 }} />

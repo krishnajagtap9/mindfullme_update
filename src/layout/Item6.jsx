@@ -16,8 +16,29 @@ import { LuSmilePlus } from "react-icons/lu";
 import { useUser } from "@clerk/clerk-react";
 import moment from "moment";
 
-const suggestedTags = ["MentalHealth", "Mindfulness", "Wellness", "Support", "Gratitude", "Anxiety", "Depression"];
-const emojiList = ["😊", "😄", "😍", "👍", "🙏", "❤️", "😂", "😢", "🤩", "🎉"];
+const suggestedTags = [
+  "MentalHealth",
+  "Mindfulness",
+  "Wellness",
+  "Support",
+  "Gratitude",
+  "Anxiety",
+  "Depression",
+];
+const emojiList = [
+  "😊",
+  "😄",
+  "😍",
+  "👍",
+  "🙏",
+  "❤️",
+  "😂",
+  "😢",
+  "🤩",
+  "🎉",
+];
+
+const API_URL = "https://mindfullme-update-q1z8.onrender.com/api/posts";
 
 const Item6 = () => {
   const { user, isLoaded, isSignedIn } = useUser();
@@ -45,12 +66,12 @@ const Item6 = () => {
 
   const fetchPosts = () => {
     axios
-      .get("http://localhost:5000/api/posts")
+      .get(API_URL)
       .then((res) => {
         setPosts(res.data);
         const initialLikedPosts = {};
-        res.data.forEach(post => {
-          if (post.likes && post.likes.includes(userId)) {
+        res.data.forEach((post) => {
+          if (post.likes && Array.isArray(post.likes) && post.likes.includes(userId)) {
             initialLikedPosts[post._id] = true;
           }
         });
@@ -62,7 +83,7 @@ const Item6 = () => {
   // Like/Unlike feature
   const handleLike = (postId) => {
     const liked = likedPosts[postId];
-    const url = `http://localhost:5000/api/posts/${postId}/${liked ? "unlike" : "like"}`;
+    const url = `${API_URL}/${postId}/like`;
     axios
       .patch(url, { userId })
       .then((res) => {
@@ -74,7 +95,15 @@ const Item6 = () => {
 
   const handlePost = () => {
     if (!newPost.trim()) return;
-    const finalTags = Array.from(new Set([...postTags, ...tagInput.split(',').map(tag => tag.trim()).filter(tag => tag !== '')]));
+    const finalTags = Array.from(
+      new Set([
+        ...postTags,
+        ...tagInput
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter((tag) => tag !== ""),
+      ])
+    );
     const postData = {
       name: userName,
       text: newPost + (selectedEmoji ? " " + selectedEmoji : ""),
@@ -83,7 +112,7 @@ const Item6 = () => {
       userId: userId,
     };
     axios
-      .post("http://localhost:5000/api/posts", postData)
+      .post(API_URL, postData)
       .then((res) => {
         setPosts([res.data, ...posts]);
         setNewPost("");
@@ -109,7 +138,7 @@ const Item6 = () => {
       userId: userId,
     };
     axios
-      .post(`http://localhost:5000/api/posts/${postId}/comment`, commentData)
+      .post(`${API_URL}/${postId}/comment`, commentData)
       .then((res) => {
         setPosts(posts.map((post) => (post._id === postId ? res.data : post)));
         setCommentInputs({ ...commentInputs, [postId]: "" });
@@ -131,7 +160,7 @@ const Item6 = () => {
       userId: userId,
     };
     axios
-      .post(`http://localhost:5000/api/posts/${postId}/comments/${commentId}/reply`, replyData)
+      .post(`${API_URL}/${postId}/comments/${commentId}/reply`, replyData)
       .then((res) => {
         setPosts(posts.map((post) => (post._id === postId ? res.data : post)));
         setReplyInputs({ ...replyInputs, [commentId]: "" });
@@ -147,7 +176,7 @@ const Item6 = () => {
   };
 
   const handleRemoveTag = (tagToRemove) => {
-    setPostTags(postTags.filter(tag => tag !== tagToRemove));
+    setPostTags(postTags.filter((tag) => tag !== tagToRemove));
   };
 
   const handleTagInputChange = (e) => {
@@ -158,7 +187,7 @@ const Item6 = () => {
   const handleDeletePost = (postId) => {
     if (!window.confirm("Are you sure you want to delete this post?")) return;
     axios
-      .delete(`http://localhost:5000/api/posts/${postId}`, { data: { userId } })
+      .delete(`${API_URL}/${postId}`, { data: { userId } })
       .then(() => {
         setPosts(posts.filter((post) => post._id !== postId));
       })
@@ -174,7 +203,7 @@ const Item6 = () => {
   const handleEditPostSave = (postId) => {
     if (!editPostText.trim()) return;
     axios
-      .patch(`http://localhost:5000/api/posts/${postId}`, { text: editPostText, userId })
+      .patch(`${API_URL}/${postId}`, { text: editPostText, userId })
       .then((res) => {
         setPosts(posts.map((post) => (post._id === postId ? res.data : post)));
         setEditingPostId(null);
@@ -265,40 +294,41 @@ const Item6 = () => {
         </div>
         {/* End Tag Input and Suggested Tags */}
 
-        <div className="flex justify-between mt-2 flex-wrap gap-2">
-          <div className="flex gap-2 flex-wrap">
-            <button
-              type="button"
-              className="px-3 py-1 bg-gray-100 rounded text-sm hover:bg-gray-200 transition flex items-center gap-2"
-              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-            >
-              <LuSmilePlus /> Share Emoji
-            </button>
-            {showEmojiPicker && (
-              <div className="flex gap-1 mt-2">
-                {emojiList.map((emoji) => (
-                  <button
-                    key={emoji}
-                    type="button"
-                    className="text-xl"
-                    onClick={() => handleShareEmoji(emoji)}
-                  >
-                    {emoji}
-                  </button>
-                ))}
-              </div>
-            )}
-            {selectedEmoji && (
-              <span className="ml-2 text-xl">{selectedEmoji}</span>
-            )}
-          </div>
+       <div className="flex justify-between mt-2 flex-wrap gap-2">
+  <div className="flex gap-2 flex-wrap relative max-w-full">
+    <button
+      type="button"
+      className="px-3 py-1 bg-gray-100 rounded text-sm hover:bg-gray-200 transition flex items-center gap-2"
+      onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+    >
+      <LuSmilePlus /> Share Emoji
+    </button>
+    {showEmojiPicker && (
+      <div className="flex gap-1 mt-2  max-w-full flex-wrap overflow-auto max-h-32">
+        {emojiList.map((emoji) => (
           <button
-            onClick={handlePost}
-            className="px-4 py-1 bg-green-500 text-white rounded text-sm hover:bg-green-600 transition"
+            key={emoji}
+            type="button"
+            className="text-xl"
+            onClick={() => handleShareEmoji(emoji)}
           >
-            Post
+            {emoji}
           </button>
-        </div>
+        ))}
+      </div>
+    )}
+    {selectedEmoji && (
+      <span className="ml-2 text-xl">{selectedEmoji}</span>
+    )}
+  </div>
+  <button
+    onClick={handlePost}
+    className="px-4 py-1 bg-green-500 text-white rounded text-sm hover:bg-green-600 transition"
+  >
+    Post
+  </button>
+</div>
+
       </div>
 
       {/* Posts List */}
@@ -443,7 +473,13 @@ const Item6 = () => {
                     </p>
                     <button
                       className="text-xs text-blue-500 hover:underline flex items-center gap-1 mt-1"
-                      onClick={() => setReplyInputs({ ...replyInputs, [cmt._id]: replyInputs[cmt._id] === undefined ? "" : undefined })}
+                      onClick={() =>
+                        setReplyInputs({
+                          ...replyInputs,
+                          [cmt._id]:
+                            replyInputs[cmt._id] === undefined ? "" : undefined,
+                        })
+                      }
                     >
                       <FaReply className="text-xs" /> Reply
                     </button>
@@ -455,7 +491,9 @@ const Item6 = () => {
                       type="text"
                       placeholder="Add a reply..."
                       value={replyInputs[cmt._id] || ""}
-                      onChange={(e) => handleReplyChange(cmt._id, e.target.value)}
+                      onChange={(e) =>
+                        handleReplyChange(cmt._id, e.target.value)
+                      }
                       className="w-full border border-gray-300 rounded p-1 text-sm"
                     />
                     <button
