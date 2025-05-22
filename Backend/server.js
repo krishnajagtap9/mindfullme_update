@@ -144,21 +144,6 @@ app.post('/api/posts/:postId/comments/:commentId/reply', async (req, res) => {
   }
 });
 
-// Delete post
-app.delete('/api/posts/:id', async (req, res) => {
-  try {
-    const { userId } = req.body;
-    const post = await Post.findById(req.params.id);
-    if (!post) return res.status(404).json({ error: 'Post not found' });
-    if (post.userId !== userId) return res.status(403).json({ error: 'Unauthorized' });
-
-    await post.remove();
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to delete post' });
-  }
-});
-
 // Update post
 app.patch('/api/posts/:id', async (req, res) => {
   try {
@@ -178,6 +163,25 @@ app.patch('/api/posts/:id', async (req, res) => {
     res.json(postObject);
   } catch (err) {
     res.status(500).json({ error: 'Failed to update post' });
+  }
+});
+
+// Delete post
+app.delete('/api/posts/:id', async (req, res) => {
+  try {
+    // Support userId from body (axios default) or query (fetch, etc)
+    const userId = req.body?.userId || req.query?.userId;
+    if (!userId) return res.status(400).json({ error: 'User ID required' });
+
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ error: 'Post not found' });
+    if (post.userId !== userId) return res.status(403).json({ error: 'Unauthorized' });
+
+    // Use deleteOne() instead of remove() as remove() is deprecated
+    await post.deleteOne();
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete post' });
   }
 });
 

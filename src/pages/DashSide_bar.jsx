@@ -27,6 +27,8 @@ import { IoSettingsOutline } from 'react-icons/io5';
 import { FiMenu } from 'react-icons/fi';
 import { AiOutlineClose } from 'react-icons/ai';
 import { IoDocumentTextOutline } from "react-icons/io5";
+import { CgProfile } from "react-icons/cg";
+import Item7 from '../layout/Item7';
 
 const StyledTab = styled(Tab)(({ theme }) => ({
   textTransform: 'none',
@@ -148,6 +150,7 @@ export default function VerticalTabs() {
     { label: 'Community', icon: <MdPeopleAlt />, component: <Item6 /> },
     { label: 'Games', icon: <CgGames />, component: <Item2 /> },
     { label: 'Support', icon: <IoSettingsOutline />, component: <Item3 /> },
+    { label: 'Profile', icon: <CgProfile />, component: <Item7 /> },
   ];
 
   const showTabs = isLargeScreen || showTabsState;

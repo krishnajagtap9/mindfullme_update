@@ -10,7 +10,6 @@ import {
   FaEdit,
   FaCheck,
   FaTimes,
-  FaShareSquare,
 } from "react-icons/fa";
 import { LuSmilePlus } from "react-icons/lu";
 import { useUser } from "@clerk/clerk-react";
@@ -57,11 +56,14 @@ const Item6 = () => {
   const [selectedEmoji, setSelectedEmoji] = useState("");
   const [editingPostId, setEditingPostId] = useState(null);
   const [editPostText, setEditPostText] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState("newest"); // newest, trending, description
 
   useEffect(() => {
     if (userId) {
       fetchPosts();
     }
+    // eslint-disable-next-line
   }, [userId]);
 
   const fetchPosts = () => {
@@ -71,7 +73,10 @@ const Item6 = () => {
         setPosts(res.data);
         const initialLikedPosts = {};
         res.data.forEach((post) => {
-          if (post.likes && Array.isArray(post.likes) && post.likes.includes(userId)) {
+          if (
+            (Array.isArray(post.likes) && post.likes.includes(userId)) ||
+            (typeof post.likes === "number" && post.likes > 0)
+          ) {
             initialLikedPosts[post._id] = true;
           }
         });
@@ -87,8 +92,10 @@ const Item6 = () => {
     axios
       .patch(url, { userId })
       .then((res) => {
-        setPosts(posts.map((post) => (post._id === postId ? res.data : post)));
-        setLikedPosts({ ...likedPosts, [postId]: !liked });
+        setPosts((prev) =>
+          prev.map((post) => (post._id === postId ? res.data : post))
+        );
+        setLikedPosts((prev) => ({ ...prev, [postId]: !liked }));
       })
       .catch((err) => console.error(err));
   };
@@ -114,7 +121,7 @@ const Item6 = () => {
     axios
       .post(API_URL, postData)
       .then((res) => {
-        setPosts([res.data, ...posts]);
+        setPosts((prev) => [res.data, ...prev]);
         setNewPost("");
         setPostTags([]);
         setTagInput("");
@@ -140,8 +147,10 @@ const Item6 = () => {
     axios
       .post(`${API_URL}/${postId}/comment`, commentData)
       .then((res) => {
-        setPosts(posts.map((post) => (post._id === postId ? res.data : post)));
-        setCommentInputs({ ...commentInputs, [postId]: "" });
+        setPosts((prev) =>
+          prev.map((post) => (post._id === postId ? res.data : post))
+        );
+        setCommentInputs((prev) => ({ ...prev, [postId]: "" }));
       })
       .catch((err) => console.error(err));
   };
@@ -162,8 +171,10 @@ const Item6 = () => {
     axios
       .post(`${API_URL}/${postId}/comments/${commentId}/reply`, replyData)
       .then((res) => {
-        setPosts(posts.map((post) => (post._id === postId ? res.data : post)));
-        setReplyInputs({ ...replyInputs, [commentId]: "" });
+        setPosts((prev) =>
+          prev.map((post) => (post._id === postId ? res.data : post))
+        );
+        setReplyInputs((prev) => ({ ...prev, [commentId]: "" }));
       })
       .catch((err) => console.error(err));
   };
@@ -189,7 +200,7 @@ const Item6 = () => {
     axios
       .delete(`${API_URL}/${postId}`, { data: { userId } })
       .then(() => {
-        setPosts(posts.filter((post) => post._id !== postId));
+        setPosts((prev) => prev.filter((post) => post._id !== postId));
       })
       .catch((err) => console.error(err));
   };
@@ -205,7 +216,9 @@ const Item6 = () => {
     axios
       .patch(`${API_URL}/${postId}`, { text: editPostText, userId })
       .then((res) => {
-        setPosts(posts.map((post) => (post._id === postId ? res.data : post)));
+        setPosts((prev) =>
+          prev.map((post) => (post._id === postId ? res.data : post))
+        );
         setEditingPostId(null);
         setEditPostText("");
       })
@@ -223,6 +236,36 @@ const Item6 = () => {
     setShowEmojiPicker(false);
   };
 
+  // --- Search and Sort ---
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSortChange = (e) => {
+    setSortBy(e.target.value);
+  };
+
+  // --- Filtered and Sorted Posts ---
+  let filteredPosts = posts.filter((post) =>
+    post.text?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (sortBy === "newest") {
+    filteredPosts = filteredPosts.sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
+  } else if (sortBy === "trending") {
+    filteredPosts = filteredPosts.sort(
+      (a, b) =>
+        (Array.isArray(b.likes) ? b.likes.length : b.likes) -
+        (Array.isArray(a.likes) ? a.likes.length : a.likes)
+    );
+  } else if (sortBy === "description") {
+    filteredPosts = filteredPosts.sort((a, b) =>
+      (a.text || "").localeCompare(b.text || "")
+    );
+  }
+
   if (!isLoaded)
     return <div className="p-4 text-center">Loading user data...</div>;
   if (!isSignedIn)
@@ -234,6 +277,8 @@ const Item6 = () => {
 
   return (
     <div className="flex flex-col min-h-screen p-4 gap-4 bg-[#F0F0F0]">
+   
+
       {/* Create Post */}
       <div className="p-4 rounded-lg shadow-md bg-white">
         <div className="flex items-center gap-3 mb-3">
@@ -294,45 +339,96 @@ const Item6 = () => {
         </div>
         {/* End Tag Input and Suggested Tags */}
 
-       <div className="flex justify-between mt-2 flex-wrap gap-2">
-  <div className="flex gap-2 flex-wrap relative max-w-full">
-    <button
-      type="button"
-      className="px-3 py-1 bg-gray-100 rounded text-sm hover:bg-gray-200 transition flex items-center gap-2"
-      onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-    >
-      <LuSmilePlus /> Share Emoji
-    </button>
-    {showEmojiPicker && (
-      <div className="flex gap-1 mt-2  max-w-full flex-wrap overflow-auto max-h-32">
-        {emojiList.map((emoji) => (
+        <div className="flex justify-between mt-2 flex-wrap gap-2">
+          <div className="flex gap-2 flex-wrap relative max-w-full">
+            <button
+              type="button"
+              className="px-3 py-1 bg-gray-100 rounded text-sm hover:bg-gray-200 transition flex items-center gap-2"
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            >
+              <LuSmilePlus /> Share Emoji
+            </button>
+            {showEmojiPicker && (
+              <div className="flex gap-1 mt-2 max-w-full flex-wrap overflow-auto max-h-32">
+                {emojiList.map((emoji) => (
+                  <button
+                    key={emoji}
+                    type="button"
+                    className="text-xl"
+                    onClick={() => handleShareEmoji(emoji)}
+                  >
+                    {emoji}
+                  </button>
+                ))}
+              </div>
+            )}
+            {selectedEmoji && (
+              <span className="ml-2 text-xl">{selectedEmoji}</span>
+            )}
+          </div>
           <button
-            key={emoji}
-            type="button"
-            className="text-xl"
-            onClick={() => handleShareEmoji(emoji)}
+            onClick={handlePost}
+            className="px-4 py-1 bg-green-500 text-white rounded text-sm hover:bg-green-600 transition"
           >
-            {emoji}
+            Post
           </button>
-        ))}
+        </div>
       </div>
-    )}
-    {selectedEmoji && (
-      <span className="ml-2 text-xl">{selectedEmoji}</span>
-    )}
+
+
+<div className="flex flex-col md:flex-row gap-4 mb-6 p-4 bg-white rounded-lg shadow-md">
+  {/* Search Input */}
+  <div className="relative flex-1">
+    <input
+      type="text"
+      placeholder="Search discussions..."
+      value={searchTerm}
+      onChange={handleSearchChange}
+      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700 placeholder-gray-400 transition duration-200 ease-in-out text-sm"
+    />
+    <svg
+      className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      width="20"
+      height="20"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+      />
+    </svg>
   </div>
-  <button
-    onClick={handlePost}
-    className="px-4 py-1 bg-green-500 text-white rounded text-sm hover:bg-green-600 transition"
-  >
-    Post
-  </button>
+
+  {/* Sort Select */}
+  <div className="relative">
+    <select
+      value={sortBy}
+      onChange={handleSortChange}
+      className="appearance-none w-full md:w-auto pr-8 pl-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out cursor-pointer text-sm"
+    >
+      <option value="newest">Sort by: Newest</option>
+      <option value="trending">Most Trending</option>
+      <option value="description">By Description</option>
+    </select>
+    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+      <svg
+        className="fill-current h-4 w-4"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+      >
+        <path d="M9.293 12.95l.707.707 3.536-3.536L12.536 9.293 10 11.828l-2.536-2.535z" />
+      </svg>
+    </div>
+  </div>
 </div>
 
-      </div>
-
       {/* Posts List */}
-      {posts.map((post) => (
+      {filteredPosts.map((post) => (
         <div key={post._id} className="bg-white p-4 rounded-lg shadow-md">
           <div className="flex items-center gap-3 mb-2">
             <img
@@ -450,89 +546,102 @@ const Item6 = () => {
 
           {/* Show Comments */}
           <div className="mt-3 space-y-2">
-            {post.comments.slice().reverse().map((cmt, i) => (
-              <div key={cmt._id || i} className="flex flex-col gap-1 pl-2 border-l-2 border-gray-200">
-                <div className="flex items-start gap-2">
-                  <img
-                    src={
-                      cmt.imageUrl
-                        ? cmt.imageUrl
-                        : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                            cmt.name
-                          )}&background=random`
-                    }
-                    alt="Commenter"
-                    className="w-6 h-6 rounded-full mt-1"
-                  />
-                  <div>
-                    <p className="text-sm">
-                      <span className="font-semibold">{cmt.name}</span>: {cmt.text}
-                    </p>
-                    <p className="text-xs text-gray-400">
-                      {moment(cmt.time).fromNow()}
-                    </p>
-                    <button
-                      className="text-xs text-blue-500 hover:underline flex items-center gap-1 mt-1"
-                      onClick={() =>
-                        setReplyInputs({
-                          ...replyInputs,
-                          [cmt._id]:
-                            replyInputs[cmt._id] === undefined ? "" : undefined,
-                        })
+            {post.comments &&
+              post.comments.slice().reverse().map((cmt, i) => (
+                <div
+                  key={cmt._id || i}
+                  className="flex flex-col gap-1 pl-2 border-l-2 border-gray-200"
+                >
+                  <div className="flex items-start gap-2">
+                    <img
+                      src={
+                        cmt.imageUrl
+                          ? cmt.imageUrl
+                          : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                              cmt.name
+                            )}&background=random`
                       }
-                    >
-                      <FaReply className="text-xs" /> Reply
-                    </button>
-                  </div>
-                </div>
-                {replyInputs[cmt._id] !== undefined && (
-                  <div className="ml-8 mt-2">
-                    <input
-                      type="text"
-                      placeholder="Add a reply..."
-                      value={replyInputs[cmt._id] || ""}
-                      onChange={(e) =>
-                        handleReplyChange(cmt._id, e.target.value)
-                      }
-                      className="w-full border border-gray-300 rounded p-1 text-sm"
+                      alt="Commenter"
+                      className="w-6 h-6 rounded-full mt-1"
                     />
-                    <button
-                      onClick={() => handleReplySubmit(post._id, cmt._id)}
-                      className="mt-1 px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 transition"
-                    >
-                      Reply
-                    </button>
+                    <div>
+                      <p className="text-sm">
+                        <span className="font-semibold">{cmt.name}</span>:{" "}
+                        {cmt.text}
+                      </p>
+                      <p className="text-xs text-gray-400">
+                        {moment(cmt.time).fromNow()}
+                      </p>
+                      <button
+                        className="text-xs text-blue-500 hover:underline flex items-center gap-1 mt-1"
+                        onClick={() =>
+                          setReplyInputs({
+                            ...replyInputs,
+                            [cmt._id]:
+                              replyInputs[cmt._id] === undefined
+                                ? ""
+                                : undefined,
+                          })
+                        }
+                      >
+                        <FaReply className="text-xs" /> Reply
+                      </button>
+                    </div>
                   </div>
-                )}
-                {cmt.replies && cmt.replies.length > 0 && (
-                  <div className="ml-8 mt-2 space-y-1">
-                    {cmt.replies.slice().reverse().map((reply, j) => (
-                      <div key={j} className="flex items-start gap-2">
-                        <img
-                          src={
-                            reply.imageUrl
-                              ? reply.imageUrl
-                              : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                                  reply.name
-                                )}&background=random`
-                          }
-                          alt="Replier"
-                          className="w-5 h-5 rounded-full mt-1"
-                        />
-                        <div>
-                          <p className="text-xs">
-                            <span className="font-semibold">{reply.name}</span>: {reply.text}
-                          </p>
-                          <p className="text-xs text-gray-400">
-                            {moment(reply.time).fromNow()}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
+                  {replyInputs[cmt._id] !== undefined && (
+                    <div className="ml-8 mt-2">
+                      <input
+                        type="text"
+                        placeholder="Add a reply..."
+                        value={replyInputs[cmt._id] || ""}
+                        onChange={(e) =>
+                          handleReplyChange(cmt._id, e.target.value)
+                        }
+                        className="w-full border border-gray-300 rounded p-1 text-sm"
+                      />
+                      <button
+                        onClick={() => handleReplySubmit(post._id, cmt._id)}
+                        className="mt-1 px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 transition"
+                      >
+                        Reply
+                      </button>
+                    </div>
+                  )}
+                  {cmt.replies && cmt.replies.length > 0 && (
+                    <div className="ml-8 mt-2 space-y-1">
+                      {cmt.replies
+                        .slice()
+                        .reverse()
+                        .map((reply, j) => (
+                          <div key={j} className="flex items-start gap-2">
+                            <img
+                              src={
+                                reply.imageUrl
+                                  ? reply.imageUrl
+                                  : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                                      reply.name
+                                    )}&background=random`
+                              }
+                              alt="Replier"
+                              className="w-5 h-5 rounded-full mt-1"
+                            />
+                            <div>
+                              <p className="text-xs">
+                                <span className="font-semibold">
+                                  {reply.name}
+                                </span>
+                                : {reply.text}
+                              </p>
+                              <p className="text-xs text-gray-400">
+                                {moment(reply.time).fromNow()}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  )}
+                </div>
+              ))}
           </div>
         </div>
       ))}
