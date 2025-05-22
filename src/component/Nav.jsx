@@ -125,7 +125,7 @@ function ResponsiveAppBar() {
           </Box>
 
           {/* Auth Buttons */}
-          <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 2, ml: 'auto' }}>
+          <Box sx={{ display: {  md: 'flex' }, gap: 2, ml: 'auto' }}>
             {isSignedIn ? (
               <SignOutButton>
                 <Button
