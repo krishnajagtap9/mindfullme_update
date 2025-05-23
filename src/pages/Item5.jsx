@@ -1,83 +1,218 @@
-import React from 'react';
-import { FaRegLightbulb, FaMusic, FaCheckCircle, FaRegBookmark, FaSyncAlt } from 'react-icons/fa';
+import React, { useState } from 'react';
 import { LuBot } from "react-icons/lu";
+import Skeleton from '@mui/material/Skeleton';
+import CircularProgress from '@mui/material/CircularProgress';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import His from './His';  
+
+
+
+const suggestedTopics = [
+  `"I'm feeling anxious about work today"`,
+  `"How can I improve my sleep quality?"`,
+  `"I need help managing stress"`,
+  `"What are some quick mindfulness exercises?"`,
+  `"I'm feeling overwhelmed with my tasks"`,
+];
 
 export default function AIWellnessGuide() {
-  return (
-    <div className="bg-[#F0F0F0] min-h-screen px-4 py-6 sm:py-10">
-      <div className="max-w-4xl mx-auto w-full">
-        {/* Header Section */}
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-3 text-gray-900 tracking-wide leading-tight">
-          Your AI Wellness Guide
-        </h1>
-        <p className="text-gray-600 mb-10 text-base sm:text-lg max-w-xl">
-          Curated tips just for you to feel your best, every day.
-        </p>
+  const [loading, setLoading] = useState(false);
+  const [aiFeedback, setAiFeedback] = useState(
+    'Try 5 minutes of mindful breathing before bed tonight. This can help calm your mind and improve sleep quality.'
+  );
+  const [userMessage, setUserMessage] = useState('');
+  const [showInputBelow, setShowInputBelow] = useState(false);
+  const [accordionOpen, setAccordionOpen] = useState(true);
 
-        {/* Today's Recommendation Card */}
-        <div className="bg-white rounded-xl shadow-lg border border-gray-200 mb-12">
-          {/* Recommendation Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-[#edf6fc] p-5 rounded-t-xl border-b border-blue-200">
-            <div className="flex items-start justify-center font-semibold text-lg sm:text-xl flex-col">
-              <div className='flex'>
-                <LuBot className='text-2xl mr-4'/>
-                <span> Today's Recommendation</span>
-              </div>
-              <span className='text-[1rem]'> Based on your recent mood patterns and goals</span>
-            </div>
-          </div>
-          <p className="text-gray-700 mt-4 sm:mt-0 sm:max-w-3xl text-base sm:text-lg p-6">
-            "Try 5 minutes of mindful breathing before bed tonight. This can help calm your mind and improve sleep quality."
+  const handleGetRecommendation = async () => {
+    if (!userMessage.trim()) {
+      setAiFeedback('Please enter your message.');
+      return;
+    }
+    setLoading(true);
+    setAiFeedback('');
+    setShowInputBelow(false);
+    try {
+      const response = await fetch('https://krish09bha-mindful-me.hf.space/feedback/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: userMessage }),
+      });
+      if (!response.ok) throw new Error('Failed to fetch recommendation');
+      const data = await response.json();
+      setAiFeedback(data.feedback || 'No recommendation found.');
+      setShowInputBelow(true);
+      setAccordionOpen(true);
+    } catch (err) {
+      setAiFeedback('Sorry, something went wrong. Please try again.');
+      setShowInputBelow(false);
+    }
+    setLoading(false);
+  };
+
+  // Improved Input field as a component for reuse
+  const InputField = (
+    <div className="relative mb-4 min-w-0">
+      <input
+        type="text"
+        className="block w-full border border-gray-300 rounded-lg p-4 pr-12 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow shadow-sm bg-white placeholder-gray-400"
+        placeholder="Describe how you're feeling..."
+        value={userMessage}
+        onChange={e => setUserMessage(e.target.value)}
+        disabled={loading}
+        autoComplete="off"
+        style={{ minWidth: 0 }}
+      />
+      {userMessage && !loading && (
+        <button
+          type="button"
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-500 focus:outline-none"
+          onClick={() => setUserMessage('')}
+          tabIndex={-1}
+          aria-label="Clear input"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      )}
+    </div>
+  );
+
+  return (
+    <div className="bg-[#F0F0F0] min-h-screen px-2 py-6 sm:py-10">
+      <div className="max-w-6xl mx-auto w-full flex flex-col lg:flex-row gap-8">
+        {/* Main Content */}
+        <div className="flex-1 min-w-0">
+          {/* Header Section */}
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-3 text-gray-900 tracking-wide leading-tight">
+            Your AI Wellness Guide
+          </h1>
+          <p className="text-gray-600 mb-10 text-base sm:text-lg max-w-xl">
+            Curated tips just for you to feel your best, every day.
           </p>
 
-          <div className="px-5 py-4 sm:px-8">
-            <a
-              href="#"
-              className="inline-flex items-center text-green-600 hover:text-green-700 font-semibold text-sm sm:text-base mb-8 transition-colors focus:outline-none focus:ring-2 focus:ring-green-400 rounded"
-            >
-              <FaMusic className="mr-2 text-lg sm:text-xl" />
-              Listen to guided breathing exercise
-            </a>
-
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 sm:gap-6 border-t border-gray-200 pt-5">
-              <div className="flex flex-wrap gap-4">
+          {/* Today's Recommendation Card */}
+          <div className="bg-white rounded-xl shadow-lg border border-gray-200 mb-12">
+            {/* Recommendation Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-[#edf6fc] p-5 rounded-t-xl border-b border-blue-200">
+              <div className="flex items-start justify-center font-semibold text-lg sm:text-xl flex-col">
+                <div className='flex'>
+                  <LuBot className='text-2xl mr-4' />
+                  <span> AI Mental Health Assistant</span>
+                </div>
+                <span className='text-[1rem]'>Share how you're feeling to get personalized guidance</span>
+              </div>
+            </div>
+            <div className="p-6">
+              {/* Input above result if not showInputBelow */}
+              {!showInputBelow && InputField}
+              <Accordion
+                expanded={accordionOpen}
+                onChange={() => setAccordionOpen(!accordionOpen)}
+                sx={{
+                  boxShadow: 'none',
+                  border: 'none',
+                  background: 'transparent',
+                  mb: showInputBelow ? 2 : 0,
+                }}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="ai-feedback-content"
+                  id="ai-feedback-header"
+                  sx={{ minHeight: 0, px: 0, py: 0 }}
+                >
+                  <span className="font-semibold text-base sm:text-lg text-green-700">
+                    AI Recommendation
+                  </span>
+                </AccordionSummary>
+                <AccordionDetails sx={{ px: 0, py: 1 }}>
+                  <div className="text-gray-700 sm:max-w-3xl text-base sm:text-lg min-h-[60px] w-full gap-1.5 flex flex-col justify-center items-center">
+                    {loading ? (
+                      <Skeleton
+                        variant="text"
+                        width="100%"
+                        sx={{ fontSize: '1.25rem', height: '2.5rem', lineHeight: '2.5rem' }}
+                        animation="wave"
+                      />
+                    ) : (
+                      <span>
+                        "{aiFeedback}"
+                      </span>
+                    )}
+                  </div>
+                </AccordionDetails>
+              </Accordion>
+              {/* Input below result if showInputBelow */}
+              {showInputBelow && InputField}
+              {/* Action Button */}
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 sm:gap-6 border-t border-gray-200 pt-5 mt-6">
                 <button
                   className="flex items-center px-5 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-shadow shadow-md text-sm sm:text-base whitespace-nowrap"
                   type="button"
+                  onClick={handleGetRecommendation}
+                  disabled={loading}
                 >
-                  <FaCheckCircle className="mr-2 text-lg" />
-                  Mark as Done
-                </button>
-                <button
-                  className="flex items-center px-5 py-3 bg-white text-gray-700 border border-gray-300 rounded-lg font-semibold hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300 transition-shadow shadow-sm text-sm sm:text-base whitespace-nowrap"
-                  type="button"
-                >
-                  <FaRegBookmark className="mr-2 text-lg" />
-                  Save
+                  {loading && <CircularProgress size={18} color="inherit" className="mr-2" />}
+                  Get AI Recommendation
                 </button>
               </div>
-              <button
-                className="flex items-center px-5 py-3 bg-white text-gray-700 border border-gray-300 rounded-lg font-semibold hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300 transition-shadow shadow-sm text-sm sm:text-base whitespace-nowrap **self-end sm:self-auto**"
-                type="button"
-              >
-                <FaSyncAlt className="mr-2 text-lg" />
-                New Suggestion
-              </button>
             </div>
           </div>
+
+          {/* Render your custom component here */}
+       <His />
+
         </div>
 
-        {/* Your Progress Section */}
-        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 sm:p-8">
-          <h2 className="text-2xl sm:text-3xl font-semibold mb-3 text-gray-800 leading-snug">
-            Your Progress
-          </h2>
-          <p className="text-gray-600 mb-8 text-base sm:text-lg max-w-xl">
-            Tracking your completed suggestions and their effectiveness
-          </p>
-          <div className="h-44 sm:h-56 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 text-sm sm:text-base select-none">
-            Progress data will appear here...
+        {/* Right Side Card */}
+        <div className="w-full lg:w-[340px] flex-shrink-0">
+          <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 sticky top-8">
+            <h3 className="text-lg font-bold text-gray-800 mb-4">How It Works</h3>
+            <ol className="mb-6 space-y-3 text-gray-700 text-base">
+              <li className="flex items-start gap-3">
+                <span className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">1</span>
+                <span>
+                  <span className="font-semibold">Share Your Thoughts</span>
+                  <br />
+                  <span className="text-gray-500">Describe how you're feeling or ask for specific guidance</span>
+                </span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">2</span>
+                <span>
+                  <span className="font-semibold">AI Analysis</span>
+                  <br />
+                  <span className="text-gray-500">Our AI processes your message and your wellness history</span>
+                </span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">3</span>
+                <span>
+                  <span className="font-semibold">Personalized Guidance</span>
+                  <br />
+                  <span className="text-gray-500">Receive tailored recommendations and insights</span>
+                </span>
+              </li>
+            </ol>
+            <div>
+              <h4 className="text-base font-semibold text-gray-800 mb-2">Suggested Topics</h4>
+              <ul className="space-y-2">
+                {suggestedTopics.map((topic, idx) => (
+                  <li
+                    key={idx}
+                    className="bg-blue-50 border border-blue-100 rounded px-3 py-2 text-gray-700 text-sm hover:bg-blue-100 cursor-pointer transition"
+                    onClick={() => setUserMessage(topic.replace(/"/g, ""))}
+                  >
+                    {topic}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
