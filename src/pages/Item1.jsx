@@ -28,6 +28,8 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import Daily_checkin from './Daily_checkin';
+import Analyze_Feedback from './Analyze_Feedback';
+import Get_Logs_by_User_ID from './Get_Logs_by_User_ID';
 
 
 export default function Dashboard() {
@@ -68,8 +70,8 @@ export default function Dashboard() {
             aria-label="Daily Check-in Tabs"
           >
             <Tab label="Mood" />
-            {/* <Tab label="Sleep" />
-            <Tab label="Gratitude" /> */}
+            <Tab label="Analyze Feedback" />
+            <Tab label="Get Logs by User ID" />
           </Tabs>
           <div className="mt-6">
             {tabValue === 0 && (
@@ -78,18 +80,13 @@ export default function Dashboard() {
               </div>
             )}
             {tabValue === 1 && (
-              <div>
-                <h3 className="font-semibold text-lg mb-2">How did you sleep?</h3>
-                {/* Sleep check-in content here */}
-                <p className="text-gray-600">Rate your sleep quality and duration.</p>
-              </div>
+             <Analyze_Feedback/>
+
             )}
             {tabValue === 2 && (
-              <div>
-                <h3 className="font-semibold text-lg mb-2">What are you grateful for?</h3>
-                {/* Gratitude check-in content here */}
-                <p className="text-gray-600">Write down something positive from today.</p>
-              </div>
+              <Get_Logs_by_User_ID/>
+
+
             )}
           </div>
         </Box>
