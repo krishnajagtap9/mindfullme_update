@@ -16,7 +16,6 @@ import Item4 from './Item4';
 import Item5 from './Item5';
 import Item6 from "../layout/Item6"
 
-
 // Icons
 import { FaHome } from 'react-icons/fa';
 import { MdOutlineLocalLibrary, MdPeopleAlt } from 'react-icons/md';
@@ -86,18 +85,19 @@ function TabPanel(props) {
       id={`vertical-tabpanel-${index}`}
       aria-labelledby={`vertical-tab-${index}`}
       {...other}
-      style={{ height: '100%', display: value === index ? 'block' : 'none' }}
+      style={{ height: '100%', display: value === index ? 'block' : 'none', width: '100%' }}
     >
       {value === index && (
-        <Box sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
-          <Typography variant="h5" component="h2" sx={{ marginBottom: 2 }}>
+        <Box sx={{ p: 0, height: '100%', display: 'flex', flexDirection: 'column', width: '100%' }}>
+          <Typography variant="h5" component="h2" sx={{ marginBottom: 2, display: 'none' }}>
             {children && children.props && children.props.label ? children.props.label : ''}
           </Typography>
           <Box
             sx={{
               flexGrow: 1,
               overflowY: 'auto',
-              pr: 1,
+              pr: 0,
+              width: '100%',
               scrollbarWidth: 'none',
               msOverflowStyle: 'none',
               '&::-webkit-scrollbar': {
@@ -157,7 +157,7 @@ export default function VerticalTabs() {
 
   return (
     <ThemeProvider theme={customTheme}>
-      <Box sx={{ display: 'flex', height: '100vh', backgroundColor:"white" }}>
+      <Box sx={{ display: 'flex', height: '100vh', backgroundColor: "white" }}>
         {!isLargeScreen && (
           <IconButton
             onClick={toggleTabs}
@@ -190,6 +190,7 @@ export default function VerticalTabs() {
               transition: 'all 0.3s ease',
               backgroundColor: { xs: 'background.paper', md: 'transparent' },
               zIndex: { xs: 1200, md: 'auto' },
+              height: '100vh',
             }}
           >
             <Tabs
@@ -227,13 +228,19 @@ export default function VerticalTabs() {
             bgcolor: '#F0F0F0',
             height: '100vh',
             overflow: 'hidden',
+            width: 0,
+            minWidth: 0,
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
           {tabsData.map((tab, index) => (
             <TabPanel key={index} value={value} index={index}>
               <>
                 <Typography component="span" sx={{ display: 'none' }} label={tab.label} />
-                {tab.component}
+                <Box sx={{ width: '100%', height: '100%' }}>
+                  {tab.component}
+                </Box>
               </>
             </TabPanel>
           ))}

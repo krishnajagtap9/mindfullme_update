@@ -58,29 +58,29 @@ const Get_Logs_by_User_ID = () => {
   );
 
   return (
-    <div className="max-w-2xl mx-auto p-8 bg-white rounded-2xl shadow-xl mt-10">
-      <h2 className="text-2xl font-bold text-green-700 mb-4">
+    <div className="max-w-2xl mx-auto p-2 sm:p-6 md:p-8 bg-white rounded-2xl shadow-xl mt-4 sm:mt-10">
+      <h2 className="text-lg sm:text-2xl font-bold text-green-700 mb-2">
         Search Logs by Clerk User ID
       </h2>
-      <div className="flex flex-col sm:flex-row gap-2 mb-6">
+      <div className="flex flex-col sm:flex-row gap-2 mb-4">
         <input
           type="text"
           placeholder="Enter Clerk User ID"
           value={userId}
           onChange={e => setUserId(e.target.value)}
-          className="flex-1 border border-green-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+          className="flex-1 border border-green-200 rounded-lg px-3 py-2 text-xs sm:text-base focus:outline-none focus:ring-2 focus:ring-green-400"
         />
         <button
           onClick={handleSearch}
-          className="bg-green-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-700 transition"
+          className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition text-xs sm:text-base"
           disabled={loading || !userId.trim()}
         >
-          {loading ? <CircularProgress size={20} color="inherit" /> : "Search"}
+          {loading ? <CircularProgress size={18} color="inherit" /> : "Search"}
         </button>
         {user && user.id && (
           <button
             onClick={handleUseMyId}
-            className="bg-blue-100 text-blue-700 px-4 py-2 rounded-lg font-semibold hover:bg-blue-200 transition"
+            className="bg-blue-100 text-blue-700 px-3 py-2 rounded-lg font-semibold hover:bg-blue-200 transition text-xs sm:text-base"
             title="Use your Clerk User ID"
             type="button"
           >
@@ -89,15 +89,15 @@ const Get_Logs_by_User_ID = () => {
         )}
       </div>
       {user && user.id && (
-        <div className="mb-4 text-xs text-gray-500">
+        <div className="mb-3 text-[11px] sm:text-xs text-gray-500 break-all">
           <span className="font-semibold">Your Clerk User ID:</span>{" "}
-          <span className="font-mono bg-gray-100 px-2 py-1 rounded">{user.id}</span>
+          <span className="font-mono bg-gray-100 px-2 py-1 rounded break-all">{user.id}</span>
         </div>
       )}
       {/* Date and Day filter */}
       {logs.length > 0 && (
-        <div className="mb-4 flex flex-col sm:flex-row gap-2 items-center">
-          <label className="text-sm text-gray-700 font-semibold">Filter by Date:</label>
+        <div className="mb-3 flex flex-col sm:flex-row gap-2 items-center">
+          <label className="text-xs sm:text-sm text-gray-700 font-semibold">Filter by Date:</label>
           <input
             type="date"
             value={searchDate}
@@ -105,26 +105,26 @@ const Get_Logs_by_User_ID = () => {
               setSearchDate(e.target.value);
               setSearchDay(""); // Clear day filter if date is set
             }}
-            className="border border-green-200 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-green-400"
+            className="border border-green-200 rounded px-2 py-1 text-xs sm:text-base focus:outline-none focus:ring-2 focus:ring-green-400"
           />
           {searchDate && (
             <button
               onClick={() => setSearchDate("")}
-              className="ml-2 text-xs text-gray-500 underline"
+              className="ml-2 text-[11px] sm:text-xs text-gray-500 underline"
               type="button"
             >
               Clear
             </button>
           )}
-          <span className="mx-2 text-gray-400">or</span>
-          <label className="text-sm text-gray-700 font-semibold">Filter by Day:</label>
+          <span className="mx-2 text-gray-400 text-xs sm:text-base">or</span>
+          <label className="text-xs sm:text-sm text-gray-700 font-semibold">Filter by Day:</label>
           <select
             value={searchDay}
             onChange={e => {
               setSearchDay(e.target.value);
               setSearchDate(""); // Clear date filter if day is set
             }}
-            className="border border-green-200 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-green-400"
+            className="border border-green-200 rounded px-2 py-1 text-xs sm:text-base focus:outline-none focus:ring-2 focus:ring-green-400"
           >
             <option value="">Select Day</option>
             {uniqueDays.map((day) => (
@@ -134,7 +134,7 @@ const Get_Logs_by_User_ID = () => {
           {searchDay && (
             <button
               onClick={() => setSearchDay("")}
-              className="ml-2 text-xs text-gray-500 underline"
+              className="ml-2 text-[11px] sm:text-xs text-gray-500 underline"
               type="button"
             >
               Clear
@@ -143,12 +143,12 @@ const Get_Logs_by_User_ID = () => {
         </div>
       )}
       {loading && (
-        <div className="flex justify-center items-center h-24">
-          <CircularProgress size={32} color="success" />
+        <div className="flex justify-center items-center h-20">
+          <CircularProgress size={28} color="success" />
         </div>
       )}
       {!loading && searched && filteredLogs.length === 0 && (
-        <div className="text-gray-400 text-center py-8">
+        <div className="text-gray-400 text-center py-6 text-xs sm:text-base">
           {searchDate
             ? "No logs found for this user ID on this date."
             : searchDay
@@ -158,22 +158,22 @@ const Get_Logs_by_User_ID = () => {
         </div>
       )}
       {!loading && filteredLogs.length > 0 && (
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {filteredLogs.map((log, idx) => (
             <div
               key={idx}
-              className="border border-green-200 rounded-xl p-5 shadow bg-gradient-to-br from-green-50 to-white"
+              className="border border-green-200 rounded-xl p-2 sm:p-5 shadow bg-gradient-to-br from-green-50 to-white"
             >
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-2">
-                <div className="text-xs text-green-700 font-semibold flex items-center gap-2">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-1 sm:gap-2 mb-1 sm:mb-2">
+                <div className="text-[11px] sm:text-xs text-green-700 font-semibold flex items-center gap-1 sm:gap-2">
                   <span role="img" aria-label="calendar">📅</span>
                   {log.timestamp} <span className="ml-2 text-gray-500">({getDayName(log.timestamp)})</span>
                 </div>
-                <div className="text-xs text-gray-500">
+                <div className="text-[11px] sm:text-xs text-gray-500 break-all">
                   User ID: <span className="font-mono">{log.user_id}</span>
                 </div>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-2 text-sm text-gray-700 mb-3">
+              <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-1 sm:gap-x-6 sm:gap-y-2 text-xs sm:text-sm text-gray-700 mb-2 sm:mb-3">
                 <div>
                   <span className="font-semibold text-black">Mood:</span> {log.mood}/10
                 </div>
@@ -203,5 +203,3 @@ const Get_Logs_by_User_ID = () => {
     </div>
   );
 };
-
-export default Get_Logs_by_User_ID;

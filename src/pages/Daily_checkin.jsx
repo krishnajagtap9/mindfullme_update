@@ -131,15 +131,15 @@ export default function WellnessCheckIn() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-8 p-8 bg-transparent mt-10">
+    <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 p-4 sm:p-6 md:p-8 bg-transparent mt-6 sm:mt-10">
       <ToastContainer position="top-right" autoClose={3000} />
       {/* Form Card */}
-      <div className="flex-1">
-        <div className="bg-white rounded-2xl shadow-2xl border border-green-100 p-8">
-          <h2 className="text-3xl font-bold text-green-700 flex items-center gap-2 mb-2">
+      <div className="flex-1 w-full">
+        <div className="bg-white rounded-2xl shadow-2xl border border-green-100 p-4 sm:p-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-green-700 flex items-center gap-2 mb-2">
             <span role="img" aria-label="check-in">📝</span> Daily Wellness Check-In
           </h2>
-          <p className="text-gray-500 mb-6">
+          <p className="text-gray-500 mb-6 text-sm sm:text-base">
             Track your mental and physical wellbeing to receive personalized recommendations.
           </p>
 
@@ -150,7 +150,7 @@ export default function WellnessCheckIn() {
             { label: "Diet Quality", id: "diet_level", icon: "🥗" },
             { label: "Anxiety Level", id: "anxiety_level", icon: "😟" }
           ].map(({ label, id, icon }) => (
-            <div key={id} className="mb-2">
+            <div key={id} className="mb-3">
               <label className="block text-sm font-semibold text-gray-700 mb-1 flex items-center gap-2">
                 <span>{icon}</span> {label} <span className="ml-auto text-green-700 font-bold">{formData[id]}</span>
               </label>
@@ -170,7 +170,7 @@ export default function WellnessCheckIn() {
             </div>
           ))}
 
-          <div className="mb-2">
+          <div className="mb-3">
             <label className="block text-sm font-semibold text-gray-700 mb-1 flex items-center gap-2">
               🏃‍♂️ Exercise Duration <span className="ml-auto text-green-700 font-bold">{formData.exercise_duration} min</span>
             </label>
@@ -189,7 +189,7 @@ export default function WellnessCheckIn() {
             </div>
           </div>
 
-          <div>
+          <div className="mb-3">
             <label className="block text-sm font-semibold text-gray-700 mb-1 flex items-center gap-2">
               🛏️ Sleep Hours <span className="ml-auto text-green-700 font-bold">{formData.sleep_hours} hrs</span>
             </label>
@@ -207,7 +207,7 @@ export default function WellnessCheckIn() {
 
           <button
             onClick={handleSubmit}
-            className={`w-full bg-gradient-to-r from-green-500 to-green-700 text-white py-3 rounded-lg font-bold text-lg shadow-md hover:from-green-600 hover:to-green-800 transition flex items-center justify-center mt-6 ${loading || alreadyLogged ? "opacity-70 cursor-not-allowed" : ""}`}
+            className={`w-full bg-gradient-to-r from-green-500 to-green-700 text-white py-3 rounded-lg font-bold text-base sm:text-lg shadow-md hover:from-green-600 hover:to-green-800 transition flex items-center justify-center mt-6 ${loading || alreadyLogged ? "opacity-70 cursor-not-allowed" : ""}`}
             disabled={loading || alreadyLogged}
           >
             {loading ? (
@@ -225,15 +225,15 @@ export default function WellnessCheckIn() {
       </div>
 
       {/* Result Card */}
-      <div className="flex-1 flex flex-col justify-center">
-        <div className="bg-white rounded-2xl shadow-2xl border border-green-100 p-8 h-full flex items-center justify-center">
+      <div className="flex-1 w-full flex flex-col justify-center mt-8 lg:mt-0">
+        <div className="bg-white rounded-2xl shadow-2xl border border-green-100 p-4 sm:p-8 h-full flex items-center justify-center">
           {alreadyLogged ? (
-            <div className="p-6 bg-yellow-50 border border-yellow-300 rounded-xl text-base text-yellow-900 shadow-inner text-center">
+            <div className="p-4 sm:p-6 bg-yellow-50 border border-yellow-300 rounded-xl text-base text-yellow-900 shadow-inner text-center w-full">
               <span className="font-bold text-yellow-800 text-lg">A log for today already exists.</span>
               <div className="mt-2 text-yellow-700">You can only submit your daily log once per day.</div>
             </div>
           ) : response ? (
-            <div className="p-6 bg-green-50 border border-green-200 rounded-xl text-base text-green-900 shadow-inner">
+            <div className="p-4 sm:p-6 bg-green-50 border border-green-200 rounded-xl text-base text-green-900 shadow-inner w-full">
               <div className="mb-2">
                 <span className="font-bold text-green-800">Recommendation:</span>
                 <span
@@ -250,7 +250,7 @@ export default function WellnessCheckIn() {
               </div>
             </div>
           ) : (
-            <div className="p-6 bg-gray-50 border border-gray-200 rounded-xl text-base text-gray-500 shadow-inner text-center">
+            <div className="p-4 sm:p-6 bg-gray-50 border border-gray-200 rounded-xl text-base text-gray-500 shadow-inner text-center w-full">
               <span>Submit your daily check-in to see recommendations here.</span>
             </div>
           )}
