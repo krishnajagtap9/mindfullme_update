@@ -6,9 +6,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import His from './His';  
-
-
+import His from './His';
 
 const suggestedTopics = [
   `"I'm feeling anxious about work today"`,
@@ -53,7 +51,6 @@ export default function AIWellnessGuide() {
     setLoading(false);
   };
 
-  // Improved Input field as a component for reuse
   const InputField = (
     <div className="relative mb-4 min-w-0">
       <input
@@ -82,12 +79,40 @@ export default function AIWellnessGuide() {
     </div>
   );
 
+  const renderFormattedFeedback = () => {
+    return aiFeedback.split('\n').map((line, idx) => {
+      const isBullet = /^\*|^\-/.test(line.trim());
+      let emoji = '✅';
+      const cleaned = line.replace(/^\*+|\-+/, '').trim();
+
+      if (/avoid|don’t|not|stop|skip/i.test(cleaned)) {
+        emoji = '❌';
+      }
+
+      const formattedText = cleaned.replace(/\*\*(.*?)\*\*/g, (_, boldText) => `<strong>${boldText}</strong>`);
+
+      if (isBullet) {
+        return (
+          <div key={idx} className="flex items-start gap-3">
+            <span className="mt-1 text-green-500 text-lg">{emoji}</span>
+            <span
+              className="text-gray-800"
+              dangerouslySetInnerHTML={{ __html: formattedText }}
+            />
+          </div>
+        );
+      }
+
+      return (
+        <p key={idx} dangerouslySetInnerHTML={{ __html: line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
+      );
+    });
+  };
+
   return (
     <div className="bg-[#F0F0F0] min-h-screen px-2 py-6 sm:py-10">
       <div className="max-w-6xl mx-auto w-full flex flex-col lg:flex-row gap-8">
-        {/* Main Content */}
         <div className="flex-1 min-w-0">
-          {/* Header Section */}
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-3 text-gray-900 tracking-wide leading-tight">
             Your AI Wellness Guide
           </h1>
@@ -95,9 +120,7 @@ export default function AIWellnessGuide() {
             Curated tips just for you to feel your best, every day.
           </p>
 
-          {/* Today's Recommendation Card */}
           <div className="bg-white rounded-xl shadow-lg border border-gray-200 mb-12">
-            {/* Recommendation Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-[#edf6fc] p-5 rounded-t-xl border-b border-blue-200">
               <div className="flex items-start justify-center font-semibold text-lg sm:text-xl flex-col">
                 <div className='flex'>
@@ -108,7 +131,6 @@ export default function AIWellnessGuide() {
               </div>
             </div>
             <div className="p-6">
-              {/* Input above result if not showInputBelow */}
               {!showInputBelow && InputField}
               <Accordion
                 expanded={accordionOpen}
@@ -131,25 +153,28 @@ export default function AIWellnessGuide() {
                   </span>
                 </AccordionSummary>
                 <AccordionDetails sx={{ px: 0, py: 1 }}>
-                  <div className="text-gray-700 sm:max-w-3xl text-base sm:text-lg min-h-[60px] w-full gap-1.5 flex flex-col justify-center items-center">
-                    {loading ? (
-                      <Skeleton
-                        variant="text"
-                        width="100%"
-                        sx={{ fontSize: '1.25rem', height: '2.5rem', lineHeight: '2.5rem' }}
-                        animation="wave"
-                      />
-                    ) : (
-                      <span>
-                        "{aiFeedback}"
-                      </span>
-                    )}
+                  <div className="w-full flex justify-center">
+                    <div className="w-full sm:max-w-3xl bg-green-50 border border-green-200 rounded-lg px-5 py-4 flex items-start gap-3 shadow-sm">
+                      <span className="mt-1 text-green-500 text-xl"><LuBot /></span>
+                      <div className="flex-1 text-gray-800 text-base sm:text-lg whitespace-pre-line leading-relaxed">
+                        {loading ? (
+                          <Skeleton
+                            variant="text"
+                            width="100%"
+                            sx={{ fontSize: '1.25rem', height: '2.5rem', lineHeight: '2.5rem' }}
+                            animation="wave"
+                          />
+                        ) : (
+                          <div className="space-y-3">
+                            {renderFormattedFeedback()}
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </AccordionDetails>
               </Accordion>
-              {/* Input below result if showInputBelow */}
               {showInputBelow && InputField}
-              {/* Action Button */}
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 sm:gap-6 border-t border-gray-200 pt-5 mt-6">
                 <button
                   className="flex items-center px-5 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-shadow shadow-md text-sm sm:text-base whitespace-nowrap"
@@ -164,39 +189,24 @@ export default function AIWellnessGuide() {
             </div>
           </div>
 
-          {/* Render your custom component here */}
-       <His />
-
+          <His />
         </div>
 
-        {/* Right Side Card */}
         <div className="w-full lg:w-[340px] flex-shrink-0">
           <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 sticky top-8">
             <h3 className="text-lg font-bold text-gray-800 mb-4">How It Works</h3>
             <ol className="mb-6 space-y-3 text-gray-700 text-base">
               <li className="flex items-start gap-3">
                 <span className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">1</span>
-                <span>
-                  <span className="font-semibold">Share Your Thoughts</span>
-                  <br />
-                  <span className="text-gray-500">Describe how you're feeling or ask for specific guidance</span>
-                </span>
+                <span><span className="font-semibold">Share Your Thoughts</span><br /><span className="text-gray-500">Describe how you're feeling or ask for specific guidance</span></span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">2</span>
-                <span>
-                  <span className="font-semibold">AI Analysis</span>
-                  <br />
-                  <span className="text-gray-500">Our AI processes your message and your wellness history</span>
-                </span>
+                <span><span className="font-semibold">AI Analysis</span><br /><span className="text-gray-500">Our AI processes your message and your wellness history</span></span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">3</span>
-                <span>
-                  <span className="font-semibold">Personalized Guidance</span>
-                  <br />
-                  <span className="text-gray-500">Receive tailored recommendations and insights</span>
-                </span>
+                <span><span className="font-semibold">Personalized Guidance</span><br /><span className="text-gray-500">Receive tailored recommendations and insights</span></span>
               </li>
             </ol>
             <div>
