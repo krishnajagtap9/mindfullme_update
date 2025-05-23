@@ -16,10 +16,80 @@ const suggestedTopics = [
   `"I'm feeling overwhelmed with my tasks"`,
 ];
 
+// Format feedback content: bold, italic, paragraphs, lists, remove leading dots/bullets
+function formatFeedbackContent(content) {
+  if (!content) return "";
+
+  // Replace **bold**
+  let formatted = content.replace(
+    /\*\*(.*?)\*\*/g,
+    '<strong class="font-semibold text-green-800">$1</strong>'
+  );
+
+  // Replace *italic*
+  formatted = formatted.replace(
+    /\*(.*?)\*/g,
+    '<em>$1</em>'
+  );
+
+  // Remove leading dots, asterisks, bullets, and numbers from each line
+  formatted = formatted
+    .split('\n')
+    .map(line =>
+      line
+        .replace(/^(\d+\.)\s*/, "") // Remove "1. ", "2. ", etc.
+        .replace(/^•\s*/, "")       // Remove "• "
+        .replace(/^\*\s*/, "")      // Remove "* "
+        .replace(/^\.\s*/, "")      // Remove ". "
+        .trim()
+    )
+    .join('\n');
+
+  // Process paragraphs and lists
+  let result = "";
+  const paragraphs = formatted.split("\n\n");
+
+  for (let i = 0; i < paragraphs.length; i++) {
+    const para = paragraphs[i];
+
+    // Bullet/list detection
+    if (
+      para.trim().startsWith("- ") ||
+      para.trim().startsWith("* ") ||
+      para.trim().match(/^(\d+\.)\s/)
+    ) {
+      // List
+      const items = para
+        .split('\n')
+        .map(item =>
+          item
+            .replace(/^-\s*/, "")
+            .replace(/^\*\s*/, "")
+            .replace(/^(\d+\.)\s*/, "")
+            .replace(/^•\s*/, "")
+            .replace(/^\.\s*/, "")
+            .trim()
+        )
+        .filter(Boolean);
+      result += `<ul class="list-disc pl-5 space-y-2">${items
+        .map(
+          (item) =>
+            `<li class="mb-1">${item}</li>`
+        )
+        .join("")}</ul>`;
+    } else if (para.trim()) {
+      // Paragraph
+      result += `<p class="mb-2">${para.trim()}</p>`;
+    }
+  }
+
+  return result;
+}
+
 export default function AIWellnessGuide() {
   const [loading, setLoading] = useState(false);
   const [aiFeedback, setAiFeedback] = useState(
-    'Try 5 minutes of mindful breathing before bed tonight. This can help calm your mind and improve sleep quality.'
+    'Try **5 minutes of mindful breathing** before bed tonight.\n\n- This can help calm your mind and improve sleep quality.\n- Make sure your room is dark and quiet.\n- Avoid screens 30 minutes before sleep.'
   );
   const [userMessage, setUserMessage] = useState('');
   const [showInputBelow, setShowInputBelow] = useState(false);
@@ -80,33 +150,12 @@ export default function AIWellnessGuide() {
   );
 
   const renderFormattedFeedback = () => {
-    return aiFeedback.split('\n').map((line, idx) => {
-      const isBullet = /^\*|^\-/.test(line.trim());
-      let emoji = '✅';
-      const cleaned = line.replace(/^\*+|\-+/, '').trim();
-
-      if (/avoid|don’t|not|stop|skip/i.test(cleaned)) {
-        emoji = '❌';
-      }
-
-      const formattedText = cleaned.replace(/\*\*(.*?)\*\*/g, (_, boldText) => `<strong>${boldText}</strong>`);
-
-      if (isBullet) {
-        return (
-          <div key={idx} className="flex items-start gap-3">
-            <span className="mt-1 text-green-500 text-lg">{emoji}</span>
-            <span
-              className="text-gray-800"
-              dangerouslySetInnerHTML={{ __html: formattedText }}
-            />
-          </div>
-        );
-      }
-
-      return (
-        <p key={idx} dangerouslySetInnerHTML={{ __html: line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
-      );
-    });
+    return (
+      <div
+        className="space-y-3"
+        dangerouslySetInnerHTML={{ __html: formatFeedbackContent(aiFeedback) }}
+      />
+    );
   };
 
   return (
@@ -165,9 +214,7 @@ export default function AIWellnessGuide() {
                             animation="wave"
                           />
                         ) : (
-                          <div className="space-y-3">
-                            {renderFormattedFeedback()}
-                          </div>
+                          renderFormattedFeedback()
                         )}
                       </div>
                     </div>
