@@ -92,7 +92,6 @@ export default function AIWellnessGuide() {
     'Try **5 minutes of mindful breathing** before bed tonight.\n\n- This can help calm your mind and improve sleep quality.\n- Make sure your room is dark and quiet.\n- Avoid screens 30 minutes before sleep.'
   );
   const [userMessage, setUserMessage] = useState('');
-  const [showInputBelow, setShowInputBelow] = useState(false);
   const [accordionOpen, setAccordionOpen] = useState(true);
 
   const handleGetRecommendation = async () => {
@@ -102,7 +101,6 @@ export default function AIWellnessGuide() {
     }
     setLoading(true);
     setAiFeedback('');
-    setShowInputBelow(false);
     try {
       const response = await fetch('https://krish09bha-mindful-me.hf.space/feedback/', {
         method: 'POST',
@@ -112,11 +110,9 @@ export default function AIWellnessGuide() {
       if (!response.ok) throw new Error('Failed to fetch recommendation');
       const data = await response.json();
       setAiFeedback(data.feedback || 'No recommendation found.');
-      setShowInputBelow(true);
       setAccordionOpen(true);
     } catch (err) {
       setAiFeedback('Sorry, something went wrong. Please try again.');
-      setShowInputBelow(false);
     }
     setLoading(false);
   };
@@ -180,7 +176,8 @@ export default function AIWellnessGuide() {
               </div>
             </div>
             <div className="p-6">
-              {!showInputBelow && InputField}
+              {/* Input always stays above the AI Recommendation */}
+              {InputField}
               <Accordion
                 expanded={accordionOpen}
                 onChange={() => setAccordionOpen(!accordionOpen)}
@@ -188,7 +185,7 @@ export default function AIWellnessGuide() {
                   boxShadow: 'none',
                   border: 'none',
                   background: 'transparent',
-                  mb: showInputBelow ? 2 : 0,
+                  mb: 2,
                 }}
               >
                 <AccordionSummary
@@ -221,7 +218,6 @@ export default function AIWellnessGuide() {
                   </div>
                 </AccordionDetails>
               </Accordion>
-              {showInputBelow && InputField}
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 sm:gap-6 border-t border-gray-200 pt-5 mt-6">
                 <button
                   className="flex items-center px-5 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-shadow shadow-md text-sm sm:text-base whitespace-nowrap"

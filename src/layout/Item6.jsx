@@ -40,7 +40,6 @@ const emojiList = [
 ];
 
 const API_URL = "https://mindfullme-update-q1z8.onrender.com/api/posts";
-// const API_URL = "http://localhost:5000/api/posts";
 
 const Item6 = () => {
   const { user, isLoaded, isSignedIn } = useUser();
@@ -62,6 +61,7 @@ const Item6 = () => {
   const [editPostText, setEditPostText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("newest");
+  const [loadingPosts, setLoadingPosts] = useState(false);
 
   // Modal state for create post
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -74,6 +74,7 @@ const Item6 = () => {
   }, [userId]);
 
   const fetchPosts = () => {
+    setLoadingPosts(true);
     axios
       .get(API_URL)
       .then((res) => {
@@ -91,7 +92,8 @@ const Item6 = () => {
         setLikedPosts(initialLikedPosts);
         setSavedMap(initialSavedMap);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
+      .finally(() => setLoadingPosts(false));
   };
 
   const handleLike = (postId) => {
@@ -466,225 +468,235 @@ const Item6 = () => {
         </div>
       </div>
 
-      {/* Posts List */}
-      {filteredPosts.map((post) => (
-        <div key={post._id} className="bg-white p-4 rounded-lg shadow-md">
-          <div className="flex items-center gap-3 mb-2">
-            <img
-              src={
-                post.imageUrl
-                  ? post.imageUrl
-                  : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                      post.name
-                    )}&background=random`
-              }
-              className="w-9 h-9 rounded-full object-cover"
-              alt="Post Author"
-            />
-            <div>
-              <p className="font-semibold text-gray-800">{post.name}</p>
-              <p className="text-xs text-gray-500">
-                {moment(post.createdAt).fromNow()}
-              </p>
-            </div>
-            {post.userId === userId && (
-              <div className="ml-auto flex gap-2">
-                <button
-                  className="text-blue-500 hover:text-blue-700"
-                  title="Edit"
-                  onClick={() => handleEditPost(post)}
-                >
-                  <FaEdit />
-                </button>
-                <button
-                  className="text-red-500 hover:text-red-700"
-                  title="Delete"
-                  onClick={() => handleDeletePost(post._id)}
-                >
-                  <FaTrash />
-                </button>
-              </div>
-            )}
-          </div>
-
-          {editingPostId === post._id ? (
-            <div className="flex flex-col gap-2">
-              <textarea
-                value={editPostText}
-                onChange={(e) => setEditPostText(e.target.value)}
-                className="w-full border border-gray-300 rounded p-2 resize-none text-sm"
-                rows="3"
-              />
-              <div className="flex gap-2">
-                <button
-                  className="px-3 py-1 bg-green-500 text-white rounded text-sm hover:bg-green-600 transition flex items-center gap-1"
-                  onClick={() => handleEditPostSave(post._id)}
-                >
-                  <FaCheck /> Save
-                </button>
-                <button
-                  className="px-3 py-1 bg-gray-300 text-gray-700 rounded text-sm hover:bg-gray-400 transition flex items-center gap-1"
-                  onClick={handleEditPostCancel}
-                >
-                  <FaTimes /> Cancel
-                </button>
-              </div>
-            </div>
-          ) : (
-            <p className="mt-2 text-gray-700 text-sm">{post.text}</p>
-          )}
-
-          <div className="flex flex-wrap gap-2 mt-2">
-            {post.tags?.map((tag, i) => (
-              <span
-                key={i}
-                className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full"
-              >
-                #{tag}
-              </span>
-            ))}
-          </div>
-
-          <div className="flex gap-5 text-sm text-gray-600 mt-3">
-            <button
-              onClick={() => handleLike(post._id)}
-              className={`flex items-center gap-1 transition ${
-                likedPosts[post._id] ? "text-red-500" : "hover:text-red-500"
-              }`}
-            >
-              <FaHeart /> {Array.isArray(post.likes) ? post.likes.length : post.likes}
-            </button>
-            <span className="flex items-center gap-1">
-              <FaComment /> {post.commentsCount}
-            </span>
-            <button
-              onClick={() => handleSave(post._id, !!savedMap[post._id])}
-              className={`flex items-center gap-1 transition ${
-                savedMap[post._id] ? "text-yellow-500" : "hover:text-yellow-500"
-              }`}
-              title={savedMap[post._id] ? "Unsave" : "Save"}
-            >
-              {savedMap[post._id] ? <FaBookmark /> : <FaRegBookmark />}{" "}
-              {savedMap[post._id] ? "Saved" : "Save"}
-            </button>
-          </div>
-
-          <div className="mt-3">
-            <input
-              type="text"
-              placeholder="Add a comment..."
-              value={commentInputs[post._id] || ""}
-              onChange={(e) => handleCommentChange(post._id, e.target.value)}
-              className="w-full border border-gray-300 rounded p-1 text-sm"
-            />
-            <button
-              onClick={() => handleCommentSubmit(post._id)}
-              className="mt-1 px-3 py-1 bg-green-500 text-white rounded text-sm hover:bg-green-600 transition"
-            >
-              Comment
-            </button>
-          </div>
-
-          <div className="mt-3 space-y-2">
-            {post.comments &&
-              post.comments.slice().reverse().map((cmt, i) => (
-                <div
-                  key={cmt._id || i}
-                  className="flex flex-col gap-1 pl-2 border-l-2 border-gray-200"
-                >
-                  <div className="flex items-start gap-2">
-                    <img
-                      src={
-                        cmt.imageUrl
-                          ? cmt.imageUrl
-                          : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                              cmt.name
-                            )}&background=random`
-                      }
-                      alt="Commenter"
-                      className="w-6 h-6 rounded-full mt-1"
-                    />
-                    <div>
-                      <p className="text-sm">
-                        <span className="font-semibold">{cmt.name}</span>:{" "}
-                        {cmt.text}
-                      </p>
-                      <p className="text-xs text-gray-400">
-                        {moment(cmt.time).fromNow()}
-                      </p>
-                      <button
-                        className="text-xs text-blue-500 hover:underline flex items-center gap-1 mt-1"
-                        onClick={() =>
-                          setReplyInputs({
-                            ...replyInputs,
-                            [cmt._id]:
-                              replyInputs[cmt._id] === undefined
-                                ? ""
-                                : undefined,
-                          })
-                        }
-                      >
-                        <FaReply className="text-xs" /> Reply
-                      </button>
-                    </div>
-                  </div>
-                  {replyInputs[cmt._id] !== undefined && (
-                    <div className="ml-8 mt-2">
-                      <input
-                        type="text"
-                        placeholder="Add a reply..."
-                        value={replyInputs[cmt._id] || ""}
-                        onChange={(e) =>
-                          handleReplyChange(cmt._id, e.target.value)
-                        }
-                        className="w-full border border-gray-300 rounded p-1 text-sm"
-                      />
-                      <button
-                        onClick={() => handleReplySubmit(post._id, cmt._id)}
-                        className="mt-1 px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 transition"
-                      >
-                        Reply
-                      </button>
-                    </div>
-                  )}
-                  {cmt.replies && cmt.replies.length > 0 && (
-                    <div className="ml-8 mt-2 space-y-1">
-                      {cmt.replies
-                        .slice()
-                        .reverse()
-                        .map((reply, j) => (
-                          <div key={j} className="flex items-start gap-2">
-                            <img
-                              src={
-                                reply.imageUrl
-                                  ? reply.imageUrl
-                                  : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                                      reply.name
-                                    )}&background=random`
-                              }
-                              alt="Replier"
-                              className="w-5 h-5 rounded-full mt-1"
-                            />
-                            <div>
-                              <p className="text-xs">
-                                <span className="font-semibold">
-                                  {reply.name}
-                                </span>
-                                : {reply.text}
-                              </p>
-                              <p className="text-xs text-gray-400">
-                                {moment(reply.time).fromNow()}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-          </div>
+      {/* Loading spinner for posts */}
+      {loadingPosts ? (
+        <div className="flex justify-center items-center py-10">
+          <svg className="animate-spin text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 48 48" width="80" height="80">
+            <circle className="opacity-25" cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="6"></circle>
+            <path className="opacity-75" fill="currentColor" d="M8 24a16 16 0 0132 0h-8z"></path>
+          </svg>
+          <span className="ml-6 text-green-700 text-xl font-semibold">Loading posts...</span>
         </div>
-      ))}
+      ) : (
+        filteredPosts.map((post) => (
+          <div key={post._id} className="bg-white p-4 rounded-lg shadow-md">
+            <div className="flex items-center gap-3 mb-2">
+              <img
+                src={
+                  post.imageUrl
+                    ? post.imageUrl
+                    : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                        post.name
+                      )}&background=random`
+                }
+                className="w-9 h-9 rounded-full object-cover"
+                alt="Post Author"
+              />
+              <div>
+                <p className="font-semibold text-gray-800">{post.name}</p>
+                <p className="text-xs text-gray-500">
+                  {moment(post.createdAt).fromNow()}
+                </p>
+              </div>
+              {post.userId === userId && (
+                <div className="ml-auto flex gap-2">
+                  <button
+                    className="text-blue-500 hover:text-blue-700"
+                    title="Edit"
+                    onClick={() => handleEditPost(post)}
+                  >
+                    <FaEdit />
+                  </button>
+                  <button
+                    className="text-red-500 hover:text-red-700"
+                    title="Delete"
+                    onClick={() => handleDeletePost(post._id)}
+                  >
+                    <FaTrash />
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {editingPostId === post._id ? (
+              <div className="flex flex-col gap-2">
+                <textarea
+                  value={editPostText}
+                  onChange={(e) => setEditPostText(e.target.value)}
+                  className="w-full border border-gray-300 rounded p-2 resize-none text-sm"
+                  rows="3"
+                />
+                <div className="flex gap-2">
+                  <button
+                    className="px-3 py-1 bg-green-500 text-white rounded text-sm hover:bg-green-600 transition flex items-center gap-1"
+                    onClick={() => handleEditPostSave(post._id)}
+                  >
+                    <FaCheck /> Save
+                  </button>
+                  <button
+                    className="px-3 py-1 bg-gray-300 text-gray-700 rounded text-sm hover:bg-gray-400 transition flex items-center gap-1"
+                    onClick={handleEditPostCancel}
+                  >
+                    <FaTimes /> Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <p className="mt-2 text-gray-700 text-sm">{post.text}</p>
+            )}
+
+            <div className="flex flex-wrap gap-2 mt-2">
+              {post.tags?.map((tag, i) => (
+                <span
+                  key={i}
+                  className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full"
+                >
+                  #{tag}
+                </span>
+              ))}
+            </div>
+
+            <div className="flex gap-5 text-sm text-gray-600 mt-3">
+              <button
+                onClick={() => handleLike(post._id)}
+                className={`flex items-center gap-1 transition ${
+                  likedPosts[post._id] ? "text-red-500" : "hover:text-red-500"
+                }`}
+              >
+                <FaHeart /> {Array.isArray(post.likes) ? post.likes.length : post.likes}
+              </button>
+              <span className="flex items-center gap-1">
+                <FaComment /> {post.commentsCount}
+              </span>
+              <button
+                onClick={() => handleSave(post._id, !!savedMap[post._id])}
+                className={`flex items-center gap-1 transition ${
+                  savedMap[post._id] ? "text-yellow-500" : "hover:text-yellow-500"
+                }`}
+                title={savedMap[post._id] ? "Unsave" : "Save"}
+              >
+                {savedMap[post._id] ? <FaBookmark /> : <FaRegBookmark />}{" "}
+                {savedMap[post._id] ? "Saved" : "Save"}
+              </button>
+            </div>
+
+            <div className="mt-3">
+              <input
+                type="text"
+                placeholder="Add a comment..."
+                value={commentInputs[post._id] || ""}
+                onChange={(e) => handleCommentChange(post._id, e.target.value)}
+                className="w-full border border-gray-300 rounded p-1 text-sm"
+              />
+              <button
+                onClick={() => handleCommentSubmit(post._id)}
+                className="mt-1 px-3 py-1 bg-green-500 text-white rounded text-sm hover:bg-green-600 transition"
+              >
+                Comment
+              </button>
+            </div>
+
+            <div className="mt-3 space-y-2">
+              {post.comments &&
+                post.comments.slice().reverse().map((cmt, i) => (
+                  <div
+                    key={cmt._id || i}
+                    className="flex flex-col gap-1 pl-2 border-l-2 border-gray-200"
+                  >
+                    <div className="flex items-start gap-2">
+                      <img
+                        src={
+                          cmt.imageUrl
+                            ? cmt.imageUrl
+                            : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                                cmt.name
+                              )}&background=random`
+                        }
+                        alt="Commenter"
+                        className="w-6 h-6 rounded-full mt-1"
+                      />
+                      <div>
+                        <p className="text-sm">
+                          <span className="font-semibold">{cmt.name}</span>:{" "}
+                          {cmt.text}
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          {moment(cmt.time).fromNow()}
+                        </p>
+                        <button
+                          className="text-xs text-blue-500 hover:underline flex items-center gap-1 mt-1"
+                          onClick={() =>
+                            setReplyInputs({
+                              ...replyInputs,
+                              [cmt._id]:
+                                replyInputs[cmt._id] === undefined
+                                  ? ""
+                                  : undefined,
+                            })
+                          }
+                        >
+                          <FaReply className="text-xs" /> Reply
+                        </button>
+                      </div>
+                    </div>
+                    {replyInputs[cmt._id] !== undefined && (
+                      <div className="ml-8 mt-2">
+                        <input
+                          type="text"
+                          placeholder="Add a reply..."
+                          value={replyInputs[cmt._id] || ""}
+                          onChange={(e) =>
+                            handleReplyChange(cmt._id, e.target.value)
+                          }
+                          className="w-full border border-gray-300 rounded p-1 text-sm"
+                        />
+                        <button
+                          onClick={() => handleReplySubmit(post._id, cmt._id)}
+                          className="mt-1 px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 transition"
+                        >
+                          Reply
+                        </button>
+                      </div>
+                    )}
+                    {cmt.replies && cmt.replies.length > 0 && (
+                      <div className="ml-8 mt-2 space-y-1">
+                        {cmt.replies
+                          .slice()
+                          .reverse()
+                          .map((reply, j) => (
+                            <div key={j} className="flex items-start gap-2">
+                              <img
+                                src={
+                                  reply.imageUrl
+                                    ? reply.imageUrl
+                                    : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                                        reply.name
+                                      )}&background=random`
+                                }
+                                alt="Replier"
+                                className="w-5 h-5 rounded-full mt-1"
+                              />
+                              <div>
+                                <p className="text-xs">
+                                  <span className="font-semibold">
+                                    {reply.name}
+                                  </span>
+                                  : {reply.text}
+                                </p>
+                                <p className="text-xs text-gray-400">
+                                  {moment(reply.time).fromNow()}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+            </div>
+          </div>
+        ))
+      )}
     </div>
   );
 };
