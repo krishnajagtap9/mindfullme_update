@@ -15,9 +15,7 @@ import {
 } from 'react-icons/fa';
 
 const API_URL = "https://mindfullme-update-q1z8.onrender.com/api/posts";
-// const API_URL = "http://localhost:5000/api/posts";
 
-// --- PostCard moved OUTSIDE of Item7 ---
 const PostCard = ({
   post,
   isUserPostTab,
@@ -267,13 +265,14 @@ const Item7 = () => {
   const [editPostText, setEditPostText] = useState("");
   const [commentInputs, setCommentInputs] = useState({});
   const [replyInputs, setReplyInputs] = useState({});
+  const [loadingUserPosts, setLoadingUserPosts] = useState(false);
+  const [loadingSavedPosts, setLoadingSavedPosts] = useState(false);
 
-  // Fetch only posts belonging to the logged-in user
   const fetchUserPosts = useCallback(async () => {
     if (!userId) return;
+    setLoadingUserPosts(true);
     try {
       const response = await axios.get(`${API_URL}?userId=${userId}`);
-      // Extra frontend filter for safety
       const postsData = (response.data || []).filter(post => post.userId === userId);
       setUserPosts(postsData);
 
@@ -292,16 +291,17 @@ const Item7 = () => {
     } catch (error) {
       console.error("Error fetching user posts:", error);
       setUserPosts([]);
+    } finally {
+      setLoadingUserPosts(false);
     }
   }, [userId]);
 
-  // Fetch posts saved by the user
   const fetchSavedPosts = useCallback(async () => {
     if (!userId) return;
+    setLoadingSavedPosts(true);
     try {
       const response = await axios.get(`${API_URL}/saved/${userId}`);
       setSavedPosts(response.data || []);
-      // For icon state
       const initialSavedMap = {};
       (response.data || []).forEach(post => {
         initialSavedMap[post._id] = true;
@@ -310,6 +310,8 @@ const Item7 = () => {
     } catch (error) {
       console.error("Error fetching saved posts:", error);
       setSavedPosts([]);
+    } finally {
+      setLoadingSavedPosts(false);
     }
   }, [userId]);
 
@@ -355,7 +357,6 @@ const Item7 = () => {
     setEditPostText("");
   };
 
-  // Delete handler
   const handleDeletePost = async (postId) => {
     if (!window.confirm("Are you sure you want to delete this post?")) return;
     try {
@@ -391,7 +392,6 @@ const Item7 = () => {
     }
   };
 
-  // Save/Unsave handler (works for both tabs)
   const handleSave = async (postId, isSaved, isUserPostTab) => {
     if (!userId) {
       alert("Please log in to save posts.");
@@ -405,7 +405,6 @@ const Item7 = () => {
           prevPosts.map((post) => (post._id === postId ? res.data : post))
         );
       } else {
-        // If unsaving from saved tab, remove from list
         if (isSaved) {
           setSavedPosts((prev) => prev.filter((post) => post._id !== postId));
         } else {
@@ -501,7 +500,6 @@ const Item7 = () => {
     );
   }
 
-  // Extra frontend filter for safety (even if backend already filters)
   const filteredUserPosts = userPosts.filter(post => post.userId === userId);
 
   return (
@@ -554,7 +552,15 @@ const Item7 = () => {
       {/* Tab Content */}
       {tabValue === 0 && (
         <div>
-          {filteredUserPosts.length > 0 ? (
+          {loadingUserPosts ? (
+            <div className="flex justify-center items-center py-10">
+              <svg className="animate-spin text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 48 48" width="60" height="60">
+                <circle className="opacity-25" cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="6"></circle>
+                <path className="opacity-75" fill="currentColor" d="M8 24a16 16 0 0132 0h-8z"></path>
+              </svg>
+              <span className="ml-4 text-green-700 text-lg font-semibold">Loading posts...</span>
+            </div>
+          ) : filteredUserPosts.length > 0 ? (
             filteredUserPosts.map((post) => (
               <PostCard
                 key={post._id}
@@ -593,7 +599,15 @@ const Item7 = () => {
 
       {tabValue === 1 && (
         <div>
-          {savedPosts.length > 0 ? (
+          {loadingSavedPosts ? (
+            <div className="flex justify-center items-center py-10">
+              <svg className="animate-spin text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 48 48" width="60" height="60">
+                <circle className="opacity-25" cx="24" cy="24" r="20" stroke="currentColor" strokeWidth="6"></circle>
+                <path className="opacity-75" fill="currentColor" d="M8 24a16 16 0 0132 0h-8z"></path>
+              </svg>
+              <span className="ml-4 text-green-700 text-lg font-semibold">Loading saved posts...</span>
+            </div>
+          ) : savedPosts.length > 0 ? (
             savedPosts.map((post) => (
               <PostCard
                 key={post._id}

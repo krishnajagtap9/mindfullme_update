@@ -276,24 +276,8 @@ export default function Dashboard() {
                   </AccordionDetails>
                 </Accordion>
               </div>
-              <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-                <button className="border border-gray-300 text-gray-700 px-4 py-2 rounded-full flex items-center justify-center space-x-2 hover:bg-gray-100 transition duration-300 text-sm">
-                  <MdOutlineFavoriteBorder />
-                  <span>Save</span>
-                </button>
-                <button className="border border-gray-300 text-gray-700 px-4 py-2 rounded-full flex items-center justify-center space-x-2 hover:bg-gray-100 transition duration-300 text-sm">
-                  <FaRegLightbulb />
-                  <span>Regenerate</span>
-                </button>
-                <button
-                  className="bg-green-600 text-white px-6 py-2 rounded-full flex items-center justify-center space-x-2 shadow-md hover:bg-green-700 transition duration-300 text-sm"
-                  onClick={handleTryNow}
-                  disabled={isLoading}
-                >
-                  <FaPlay />
-                  <span>{isLoading ? "Loading..." : "Try Now"}</span>
-                </button>
-              </div>
+             
+              
             </div>
           </div>
 
