@@ -8,25 +8,23 @@ import IconButton from '@mui/material/IconButton';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 import { useTheme, useMediaQuery } from '@mui/material';
 
-// Import all your Item components
+// Import your Item components
 import Item1 from './Item1';
 import Item2 from './Item2';
 import Item3 from './Item3';
 import Item4 from './Item4';
 import Item5 from './Item5';
-import Item6 from "../layout/Item6"
+import Item6 from "../layout/Item6";
 import Item7 from '../layout/Item7';
 
 // Icons
 import { FaHome } from 'react-icons/fa';
 import { MdOutlineLocalLibrary, MdPeopleAlt } from 'react-icons/md';
-import { LuBot } from 'react-icons/lu';
-import { CgGames } from 'react-icons/cg';
+import { LuBot, LuSmilePlus } from 'react-icons/lu';
+import { CgGames, CgProfile } from 'react-icons/cg';
 import { IoSettingsOutline } from 'react-icons/io5';
 import { FiMenu } from 'react-icons/fi';
 import { AiOutlineClose } from 'react-icons/ai';
-import { CgProfile } from "react-icons/cg";
-import { LuSmilePlus } from "react-icons/lu"; // For Daily Check-in
 
 const StyledTab = styled(Tab)(({ theme }) => ({
   textTransform: 'none',
@@ -87,10 +85,15 @@ function TabPanel(props) {
       style={{ height: '100%', display: value === index ? 'block' : 'none', width: '100%' }}
     >
       {value === index && (
-        <Box sx={{ p: 0, height: '100%', display: 'flex', flexDirection: 'column', width: '100%' }}>
-          <Typography variant="h5" component="h2" sx={{ marginBottom: 2, display: 'none' }}>
-            {children && children.props && children.props.label ? children.props.label : ''}
-          </Typography>
+        <Box
+          sx={{
+            p: 0,
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+          }}
+        >
           <Box
             sx={{
               flexGrow: 1,
@@ -127,15 +130,24 @@ function a11yProps(index) {
 
 export default function VerticalTabs() {
   const [value, setValue] = React.useState(0);
-  const [showTabsState, setShowTabsState] = React.useState(false);
-  const [showCheckinTabs, setShowCheckinTabs] = React.useState(false);
-
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  const [showTabsState, setShowTabsState] = React.useState(false);
 
-  // Add Daily Check-in tab to tabsData
+  // State to trigger check-in UI in Dashboard
+  const [showCheckinTabs, setShowCheckinTabs] = React.useState(false);
+
+  const toggleTabs = () => {
+    if (!isLargeScreen) {
+      setShowTabsState((prev) => !prev);
+    }
+  };
+
+  const showTabs = isLargeScreen || showTabsState;
+
+  // Pass check-in state to Dashboard tab
   const tabsData = [
-    { label: 'Dashboard', icon: <FaHome />, component: <Item1 /> },
+    { label: 'Dashboard', icon: <FaHome />, component: <Item1 showCheckinTabsFromSidebar={showCheckinTabs} setShowCheckinTabsFromSidebar={setShowCheckinTabs} /> },
     { label: 'Library', icon: <MdOutlineLocalLibrary />, component: <Item4 /> },
     { label: 'AI Suggestion', icon: <LuBot />, component: <Item5 /> },
     { label: 'Community', icon: <MdPeopleAlt />, component: <Item6 /> },
@@ -151,26 +163,19 @@ export default function VerticalTabs() {
   ];
 
   const handleChange = (event, newValue) => {
-    // If Daily Check-in tab is clicked, show check-in UI instead of switching tab
+    // If Daily Check-in tab is clicked, trigger check-in and switch to Dashboard tab
     if (tabsData[newValue].isCheckin) {
       setShowCheckinTabs(true);
+      setValue(0); // Switch to Dashboard tab
       return;
     }
     setValue(newValue);
     setShowCheckinTabs(false);
   };
 
-  const toggleTabs = () => {
-    if (!isLargeScreen) {
-      setShowTabsState((prev) => !prev);
-    }
-  };
-
-  const showTabs = isLargeScreen || showTabsState;
-
   return (
     <ThemeProvider theme={customTheme}>
-      <Box sx={{ display: 'flex', height: '100vh', backgroundColor: "white" }}>
+      <Box sx={{ display: 'flex', height: '100vh', backgroundColor: 'white' }}>
         {!isLargeScreen && (
           <IconButton
             onClick={toggleTabs}
@@ -184,7 +189,6 @@ export default function VerticalTabs() {
               '&:hover': {
                 backgroundColor: '#f0f0f0',
               },
-              display: 'block',
             }}
           >
             {showTabsState ? <AiOutlineClose size={18} /> : <FiMenu size={18} />}
@@ -208,7 +212,6 @@ export default function VerticalTabs() {
           >
             <Tabs
               orientation="vertical"
-              variant="standard"
               value={value}
               onChange={handleChange}
               sx={{
@@ -218,9 +221,6 @@ export default function VerticalTabs() {
                   left: 0,
                   width: '4px',
                 },
-                '& .MuiTabs-scroller': {
-                  overflowY: 'auto',
-                },
               }}
             >
               {tabsData.map((tab, index) => (
@@ -229,7 +229,14 @@ export default function VerticalTabs() {
                   label={tab.label}
                   icon={tab.icon}
                   {...a11yProps(index)}
-                  sx={tab.isCheckin ? { color: '#43a047', fontWeight: 700, border: '1px solid #e0e0e0', background: '#e8f5e9', borderRadius: 2, mb: 2 } : {}}
+                  sx={tab.isCheckin ? {
+                    color: '#43a047',
+                    fontWeight: 700,
+                    border: '1px solid #e0e0e0',
+                    background: '#e8f5e9',
+                    borderRadius: 2,
+                    mb: 2,
+                  } : {}}
                 />
               ))}
             </Tabs>
@@ -242,46 +249,17 @@ export default function VerticalTabs() {
             bgcolor: '#F0F0F0',
             height: '100vh',
             overflow: 'hidden',
-            width: 0,
-            minWidth: 0,
             display: 'flex',
             flexDirection: 'column',
-            
           }}
         >
-          {/* Render the check-in UI in a container exactly like other tab panels */}
-          {showCheckinTabs ? (
-            <Box
-              sx={{
-                flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
-                width: '100%',
-                height: '100%',
-                borderRadius: 3,
-                overflowY: 'auto',
-            bgcolor: 'transparent', // Match other tabs' background
-
-              }}
-            >
+          {tabsData.map((tab, index) => (
+            <TabPanel key={index} value={value} index={index}>
               <Box sx={{ width: '100%', height: '100%' }}>
-                <Item1 showCheckinTabsFromSidebar={showCheckinTabs} setShowCheckinTabsFromSidebar={setShowCheckinTabs} />
+                {tab.component}
               </Box>
-            </Box>
-          ) : (
-            tabsData.map((tab, index) =>
-              !tab.isCheckin && (
-                <TabPanel key={index} value={value} index={index}>
-                  <>
-                    <Typography component="span" sx={{ display: 'none' }} label={tab.label} />
-                    <Box sx={{ width: '100%', height: '100%' }}>
-                      {tab.component}
-                    </Box>
-                  </>
-                </TabPanel>
-              )
-            )
-          )}
+            </TabPanel>
+          ))}
         </Box>
       </Box>
     </ThemeProvider>

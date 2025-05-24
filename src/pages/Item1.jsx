@@ -108,7 +108,7 @@ function formatFeedbackContent(content) {
   return result;
 }
 
-export default function Dashboard() {
+export default function Dashboard({ showCheckinTabsFromSidebar, setShowCheckinTabsFromSidebar }) {
   const [showCheckinTabs, setShowCheckinTabs] = useState(false);
   const [tabValue, setTabValue] = useState(0);
 
@@ -164,6 +164,11 @@ export default function Dashboard() {
       dangerouslySetInnerHTML={{ __html: formatFeedbackContent(todayFeedback) }}
     />
   );
+
+  useEffect(() => {
+    if (showCheckinTabsFromSidebar) setShowCheckinTabs(true);
+  }, [showCheckinTabsFromSidebar]);
+
 
   return (
     <div className="p-2 sm:p-4 md:p-6 lg:p-8 min-h-screen font-sans bg-[#F0F0F0] w-full max-w-full">

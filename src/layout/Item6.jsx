@@ -47,6 +47,13 @@ const Item6 = () => {
   const userProfileImageUrl = user?.imageUrl || "";
   const userId = user?.id;
 
+  useEffect(() => {
+  console.log("userId:", userId);
+  if (userId) {
+    fetchPosts();
+  }
+}, [userId]);
+
   const [posts, setPosts] = useState([]);
   const [newPost, setNewPost] = useState("");
   const [commentInputs, setCommentInputs] = useState({});
