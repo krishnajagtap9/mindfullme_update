@@ -100,7 +100,7 @@ export default function WellnessInsights() {
     return result;
   }
 
-  // Fetch feedback for a specific log entry
+  // Fetch feedback for a specific log entry from /daily-log endpoint
   const handleDetailsClick = async (index, entry) => {
     if (expandedIndex === index) {
       setExpandedIndex(null);
@@ -109,10 +109,20 @@ export default function WellnessInsights() {
     setExpandedIndex(index);
     setDetailsLoading(true);
     try {
-      const response = await fetch('https://krish09bha-mindful-me.hf.space/feedback/', {
+      // Send all required fields as per API spec
+      const response = await fetch('https://krish09bha-mindful-me.hf.space/daily-log', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: entry.action }),
+        body: JSON.stringify({
+          user_id: entry.user_id,
+          mood: entry.mood,
+          energy_level: entry.energy_level,
+          sleep_quality: entry.sleep_quality,
+          diet_level: entry.diet_level,
+          exercise_duration: entry.exercise_duration,
+          anxiety_level: entry.anxiety_level,
+          sleep_hours: entry.sleep_hours
+        }),
       });
       if (!response.ok) throw new Error('Failed to fetch feedback');
       const data = await response.json();
