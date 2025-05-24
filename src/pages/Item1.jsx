@@ -180,10 +180,7 @@ export default function Dashboard() {
             <LuSmilePlus />
             <span>Start Daily Check-in</span>
           </button>
-          <button className="w-full sm:w-auto bg-green-500 text-white px-4 py-2 rounded-full flex justify-center items-center space-x-2 shadow-md hover:bg-green-600 transition duration-300">
-            <MdOutlineMail />
-            <span>Upgrade to Pro</span>
-          </button>
+         
         </div>
       </div>
 

@@ -44,7 +44,7 @@ const PostSchema = new mongoose.Schema({
   userId: String,
   likes: [String],
   comments: [CommentSchema],
-  savedBy: [String], // <-- Add this line
+  savedBy: [String], 
 }, { timestamps: true });
 
 const Post = mongoose.model('Post', PostSchema);

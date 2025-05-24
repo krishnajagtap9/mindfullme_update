@@ -27,7 +27,8 @@ export default function Weekprogres() {
     Diet: log.diet_level,
     Anxiety: log.anxiety_level,
     "Sleep Hours": log.sleep_hours,
-    Exercise: log.exercise_duration,
+    // Convert exercise_duration from minutes to hours (rounded to 1 decimal)
+    Exercise: log.exercise_duration ? +(log.exercise_duration / 60).toFixed(1) : 0,
   }));
 
   // Mood entries and streak calculation
@@ -85,8 +86,20 @@ export default function Weekprogres() {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="day" />
               <YAxis domain={[0, 10]} />
-              <Tooltip />
-              <Legend />
+              <Tooltip
+                formatter={(value, name) =>
+                  name === "Exercise"
+                    ? [`${value} hr`, "Exercise"]
+                    : value
+                }
+              />
+              <Legend
+                formatter={(value) =>
+                  value === "Exercise"
+                    ? "Exercise (hr)"
+                    : value
+                }
+              />
               <Line type="monotone" dataKey="Mood" stroke="#3b82f6" strokeWidth={2} dot />
               <Line type="monotone" dataKey="Energy" stroke="#22c55e" strokeWidth={2} dot />
               <Line type="monotone" dataKey="Sleep Quality" stroke="#f97316" strokeWidth={2} dot />

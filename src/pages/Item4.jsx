@@ -1,317 +1,227 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
+import "../index.css";
 import {
-  FaMusic,
-  FaPrayingHands,
-  FaFileAlt,
-  FaVideo,
-  FaFilePdf,
-  FaHeadphones,
-} from "react-icons/fa";
-import { IoPlayOutline } from "react-icons/io5"; // Import the new play icon
-import { IoSearch } from "react-icons/io5";
+  FaChevronRight
+} from 'react-icons/fa';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Box from '@mui/material/Box';
+import { useUser } from "@clerk/clerk-react";
 
+// --- Import images for video thumbnails ---
+import image1 from "../images/pre_image2.jpeg";
+import image2 from "../images/pre_image3.jpeg";
+import image3 from "../images/pre_image4.jpeg";
+import image4 from "../images/pre_image5.jpeg";
+import image5 from "../images/pre_image6.jpeg";
+import image7 from "../images/pre_image7.jpeg";
+import deep1 from "../images/deep1.jpeg";
+import deep2 from "../images/deep2.jpeg";
+import deep3 from "../images/deep3.jpeg";
+import deep4 from "../images/deep4.jpeg";
+import deep5 from "../images/deep5.jpeg";
+import MusicPlayer from "./INNER_content_Music";
 
-const resources = [
+// --- Pre-recorded, ASMR, and Music data ---
+const preRecordedVideos = [
   {
-    id: 1,
-    type: "music",
-    labels: [
-      { text: "Popular", color: "blue" },
-      { text: "Recommended", color: "purple" },
-    ],
-    icon: <FaMusic className="text-gray-500 w-4 h-4" />,
-    duration: "30 min",
-    title: "Calming Rain Sounds",
-    buttonLabel: (
-      <>
-        <IoPlayOutline className="inline-block mr-2 text-xl" /> Play
-      </>
-    ),
-    image:
-      "https://www.imageenhan.com/static/icons/icon-placeholder.svg", // Updated image URL
+    title: "Release Stress & Improve Focus",
+    duration: "10 MIN",
+    thumbnail: image1,
+    views: "611K views",
+    ago: "11 months ago",
+    channel: "Hum Jeetenge Meditation",
+    videoSrc: "https://www.youtube.com/embed/Lv1jpqkN4ZY?si=J23e1gx27c3yWO82",
   },
   {
-    id: 2,
-    type: "asmr", // Changed type to 'asmr' to match screenshot's 'Asmr' type
-    labels: [{ text: "New", color: "green" }, { text: "Recommended", color: "purple" }],
-    icon: <FaHeadphones className="text-gray-500 w-4 h-4" />,
-    duration: "45 min",
-    title: "Gentle Tapping ASMR",
-    buttonLabel: (
-      <>
-        <IoPlayOutline className="inline-block mr-2 text-xl" /> Play
-      </>
-    ),
-    image:
-      "https://www.imageenhan.com/static/icons/icon-placeholder.svg", // Updated image URL
+    title: "7 Min Guided Meditation for Focus and Mental Clarity",
+    duration: "7 MIN",
+    thumbnail: image2,
+    views: "138K views",
+    ago: "2 years ago",
+    channel: "Hum Jeetenge Meditation",
+    videoSrc: "https://www.youtube.com/embed/9O8xkWySvX4?si=I7_VoGIXAhP_og-i",
   },
   {
-    id: 3,
-    type: "article",
-    labels: [],
-    icon: <FaFileAlt className="text-gray-500 w-4 h-4" />,
-    duration: "5 min read",
-    title: "Understanding Anxiety",
-    buttonLabel: "📖 View",
-    image:
-      "https://www.imageenhan.com/static/icons/icon-placeholder.svg", // Updated image URL
+    title: "Calm Your Mind with Guided Meditation",
+    duration: "15 MIN",
+    thumbnail: image3,
+    views: "320K views",
+    ago: "8 months ago",
+    channel: "Hum Jeetenge Meditation",
+    videoSrc: "https://www.youtube.com/embed/qqks74DW0DE?si=tbWFC1QQXiW2OUGd",
   },
   {
-    id: 4,
-    type: "video",
-    labels: [{ text: "Popular", color: "blue" }],
-    icon: <FaVideo className="text-gray-500 w-4 h-4" />,
-    duration: "15 min",
-    title: "Mindfulness Techniques",
-    buttonLabel: (
-      <>
-        <IoPlayOutline className="inline-block mr-2 text-xl" /> Play
-      </>
-    ),
-    image:
-      "https://www.imageenhan.com/static/icons/icon-placeholder.svg", // Updated image URL
+    title: "Daily Relaxation Techniques",
+    duration: "20 MIN",
+    thumbnail: image4,
+    views: "280K views",
+    ago: "1 year ago",
+    channel: "Hum Jeetenge Meditation",
+    videoSrc: "https://www.youtube.com/embed/wPoZVN6WsQg?si=cKXMjafOoXD8Ufta",
   },
   {
-    id: 5,
-    type: "pdf",
-    labels: [],
-    icon: <FaFilePdf className="text-gray-500 w-4 h-4" />,
-    duration: "20 min read",
-    title: "Self-Care Guide",
-    buttonLabel: "📖 View",
-    image:
-      "https://www.imageenhan.com/static/icons/icon-placeholder.svg", // Updated image URL
+    title: "Morning Energy Boost Meditation",
+    duration: "10 MIN",
+    thumbnail: image5,
+    views: "110K views",
+    ago: "6 months ago",
+    channel: "Hum Jeetenge Meditation",
+    videoSrc: "https://www.youtube.com/embed/D08e9UZFKdE?si=MmR_2RGZqlJJDP_l",
   },
   {
-    id: 6,
-    type: "asmr",
-    labels: [
-      { text: "New", color: "green" },
-      { text: "Recommended", color: "purple" },
-    ],
-    icon: <FaHeadphones className="text-gray-500 w-4 h-4" />,
-    duration: "45 min",
-    title: "Gentle Tapping ASMR",
-    buttonLabel: (
-      <>
-        <IoPlayOutline className="inline-block mr-2 text-xl" /> Play
-      </>
-    ),
-    image:
-      "https://www.imageenhan.com/static/icons/icon-placeholder.svg", // Updated image URL
+    title: "Sleep Well Guided Meditation",
+    duration: "12 MIN",
+    thumbnail: image7,
+    views: "95K views",
+    ago: "4 months ago",
+    channel: "Hum Jeetenge Meditation",
+    videoSrc: "https://www.youtube.com/embed/1B2BcayTPWY?si=mIyU9Wd6GzCwT3FU",
   },
   {
-    id: 7,
-    type: "music",
-    labels: [{ text: "Popular", color: "blue" }],
-    icon: <FaMusic className="text-gray-500 w-4 h-4" />,
-    duration: "60 min",
-    title: "Lo-Fi Focus Beats",
-    buttonLabel: (
-      <>
-        <IoPlayOutline className="inline-block mr-2 text-xl" /> Play
-      </>
-    ),
-    image:
-      "https://www.imageenhan.com/static/icons/icon-placeholder.svg", // Updated image URL
-  },
-  {
-    id: 8,
-    type: "meditation",
-    labels: [],
-    icon: <FaPrayingHands className="text-gray-500 w-4 h-4" />,
-    duration: "8 min",
-    title: "Breathing Exercises",
-    buttonLabel: (
-      <>
-        <IoPlayOutline className="inline-block mr-2 text-xl" /> Play
-      </>
-    ),
-    image:
-      "https://www.imageenhan.com/static/icons/icon-placeholder.svg", // Updated image URL
+    title: "Evening Relaxation and Gratitude",
+    duration: "8 MIN",
+    thumbnail: image3,
+    views: "89K views",
+    ago: "3 months ago",
+    channel: "Hum Jeetenge Meditation",
+    videoSrc: "https://www.youtube.com/embed/Ax05WkNwOiU?si=u7rSuSkQxeH_3WbA",
   },
 ];
 
-const labelColors = {
-  blue: "bg-blue-100 text-blue-700",
-  green: "bg-green-100 text-green-700",
-  purple: "bg-purple-100 text-purple-700",
-};
+const asmrVideos = [
+  {
+    title: "Deep Relaxation Music 1",
+    description: "A calming track designed to help you unwind and release stress.",
+    thumbnail: deep1,
+    iframeSrc: "https://www.youtube.com/embed/yditiWAHTCM?si=13d-u0xJh97zLSdy",
+  },
+  {
+    title: "Tranquil Mind Meditation",
+    description: "Soft, serene music to clear your mind and bring you peace.",
+    thumbnail: deep2,
+    iframeSrc: "https://www.youtube.com/embed/ysLkaafDyGw?si=ISprh3KxTuVgj9pP",
+  },
+  {
+    title: "Healing Soundscapes",
+    description: "Relaxing soundscapes that rejuvenate your mind and soul.",
+    thumbnail: deep3,
+    iframeSrc: "https://www.youtube.com/embed/1NeAIuVl5JY?si=aD0AQ06KE-5RIfCh",
+  },
+  {
+    title: "Calming Waves Meditation",
+    description: "A beautiful blend of ocean waves and calming music for deep relaxation.",
+    thumbnail: deep4,
+    iframeSrc: "https://www.youtube.com/embed/VEWmRyZJcQI?si=Prs26fvKEBYVQXTA",
+  },
+  {
+    title: "Serenity Sounds",
+    description: "Peaceful music designed to help you find serenity and inner calm.",
+    thumbnail: deep5,
+    iframeSrc: "https://www.youtube.com/embed/rD9jpzZc4ZQ?si=rz1oudIlcEKg_owq",
+  },
+];
 
-export default function MentalWellnessLibrary() {
-  const [filter, setFilter] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const filterTabs = [
-    { id: "all", label: "All" },
-    { id: "music", label: "Music & Sounds" },
-    { id: "meditation", label: "Guided Meditation" },
-    { id: "article", label: "Articles" },
-    { id: "video", label: "Videos" },
-    { id: "pdf", label: "Self-Help PDFs" },
-    { id: "asmr", label: "ASMR" },
-  ];
-
-  const filteredResources =
-    filter === "all"
-      ? resources
-      : resources.filter((r) => r.type === filter);
-
-  const searchedResources = filteredResources.filter((r) =>
-    r.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    r.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    r.labels.some((label) =>
-      label.text.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+// --- PreRecordedTab Component ---
+function PreRecordedTab() {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      {preRecordedVideos.map((video, idx) => (
+        <div key={idx} className="bg-white rounded-lg shadow p-4 flex flex-col items-center">
+          <img src={video.thumbnail} alt={video.title} className="w-full h-40 object-cover rounded mb-3" />
+          <h3 className="font-semibold text-gray-800 text-base mb-1">{video.title}</h3>
+          <p className="text-gray-600 text-xs mb-1">{video.duration} • {video.channel}</p>
+          <p className="text-gray-400 text-xs mb-2">{video.views} • {video.ago}</p>
+          <div className="w-full aspect-video mb-2">
+            <iframe
+              width="100%"
+              height="180"
+              src={video.videoSrc}
+              title={video.title}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+            ></iframe>
+          </div>
+        </div>
+      ))}
+    </div>
   );
+}
+
+// --- ASMRTab Component ---
+function ASMRTab() {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      {asmrVideos.map((item, idx) => (
+        <div key={idx} className="bg-white rounded-lg shadow p-4 flex flex-col items-center">
+          <img src={item.thumbnail} alt={item.title} className="w-full h-40 object-cover rounded mb-3" />
+          <h3 className="font-semibold text-gray-800 text-base mb-1">{item.title}</h3>
+          <p className="text-gray-600 text-xs mb-2">{item.description}</p>
+          <div className="w-full aspect-video mb-2">
+            <iframe
+              width="100%"
+              height="180"
+              src={item.iframeSrc}
+              title={item.title}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+            ></iframe>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// --- MusicTab Component ---
+function MusicTab() {
+  return (
+    <div className="flex flex-col items-center justify-center w-full">
+      <div className="w-full">
+        <MusicPlayer />
+      </div>
+    </div>
+  );
+}
+
+export default function Dashboard() {
+  const [resourceTab, setResourceTab] = useState(0);
 
   return (
-    <div className=" min-h-screen px-6 py-10 ">
-      <div className="max-w-7xl mx-auto bg-[#F0F0F0]">
-        {/* Header */}
-        <h1 className="md:text-4xl  text-2xl font-extrabold mb-2 text-gray-900 tracking-wide">
-          Explore the Calm Within
-        </h1>
-        <p className="text-gray-600 mb-8 max-w-2xl text-lg">
-          Discover resources to support your mental well-being journey.
-        </p>
-
-        {/* Search & Filter */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-8 max-w-4xl">
-          <input
-            type="text"
-            placeholder="Search by topic, type, or feeling"
-            className="flex-1 border border-gray-300 px-5 py-3 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button
-            className="flex  gap-3   items-center justify-center whitespace-nowrap bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold shadow-md transition"
-            onClick={() => setFilter("all")}
-            aria-label="Reset Filters"
-          >
-           <IoSearch/> Clear Filters
+    <div className="p-2 sm:p-4 md:p-6 lg:p-8 min-h-screen font-sans bg-[#F0F0F0] w-full max-w-full">
+      {/* Calming Resources as Tabs */}
+      <div className="p-2 sm:p-4 md:p-8 mt-4 sm:mt-6 bg-white rounded-lg shadow-md">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2 sm:mb-4 space-y-2 sm:space-y-0">
+          <h2 className="text-base sm:text-lg md:text-xl font-semibold text-gray-800">Calming Resources</h2>
+          <button className="text-green-600 flex items-center space-x-1 hover:underline text-sm">
+            <span>Go to Library</span>
+            <FaChevronRight />
           </button>
         </div>
-
-        {/* Featured */}
-        <h2 className="text-2xl font-semibold mb-6 text-gray-800">
-          Featured Resources
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
-          {resources.filter(r => r.id === 1 || r.id === 2).map((res) => (
-            <div
-              key={res.id}
-              className="relative bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-2xl transition-shadow duration-300 flex flex-col"
-            >
-              {/* Image Container */}
-              <div className="relative w-full h-40 bg-gray-100 flex items-center justify-center"> {/* Added bg-gray-100 and flex for placeholder image */}
-                <img
-                  src={res.image}
-                  alt={res.title}
-                  className="w-20 h-20 object-contain" // Adjusted size for placeholder icon
-                />
-                {/* Labels Overlay - Top Right */}
-                <div className="absolute top-3 right-3 flex flex-wrap justify-end gap-2 z-10">
-                  {res.labels.map((label, i) => (
-                    <span
-                      key={i}
-                      className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${labelColors[label.color]}`}
-                    >
-                      {label.text}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Card Content */}
-              <div className="p-5 flex flex-col flex-grow">
-                <div className="flex items-center gap-2 text-gray-500 text-sm font-medium mb-2">
-                  {res.icon}
-                  <span className="capitalize">{res.type}</span>
-                  <span className="mx-1">•</span>
-                  <span>{res.duration}</span>
-                </div>
-                <h3 className="text-xl font-semibold mb-4 text-gray-900 leading-tight">
-                  {res.title}
-                </h3>
-                <button className="mt-auto w-full flex items-center justify-center bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold shadow transition">
-                  {res.buttonLabel}
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Filter Tabs */}
-        <div className="flex flex-wrap gap-3 mb-10 max-w-4xl">
-          {filterTabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setFilter(tab.id)}
-              className={`px-5 py-2 rounded-full border text-sm font-medium transition ${
-                filter === tab.id
-                  ? "bg-green-600 text-white border-green-600 shadow-md"
-                  : "text-gray-600 border-gray-300 hover:bg-green-50"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        {/* All Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
-          {searchedResources.length === 0 ? (
-            <p className="text-center text-gray-500 col-span-full">
-              No resources found.
-            </p>
-          ) : (
-            searchedResources.map((res) => (
-              <div
-                key={res.id}
-                className="relative bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col"
-                data-type={res.type}
-              >
-                {/* Image Container */}
-                <div className="relative w-full h-36 bg-gray-100 flex items-center justify-center"> {/* Added bg-gray-100 and flex for placeholder image */}
-                  <img
-                    src={res.image || "https://www.imageenhan.com/static/icons/icon-placeholder.svg"}
-                    alt={res.title}
-                    className="w-16 h-16 object-contain" // Adjusted size for placeholder icon
-                  />
-                  {/* Labels Overlay - Top Right */}
-                  <div className="absolute top-3 right-3 flex flex-wrap justify-end gap-2 z-10">
-                    {res.labels.map((label, i) => (
-                      <span
-                        key={i}
-                        className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${labelColors[label.color]}`}
-                      >
-                        {label.text}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Card Content */}
-                <div className="p-5 flex flex-col flex-grow">
-                  <div className="flex items-center gap-2 text-gray-500 text-sm font-medium mb-2">
-                    {res.icon}
-                    <span className="capitalize">{res.type}</span>
-                    <span className="mx-1">•</span>
-                    <span>{res.duration}</span>
-                  </div>
-                  <h3 className="font-semibold text-lg mb-4 text-gray-900 leading-tight">
-                    {res.title}
-                  </h3>
-                  <button className="mt-auto w-full flex items-center justify-center bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-semibold shadow transition">
-                    {res.buttonLabel}
-                  </button>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
+        <Box sx={{ width: '100%', bgcolor: 'transparent', mb: 2 }}>
+          <Tabs
+            value={resourceTab}
+            onChange={(_, newValue) => setResourceTab(newValue)}
+            indicatorColor="primary"
+            textColor="primary"
+            variant="fullWidth"
+            aria-label="Calming Resources Tabs"
+            sx={{ mb: 2, minHeight: 64 }}
+          >
+            <Tab label="Pre-recorded Sessions" sx={{ minHeight: 64, fontSize: '1rem' }} />
+            <Tab label="ASMR Video" sx={{ minHeight: 64, fontSize: '1rem' }} />
+            <Tab label="Music" sx={{ minHeight: 64, fontSize: '1rem' }} />
+          </Tabs>
+          <div className="mt-4 h-[70vh] overflow-y-auto">
+            {resourceTab === 0 && <PreRecordedTab />}
+            {resourceTab === 1 && <ASMRTab />}
+            {resourceTab === 2 && <MusicTab />}
+          </div>
+        </Box>
       </div>
     </div>
   );
