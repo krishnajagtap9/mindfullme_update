@@ -8,29 +8,24 @@ import "react-toastify/dist/ReactToastify.css";
 const formatFeedbackContent = (content) => {
   if (!content) return "";
 
-  // Replace bold text
   let formatted = content.replace(
     /\*\*(.*?)\*\*/g,
-    '<h4 class="font-bold text-gray-800 dark:text-gray-200 mt-4 mb-2">$1</h4>',
+    '<h4 class="font-bold text-gray-800 dark:text-gray-200 mt-4 mb-2">$1</h4>'
   );
 
-  // Replace italic text
   formatted = formatted.replace(/(?<!\*)\*(?!\*)([^*\n]+)(?<!\*)\*(?!\*)/g, "<em>$1</em>");
 
-  // Process paragraphs and lists
   let result = "";
   const paragraphs = formatted.split("\n\n");
 
   for (let i = 0; i < paragraphs.length; i++) {
     const para = paragraphs[i];
 
-    // Skip if already processed as a header
     if (para.includes('<h4 class="font-bold')) {
       result += para;
       continue;
     }
 
-    // Handle bullet points and lists
     if (para.trim().match(/^\s*\*\s+/m)) {
       let listItems = "";
       const lines = para.split("\n").filter((item) => item.trim());
@@ -38,18 +33,13 @@ const formatFeedbackContent = (content) => {
       for (let j = 0; j < lines.length; j++) {
         const item = lines[j];
         const bulletMatch = item.match(/^\s*\*\s+(.*)/);
-        if (bulletMatch) {
-          listItems += `<li class="text-gray-700 dark:text-gray-300 my-1">${bulletMatch[1]}</li>`;
-        } else {
-          listItems += `<li class="text-gray-700 dark:text-gray-300 my-1">${item}</li>`;
-        }
+        listItems += `<li class="text-gray-700 dark:text-gray-300 my-1">${bulletMatch ? bulletMatch[1] : item}</li>`;
       }
 
       result += `<ul class="list-disc pl-5 space-y-1 my-4">${listItems}</ul>`;
       continue;
     }
 
-    // Regular paragraphs
     result += `<p class="text-gray-700 dark:text-gray-300 my-3">${para}</p>`;
   }
 
@@ -74,7 +64,7 @@ export default function WellnessCheckIn() {
   const [alreadyLogged, setAlreadyLogged] = useState(false);
 
   const handleChange = (key, value) => {
-    setFormData(prev => ({ ...prev, [key]: parseFloat(value) }));
+    setFormData((prev) => ({ ...prev, [key]: parseFloat(value) }));
   };
 
   const handleSubmit = async () => {
@@ -101,14 +91,11 @@ export default function WellnessCheckIn() {
     try {
       const res = await fetch("https://krish09bha-mindful-me.hf.space/daily-log", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
 
       if (res.status === 409) {
-        // Already logged today
         setAlreadyLogged(true);
         toast.info("A log for today already exists. You can only submit once per day.");
         setLoading(false);
@@ -133,11 +120,11 @@ export default function WellnessCheckIn() {
   return (
     <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 p-4 sm:p-6 md:p-8 bg-transparent mt-6 sm:mt-10">
       <ToastContainer position="top-right" autoClose={3000} />
-      {/* Form Card */}
+      {/* Form Section */}
       <div className="flex-1 w-full">
         <div className="bg-white rounded-2xl shadow-2xl border border-green-100 p-4 sm:p-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-green-700 flex items-center gap-2 mb-2">
-            <span role="img" aria-label="check-in">📝</span> Daily Wellness Check-In
+            📝 Daily Wellness Check-In
           </h2>
           <p className="text-gray-500 mb-6 text-sm sm:text-base">
             Track your mental and physical wellbeing to receive personalized recommendations.
@@ -150,29 +137,31 @@ export default function WellnessCheckIn() {
             { label: "Diet Quality", id: "diet_level", icon: "🥗" },
             { label: "Anxiety Level", id: "anxiety_level", icon: "😟" }
           ].map(({ label, id, icon }) => (
-            <div key={id} className="mb-3">
-              <label className="block text-sm font-semibold text-gray-700 mb-1 flex items-center gap-2">
-                <span>{icon}</span> {label} <span className="ml-auto text-green-700 font-bold">{formData[id]}</span>
+            <div key={id} className="mb-6">
+              <label className="block text-sm font-semibold text-gray-700 mb-1 flex items-center justify-between">
+                <span className="flex gap-2 items-center">{icon} {label} (1-10)</span>
+                <span className="text-green-700 font-bold">{formData[id]}</span>
               </label>
               <input
                 type="range"
                 min="1"
                 max="10"
-                step="0.5"
+                step="1"
                 value={formData[id]}
                 onChange={(e) => handleChange(id, e.target.value)}
                 className="w-full accent-green-600"
                 disabled={loading || alreadyLogged}
               />
-              <div className="flex justify-between text-xs text-gray-400">
+              <div className="flex justify-between text-xs text-gray-400 mt-1">
                 <span>Low</span><span>High</span>
               </div>
             </div>
           ))}
 
-          <div className="mb-3">
-            <label className="block text-sm font-semibold text-gray-700 mb-1 flex items-center gap-2">
-              🏃‍♂️ Exercise Duration <span className="ml-auto text-green-700 font-bold">{formData.exercise_duration} min</span>
+          <div className="mb-6">
+            <label className="block text-sm font-semibold text-gray-700 mb-1 flex items-center justify-between">
+              🏃‍♂️ Exercise Duration (minutes)
+              <span className="text-green-700 font-bold">{formData.exercise_duration} min</span>
             </label>
             <input
               type="range"
@@ -184,14 +173,15 @@ export default function WellnessCheckIn() {
               className="w-full accent-green-600"
               disabled={loading || alreadyLogged}
             />
-            <div className="flex justify-between text-xs text-gray-400">
+            <div className="flex justify-between text-xs text-gray-400 mt-1">
               <span>0 min</span><span>120 min</span>
             </div>
           </div>
 
-          <div className="mb-3">
-            <label className="block text-sm font-semibold text-gray-700 mb-1 flex items-center gap-2">
-              🛏️ Sleep Hours <span className="ml-auto text-green-700 font-bold">{formData.sleep_hours} hrs</span>
+          <div className="mb-6">
+            <label className="block text-sm font-semibold text-gray-700 mb-1 flex items-center justify-between">
+              🛏️ Sleep Hours
+              <span className="text-green-700 font-bold">{formData.sleep_hours} hrs</span>
             </label>
             <input
               type="number"
@@ -207,7 +197,7 @@ export default function WellnessCheckIn() {
 
           <button
             onClick={handleSubmit}
-            className={`w-full bg-gradient-to-r from-green-500 to-green-700 text-white py-3 rounded-lg font-bold text-base sm:text-lg shadow-md hover:from-green-600 hover:to-green-800 transition flex items-center justify-center mt-6 ${loading || alreadyLogged ? "opacity-70 cursor-not-allowed" : ""}`}
+            className={`w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-bold text-base shadow-md transition mt-6 ${loading || alreadyLogged ? "opacity-70 cursor-not-allowed" : ""}`}
             disabled={loading || alreadyLogged}
           >
             {loading ? (
@@ -224,35 +214,21 @@ export default function WellnessCheckIn() {
         </div>
       </div>
 
-      {/* Result Card */}
+      {/* Result Section */}
       <div className="flex-1 w-full flex flex-col justify-center mt-8 lg:mt-0">
-        <div className="bg-white rounded-2xl shadow-2xl border border-green-100 p-4 sm:p-8 h-full flex items-center justify-center">
-          {alreadyLogged ? (
+        <div className="bg-white rounded-2xl shadow-2xl border border-green-100 p-4 sm:p-8 h-full overflow-y-auto max-h-[80vh]">
+          {alreadyLogged && !response ? (
             <div className="p-4 sm:p-6 bg-yellow-50 border border-yellow-300 rounded-xl text-base text-yellow-900 shadow-inner text-center w-full">
               <span className="font-bold text-yellow-800 text-lg">A log for today already exists.</span>
-              <div className="mt-2 text-yellow-700">You can only submit your daily log once per day.</div>
+              <div className="mt-2 text-yellow-700">You can only submit once per day.</div>
             </div>
           ) : response ? (
-            <div className="p-4 sm:p-6 bg-green-50 border border-green-200 rounded-xl text-base text-green-900 shadow-inner w-full">
-              <div className="mb-2">
-                <span className="font-bold text-green-800">Recommendation:</span>
-                <span
-                  className="block mt-2"
-                  dangerouslySetInnerHTML={{ __html: formatFeedbackContent(response.action) }}
-                />
-              </div>
-              <div>
-                <span className="font-bold text-green-800">Feedback:</span>
-                <span
-                  className="block mt-2"
-                  dangerouslySetInnerHTML={{ __html: formatFeedbackContent(response.feedback) }}
-                />
-              </div>
+            <div>
+              <h3 className="text-xl font-semibold text-green-700 mb-2">🧠 Personalized Feedback</h3>
+              <div className="prose max-w-none prose-sm sm:prose lg:prose-lg prose-green" dangerouslySetInnerHTML={{ __html: formatFeedbackContent(response.feedback) }} />
             </div>
           ) : (
-            <div className="p-4 sm:p-6 bg-gray-50 border border-gray-200 rounded-xl text-base text-gray-500 shadow-inner text-center w-full">
-              <span>Submit your daily check-in to see recommendations here.</span>
-            </div>
+            <p className="text-gray-400 text-center">Submit your wellness check-in to receive feedback.</p>
           )}
         </div>
       </div>
