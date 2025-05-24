@@ -28,8 +28,8 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import Daily_checkin from './Daily_checkin';
-import Analyze_Feedback from './Analyze_Feedback';
-import Get_Logs_by_User_ID from './Get_Logs_by_User_ID';
+import Analyze_Feedback from '../layout/Analyze_Feedback';
+import Get_Logs_by_User_ID from '../layout/Get_Logs_by_User_ID';
 
 export default function Dashboard() {
   const [showCheckinTabs, setShowCheckinTabs] = useState(false);
