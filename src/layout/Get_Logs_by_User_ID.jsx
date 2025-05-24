@@ -203,3 +203,5 @@ const Get_Logs_by_User_ID = () => {
     </div>
   );
 };
+
+export default Get_Logs_by_User_ID;
