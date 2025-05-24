@@ -77,7 +77,7 @@ const Analyze_Feedback = () => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+ useEffect(() => {
     if (!user || !user.id) return;
     const fetchLogs = async () => {
       setLoading(true);
@@ -87,7 +87,14 @@ const Analyze_Feedback = () => {
         );
         if (!res.ok) throw new Error("Failed to fetch logs");
         const data = await res.json();
-        setLogs(data.logs || []);
+        // Sort logs by timestamp descending (newest first)
+        const sortedLogs = (data.logs || []).sort((a, b) => {
+          // Try to parse as date, fallback to string compare
+          const dateA = new Date(a.timestamp);
+          const dateB = new Date(b.timestamp);
+          return dateB - dateA;
+        });
+        setLogs(sortedLogs);
       } catch (err) {
         setLogs([]);
       }
@@ -162,10 +169,7 @@ const Analyze_Feedback = () => {
                   dangerouslySetInnerHTML={{ __html: formatFeedbackContent(log.feedback) }}
                 />
               </div>
-              <div className="mt-1 sm:mt-2">
-                <span className="font-semibold text-gray-700">State Array:</span>{" "}
-                <span className="font-mono text-[11px] sm:text-xs text-gray-600">[{log.state && log.state.join(", ")}]</span>
-              </div>
+          
             </div>
           ))}
         </div>

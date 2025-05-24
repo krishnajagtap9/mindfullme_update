@@ -33,7 +33,13 @@ export default function WellnessInsights() {
           );
           if (!res.ok) throw new Error("Failed to fetch logs");
           const data = await res.json();
-          setLogs(data.logs);
+          // Sort logs by timestamp descending (newest first)
+          const sortedLogs = (data.logs || []).sort((a, b) => {
+            const dateA = new Date(a.timestamp);
+            const dateB = new Date(b.timestamp);
+            return dateB - dateA;
+          });
+          setLogs(sortedLogs);
         } catch (error) {
           console.error("Error fetching logs:", error);
         } finally {
@@ -100,7 +106,7 @@ export default function WellnessInsights() {
     return result;
   }
 
-  // Fetch feedback for a specific log entry from /daily-log endpoint
+  // Fetch only feedback for a specific log entry from /daily-log endpoint
   const handleDetailsClick = async (index, entry) => {
     if (expandedIndex === index) {
       setExpandedIndex(null);
@@ -128,7 +134,9 @@ export default function WellnessInsights() {
       const data = await response.json();
       setDetailsFeedback(prev => ({
         ...prev,
-        [index]: data.feedback || 'No feedback found.'
+        [index]: data.feedback
+          ? formatFeedbackContent(data.feedback)
+          : 'No feedback found.'
       }));
     } catch (err) {
       setDetailsFeedback(prev => ({
@@ -243,7 +251,7 @@ export default function WellnessInsights() {
                     ) : (
                       <div
                         dangerouslySetInnerHTML={{
-                          __html: formatFeedbackContent(detailsFeedback[index]),
+                          __html: detailsFeedback[index] || "",
                         }}
                       />
                     )}
