@@ -15,19 +15,18 @@ import Item3 from './Item3';
 import Item4 from './Item4';
 import Item5 from './Item5';
 import Item6 from "../layout/Item6"
+import Item7 from '../layout/Item7';
 
 // Icons
 import { FaHome } from 'react-icons/fa';
 import { MdOutlineLocalLibrary, MdPeopleAlt } from 'react-icons/md';
-import { TbMoodPlus } from 'react-icons/tb';
 import { LuBot } from 'react-icons/lu';
 import { CgGames } from 'react-icons/cg';
 import { IoSettingsOutline } from 'react-icons/io5';
 import { FiMenu } from 'react-icons/fi';
 import { AiOutlineClose } from 'react-icons/ai';
-import { IoDocumentTextOutline } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
-import Item7 from '../layout/Item7';
+import { LuSmilePlus } from "react-icons/lu"; // For Daily Check-in
 
 const StyledTab = styled(Tab)(({ theme }) => ({
   textTransform: 'none',
@@ -129,20 +128,12 @@ function a11yProps(index) {
 export default function VerticalTabs() {
   const [value, setValue] = React.useState(0);
   const [showTabsState, setShowTabsState] = React.useState(false);
+  const [showCheckinTabs, setShowCheckinTabs] = React.useState(false);
 
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  const toggleTabs = () => {
-    if (!isLargeScreen) {
-      setShowTabsState((prev) => !prev);
-    }
-  };
-
+  // Add Daily Check-in tab to tabsData
   const tabsData = [
     { label: 'Dashboard', icon: <FaHome />, component: <Item1 /> },
     { label: 'Library', icon: <MdOutlineLocalLibrary />, component: <Item4 /> },
@@ -151,7 +142,29 @@ export default function VerticalTabs() {
     { label: 'Games', icon: <CgGames />, component: <Item2 /> },
     { label: 'Support', icon: <IoSettingsOutline />, component: <Item3 /> },
     { label: 'Profile', icon: <CgProfile />, component: <Item7 /> },
+    {
+      label: 'Daily Check-in',
+      icon: <LuSmilePlus />,
+      isCheckin: true,
+      component: null,
+    },
   ];
+
+  const handleChange = (event, newValue) => {
+    // If Daily Check-in tab is clicked, show check-in UI instead of switching tab
+    if (tabsData[newValue].isCheckin) {
+      setShowCheckinTabs(true);
+      return;
+    }
+    setValue(newValue);
+    setShowCheckinTabs(false);
+  };
+
+  const toggleTabs = () => {
+    if (!isLargeScreen) {
+      setShowTabsState((prev) => !prev);
+    }
+  };
 
   const showTabs = isLargeScreen || showTabsState;
 
@@ -216,6 +229,7 @@ export default function VerticalTabs() {
                   label={tab.label}
                   icon={tab.icon}
                   {...a11yProps(index)}
+                  sx={tab.isCheckin ? { color: '#43a047', fontWeight: 700, border: '1px solid #e0e0e0', background: '#e8f5e9', borderRadius: 2, mb: 2 } : {}}
                 />
               ))}
             </Tabs>
@@ -232,18 +246,42 @@ export default function VerticalTabs() {
             minWidth: 0,
             display: 'flex',
             flexDirection: 'column',
+            
           }}
         >
-          {tabsData.map((tab, index) => (
-            <TabPanel key={index} value={value} index={index}>
-              <>
-                <Typography component="span" sx={{ display: 'none' }} label={tab.label} />
-                <Box sx={{ width: '100%', height: '100%' }}>
-                  {tab.component}
-                </Box>
-              </>
-            </TabPanel>
-          ))}
+          {/* Render the check-in UI in a container exactly like other tab panels */}
+          {showCheckinTabs ? (
+            <Box
+              sx={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                width: '100%',
+                height: '100%',
+                borderRadius: 3,
+                overflowY: 'auto',
+            bgcolor: 'transparent', // Match other tabs' background
+
+              }}
+            >
+              <Box sx={{ width: '100%', height: '100%' }}>
+                <Item1 showCheckinTabsFromSidebar={showCheckinTabs} setShowCheckinTabsFromSidebar={setShowCheckinTabs} />
+              </Box>
+            </Box>
+          ) : (
+            tabsData.map((tab, index) =>
+              !tab.isCheckin && (
+                <TabPanel key={index} value={value} index={index}>
+                  <>
+                    <Typography component="span" sx={{ display: 'none' }} label={tab.label} />
+                    <Box sx={{ width: '100%', height: '100%' }}>
+                      {tab.component}
+                    </Box>
+                  </>
+                </TabPanel>
+              )
+            )
+          )}
         </Box>
       </Box>
     </ThemeProvider>

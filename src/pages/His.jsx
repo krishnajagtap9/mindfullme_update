@@ -183,7 +183,6 @@ export default function WellnessInsights() {
               }}
             >
               <Tab label="List View" />
-              <Tab label="Detail View" />
             </Tabs>
           </Box>
         </div>

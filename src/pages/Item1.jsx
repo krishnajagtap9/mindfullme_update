@@ -209,13 +209,8 @@ export default function Dashboard() {
                 </span>
               }
             />
-            <Tab
-              label={
-                <span className="text-xs sm:text-sm md:text-base font-semibold">
-                  Get Logs by User ID
-                </span>
-              }
-            />
+           
+          
           </Tabs>
           <div className="mt-4 sm:mt-6">
             {tabValue === 0 && (
@@ -226,9 +221,7 @@ export default function Dashboard() {
             {tabValue === 1 && (
               <Analyze_Feedback />
             )}
-            {tabValue === 2 && (
-              <Get_Logs_by_User_ID />
-            )}
+           
           </div>
         </Box>
       ) : (

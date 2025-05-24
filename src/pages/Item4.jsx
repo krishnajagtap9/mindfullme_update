@@ -159,8 +159,6 @@ export default function Dashboard() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2 sm:mb-4 space-y-2 sm:space-y-0">
           <h2 className="text-base sm:text-lg md:text-xl font-semibold text-gray-800">Calming Resources</h2>
           <button className="text-green-600 flex items-center space-x-1 hover:underline text-sm">
-            <span>Go to Library</span>
-            <FaChevronRight />
           </button>
         </div>
         <Box sx={{ width: '100%', bgcolor: 'transparent', mb: 2 }}>
