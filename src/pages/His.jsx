@@ -50,7 +50,7 @@ export default function WellnessInsights() {
     }
   }, [user]);
 
-  // Format feedback content for details (reuse from Item5.jsx if needed)
+  // Format feedback content for details
   function formatFeedbackContent(content) {
     if (!content) return "";
     let formatted = content.replace(
@@ -106,7 +106,7 @@ export default function WellnessInsights() {
     return result;
   }
 
-  // Fetch only feedback for a specific log entry from /daily-log endpoint
+  // Fetch feedback for a specific log entry from /logs/{user_id}
   const handleDetailsClick = async (index, entry) => {
     if (expandedIndex === index) {
       setExpandedIndex(null);
@@ -115,27 +115,21 @@ export default function WellnessInsights() {
     setExpandedIndex(index);
     setDetailsLoading(true);
     try {
-      // Send all required fields as per API spec
-      const response = await fetch('https://krish09bha-mindful-me.hf.space/daily-log', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: entry.user_id,
-          mood: entry.mood,
-          energy_level: entry.energy_level,
-          sleep_quality: entry.sleep_quality,
-          diet_level: entry.diet_level,
-          exercise_duration: entry.exercise_duration,
-          anxiety_level: entry.anxiety_level,
-          sleep_hours: entry.sleep_hours
-        }),
-      });
+      // Fetch all logs for the user
+      const response = await fetch(`https://krish09bha-mindful-me.hf.space/logs/${entry.user_id}`);
       if (!response.ok) throw new Error('Failed to fetch feedback');
       const data = await response.json();
+      // Find the log that matches the timestamp and mood/energy for uniqueness
+      const foundLog = (data.logs || []).find(
+        log =>
+          log.timestamp === entry.timestamp &&
+          log.mood === entry.mood &&
+          log.energy_level === entry.energy_level
+      );
       setDetailsFeedback(prev => ({
         ...prev,
-        [index]: data.feedback
-          ? formatFeedbackContent(data.feedback)
+        [index]: foundLog && foundLog.feedback
+          ? formatFeedbackContent(foundLog.feedback)
           : 'No feedback found.'
       }));
     } catch (err) {
