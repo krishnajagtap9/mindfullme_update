@@ -1,5 +1,17 @@
 import { useState, useEffect } from "react";
 import { SmilePlus, Clock, ArrowLeft, Trophy, CheckCircle, XCircle } from "lucide-react";
+import {
+  FaSmile,
+  FaSadTear,
+  FaAngry,
+  FaSurprise,
+  FaFrownOpen,
+  FaTired,
+  FaMeh,
+  FaGrinBeam,
+  FaGrinStars,
+  FaQuestion,
+} from "react-icons/fa";
 import confetti from "canvas-confetti";
 
 const emotions = [
@@ -64,6 +76,20 @@ const emotions = [
     options: ["Thinking", "Confused", "Curious", "Doubtful"],
   },
 ];
+
+// Map emotion names to react-icons
+const emotionIcons = {
+  Happy: <FaSmile className="text-yellow-400" size={90} />,
+  Sad: <FaSadTear className="text-blue-400" size={90} />,
+  Angry: <FaAngry className="text-red-500" size={90} />,
+  Surprised: <FaSurprise className="text-yellow-500" size={90} />,
+  Fearful: <FaFrownOpen className="text-indigo-400" size={90} />,
+  Disgusted: <FaTired className="text-green-700" size={90} />,
+  Neutral: <FaMeh className="text-gray-400" size={90} />,
+  Contempt: <FaGrinBeam className="text-pink-400" size={90} />,
+  Content: <FaGrinStars className="text-green-400" size={90} />,
+  Confused: <FaQuestion className="text-blue-400" size={90} />,
+};
 
 export default function EmotionRecognition() {
   const [gameStarted, setGameStarted] = useState(false);
@@ -296,15 +322,11 @@ export default function EmotionRecognition() {
           {/* Question Card */}
           {selectedEmotions.length > 0 && currentQuestion < selectedEmotions.length && (
             <div className="shadow-lg rounded-xl border border-blue-100 p-6 max-w-xl mx-auto bg-blue-50">
-              {/* Emotion Image */}
+              {/* Emotion Image (now emoji icon) */}
               <div className="flex justify-center mb-6">
                 <div className="w-40 h-40 md:w-56 md:h-56 rounded-full bg-white border-4 border-blue-200 overflow-hidden flex items-center justify-center text-6xl shadow">
-                  <img
-                    src={selectedEmotions[currentQuestion].image || "/placeholder.svg"}
-                    alt="Emotion expression"
-                    className="w-full h-full object-cover"
-                    draggable={false}
-                  />
+                  {/* Show emoji icon for the correct answer */}
+                  {emotionIcons[selectedEmotions[currentQuestion].correct] || <FaQuestion size={90} className="text-gray-400" />}
                 </div>
               </div>
 
