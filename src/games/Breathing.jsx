@@ -1,310 +1,478 @@
-import { useState, useEffect } from "react";
-import confetti from "canvas-confetti";
-import { ArrowLeft, Clock, Sparkles, Trophy } from "lucide-react";
+"use client";
 
-const cardTypes = [
-  { emoji: "🌿", color: "bg-green-200" },
-  { emoji: "🌱", color: "bg-emerald-200" },
-  { emoji: "🍃", color: "bg-teal-200" },
-  { emoji: "🌲", color: "bg-lime-200" },
-  { emoji: "🌴", color: "bg-green-300" },
-  { emoji: "🌵", color: "bg-emerald-300" },
-  { emoji: "🍀", color: "bg-teal-300" },
-  { emoji: "🌳", color: "bg-lime-300" },
-  { emoji: "🪴", color: "bg-green-100" },
-  { emoji: "🍂", color: "bg-yellow-200" },
-  { emoji: "🍁", color: "bg-orange-200" },
-  { emoji: "🌼", color: "bg-yellow-100" },
-];
+import { useState, useEffect, useRef } from "react";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import CardHeader from "@mui/material/CardHeader";
+import Typography from "@mui/material/Typography";
+import Slider from "@mui/material/Slider";
+import IconButton from "@mui/material/IconButton";
+import Chip from "@mui/material/Chip";
+import Box from "@mui/material/Box";
+import { Sparkles, Clock, ArrowLeft, Play, Pause, Volume2, VolumeX } from "lucide-react";
 
-export default function Memory_Game() {
-  const [cards, setCards] = useState([]);
-  const [flippedCards, setFlippedCards] = useState([]);
-  const [matchedPairs, setMatchedPairs] = useState(0);
-  const [moves, setMoves] = useState(0);
+export default function BreathingZen() {
   const [gameStarted, setGameStarted] = useState(false);
-  const [gameCompleted, setGameCompleted] = useState(false);
-  const [timer, setTimer] = useState(0);
+  const [exerciseStarted, setExerciseStarted] = useState(false);
   const [difficulty, setDifficulty] = useState("easy");
-  const [score, setScore] = useState(0);
+  const [timer, setTimer] = useState(0);
+  const [totalTime, setTotalTime] = useState(0);
+  const [breathPhase, setBreathPhase] = useState("inhale");
+  const [phaseTime, setPhaseTime] = useState(0);
+  const [breathCount, setBreathCount] = useState(0);
+  const [isMuted, setIsMuted] = useState(false);
+  const [volume, setVolume] = useState(70);
 
-  // --- UI ENHANCEMENTS ---
-  // Add a little animation for flipping, highlight on match, and a progress bar
+  const circleRef = useRef(null);
+  const audioRef = useRef(null);
 
-  const initializeGame = (diff) => {
+  const breathingPatterns = {
+    easy: { inhale: 4, hold: 2, exhale: 4, rest: 2, cycles: 7 },
+    medium: { inhale: 4, hold: 4, exhale: 6, rest: 2, cycles: 10 },
+    hard: { inhale: 6, hold: 6, exhale: 8, rest: 2, cycles: 12 },
+  };
+
+  const initializeExercise = (diff) => {
     setDifficulty(diff);
-    const pairsCount = diff === "easy" ? 6 : diff === "medium" ? 8 : 12;
-    const typeCount = diff === "hard" ? 12 : 8;
+    const pattern = breathingPatterns[diff];
+    const totalSeconds = (pattern.inhale + pattern.hold + pattern.exhale + pattern.rest) * pattern.cycles;
 
-    const newCards = [];
-    for (let i = 0; i < pairsCount; i++) {
-      const type = i % typeCount;
-      newCards.push({ id: i * 2, type, flipped: false, matched: false });
-      newCards.push({ id: i * 2 + 1, type, flipped: false, matched: false });
-    }
-
-    setCards(newCards.sort(() => Math.random() - 0.5));
-    setFlippedCards([]);
-    setMatchedPairs(0);
-    setMoves(0);
+    setTotalTime(totalSeconds);
     setTimer(0);
-    setScore(0);
-    setGameCompleted(false);
+    setBreathPhase("inhale");
+    setPhaseTime(0);
+    setBreathCount(0);
+    setExerciseStarted(false);
     setGameStarted(true);
   };
 
-  const handleCardClick = (id) => {
-    const clickedCard = cards.find((card) => card.id === id);
-    if (flippedCards.length === 2 || flippedCards.includes(id) || clickedCard?.matched) return;
+  const toggleExercise = () => {
+    setExerciseStarted((prev) => !prev);
 
-    const newFlipped = [...flippedCards, id];
-    setFlippedCards(newFlipped);
-
-    if (newFlipped.length === 2) {
-      setMoves((m) => m + 1);
-      const [firstId, secondId] = newFlipped;
-      const first = cards.find((c) => c.id === firstId);
-      const second = cards.find((c) => c.id === secondId);
-
-      if (first.type === second.type) {
-        setTimeout(() => {
-          setCards((prev) =>
-            prev.map((c) =>
-              c.id === firstId || c.id === secondId ? { ...c, matched: true, justMatched: true } : c
-            )
-          );
-          setMatchedPairs((mp) => mp + 1);
-          setFlippedCards([]);
-
-          const base = difficulty === "easy" ? 100 : difficulty === "medium" ? 150 : 200;
-          const pairScore = Math.max(base - moves * 2 - Math.floor(timer / 5), 50);
-          setScore((s) => s + pairScore);
-
-          if (matchedPairs + 1 === cards.length / 2) {
-            setGameCompleted(true);
-            confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
-          }
-
-          // Remove highlight after a short delay
-          setTimeout(() => {
-            setCards((prev) =>
-              prev.map((c) =>
-                c.justMatched ? { ...c, justMatched: false } : c
-              )
-            );
-          }, 700);
-        }, 500);
+    if (audioRef.current && !isMuted) {
+      if (!exerciseStarted) {
+        audioRef.current.play().catch(() => setIsMuted(true));
       } else {
-        setTimeout(() => setFlippedCards([]), 1000);
+        try {
+          audioRef.current.pause();
+        } catch {}
       }
     }
   };
 
-  useEffect(() => {
-    if (gameStarted && !gameCompleted) {
-      const interval = setInterval(() => setTimer((t) => t + 1), 1000);
-      return () => clearInterval(interval);
+  const toggleMute = () => {
+    setIsMuted((prev) => !prev);
+    if (audioRef.current) {
+      audioRef.current.muted = !isMuted;
     }
-  }, [gameStarted, gameCompleted]);
-
-  const formatTime = (s) =>
-    `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
-
-  const calculateStars = () => {
-    const total = cards.length;
-    const [best, ok] =
-      difficulty === "easy"
-        ? [total * 0.7, total * 1.2]
-        : difficulty === "medium"
-        ? [total * 0.8, total * 1.3]
-        : [total * 0.9, total * 1.5];
-
-    if (moves <= best) return 3;
-    if (moves <= ok) return 2;
-    return 1;
   };
 
-  // Progress bar calculation
-  const progress = cards.length
-    ? Math.round((matchedPairs / (cards.length / 2)) * 100)
-    : 0;
+  const handleVolumeChange = (_, newValue) => {
+    setVolume(newValue);
+    if (audioRef.current) {
+      audioRef.current.volume = newValue / 100;
+    }
+  };
 
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume / 100;
+      audioRef.current.muted = isMuted;
+    }
+  }, [volume, isMuted]);
+
+  useEffect(() => {
+    if (!exerciseStarted) return;
+
+    const pattern = breathingPatterns[difficulty];
+    let interval = setInterval(() => {
+      setTimer((prevTimer) => {
+        const newTimer = prevTimer + 1;
+        setPhaseTime((prevPhaseTime) => {
+          let newPhaseTime = prevPhaseTime + 1;
+          let currentPhaseDuration = pattern[breathPhase];
+
+          if (newPhaseTime >= currentPhaseDuration) {
+            newPhaseTime = 0;
+            if (breathPhase === "inhale") setBreathPhase("hold");
+            else if (breathPhase === "hold") setBreathPhase("exhale");
+            else if (breathPhase === "exhale") setBreathPhase("rest");
+            else if (breathPhase === "rest") {
+              setBreathPhase("inhale");
+              setBreathCount((prev) => prev + 1);
+            }
+          }
+          return newPhaseTime;
+        });
+
+        if (newTimer >= totalTime || breathCount >= pattern.cycles) {
+          clearInterval(interval);
+          setExerciseStarted(false);
+          if (audioRef.current) audioRef.current.pause();
+          return totalTime;
+        }
+        return newTimer;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+    // eslint-disable-next-line
+  }, [exerciseStarted, difficulty, breathPhase, breathCount, totalTime]);
+
+  useEffect(() => {
+    if (!circleRef.current) return;
+    const pattern = breathingPatterns[difficulty];
+    let scale = 1;
+    let transition = "all 0.3s ease";
+    switch (breathPhase) {
+      case "inhale":
+        scale = 1.5;
+        transition = `all ${pattern.inhale}s cubic-bezier(0.4, 0, 0.2, 1)`;
+        break;
+      case "hold":
+        scale = 1.5;
+        transition = `all ${pattern.hold}s ease`;
+        break;
+      case "exhale":
+        scale = 1;
+        transition = `all ${pattern.exhale}s cubic-bezier(0.4, 0, 0.2, 1)`;
+        break;
+      case "rest":
+        scale = 1;
+        transition = `all ${pattern.rest}s ease`;
+        break;
+      default:
+        break;
+    }
+    circleRef.current.style.transform = `scale(${scale})`;
+    circleRef.current.style.transition = transition;
+  }, [breathPhase, difficulty]);
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const getInstructionText = () => {
+    switch (breathPhase) {
+      case "inhale":
+        return "Breathe In";
+      case "hold":
+        return "Hold";
+      case "exhale":
+        return "Breathe Out";
+      case "rest":
+        return "Rest";
+      default:
+        return "";
+    }
+  };
+
+  const getPhaseProgress = () => {
+    const pattern = breathingPatterns[difficulty];
+    let currentPhaseDuration = pattern[breathPhase];
+    return (phaseTime / currentPhaseDuration) * 100;
+  };
+
+  const getOverallProgress = () => {
+    return (timer / totalTime) * 100;
+  };
+
+  // --- Improved Difficulty Selection UI (Memory Game style) ---
   return (
-    <div className="max-w-2xl mx-auto bg-white shadow-xl rounded-3xl p-6 mb-8 mt-8 transition hover:shadow-2xl border border-blue-100">
-      {/* Header */}
+    <Box sx={{ width: "100%", maxWidth: 700, mx: "auto", mt: 6, mb: 6 }}>
       {!gameStarted ? (
-        <div className="text-center">
-          <div className="flex items-center gap-3 mb-4 justify-center">
-            <span className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-blue-100 shadow">
-              <Sparkles className="text-yellow-400 w-8 h-8" />
-            </span>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Memory Match</h1>
-              <p className="text-xs text-gray-500">
-                Flip cards and find pairs. Fewer moves and faster time means a better score!
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-wrap gap-3 justify-center mb-6">
-            {["#memory", "#focus", "#braintraining"].map((tag) => (
+        <Box
+          sx={{
+            background: "#fff",
+            borderRadius: 4,
+            boxShadow: 3,
+            p: { xs: 2, sm: 4 },
+            mb: 4,
+            border: "1px solid #e0e7ef",
+            textAlign: "center",
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2, justifyContent: "center", mb: 2 }}>
+            <Box sx={{ width: 48, height: 48, borderRadius: "50%", bgcolor: "primary.light", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Sparkles size={28} color="#1976d2" />
+            </Box>
+            <Box>
+              <Typography variant="h5" sx={{ fontWeight: 700 }}>Breathing Zen</Typography>
+              <Typography variant="body2" color="text.secondary">
+                Follow the pattern for deep relaxation
+              </Typography>
+            </Box>
+          </Box>
+          <Typography color="text.secondary" sx={{ mb: 3 }}>
+            Practice guided breathing exercises to reduce stress and improve focus. Follow the animated circle to regulate your breath.
+          </Typography>
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, justifyContent: "center", mb: 2 }}>
+            {["#breathe", "#focus", "#relax"].map((tag) => (
               <span
                 key={tag}
-                className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full"
+                style={{
+                  background: "#e0f2fe",
+                  color: "#2563eb",
+                  fontSize: 12,
+                  padding: "2px 10px",
+                  borderRadius: 12,
+                  fontWeight: 500,
+                }}
               >
                 {tag}
               </span>
             ))}
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
-            {["easy", "medium", "hard"].map((diff) => (
-              <button
-                key={diff}
-                className={`border-2 rounded-xl py-5 font-semibold text-lg shadow transition-all duration-200
-                  ${diff === "easy" ? "border-green-400 text-green-700 hover:bg-green-50"
-                  : diff === "medium" ? "border-yellow-400 text-yellow-700 hover:bg-yellow-50"
-                  : "border-blue-400 text-blue-700 hover:bg-blue-50"}
-                `}
-                onClick={() => initializeGame(diff)}
-              >
-                {diff[0].toUpperCase() + diff.slice(1)}{" "}
-                <span className="text-xs font-normal block mt-1">
-                  {diff === "easy" ? "6" : diff === "medium" ? "8" : "12"} pairs
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div>
-          {/* Game Info */}
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-            <button
-              onClick={() => setGameStarted(false)}
-              className="flex items-center gap-2 px-3 py-1 bg-gray-100 rounded hover:bg-gray-200 transition text-blue-600 font-medium"
+          </Box>
+          <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr 1fr" }, gap: 3, mt: 2 }}>
+            <Button
+              variant="outlined"
+              sx={{
+                borderWidth: 2,
+                borderColor: "#22c55e",
+                color: "#166534",
+                fontWeight: 700,
+                borderRadius: 3,
+                py: 3,
+                fontSize: 18,
+                flexDirection: "column",
+                boxShadow: "0 2px 8px 0 rgba(34,197,94,0.03)",
+                background: "#f0fdf4",
+                transition: "all 0.2s",
+                "&:hover": {
+                  background: "#fff",
+                  borderColor: "#22c55e",
+                  boxShadow: "0 4px 16px 0 #22c55e33",
+                },
+              }}
+              onClick={() => initializeExercise("easy")}
             >
-              <ArrowLeft size={18} /> Back
-            </button>
-            <div className="flex items-center gap-3">
-              <span className="flex items-center gap-1 bg-blue-50 px-3 py-1 rounded text-blue-700 font-semibold">
-                <Clock size={16} /> {formatTime(timer)}
-              </span>
-              <span className="flex items-center gap-1 bg-green-50 px-3 py-1 rounded text-green-700 font-semibold">
-                <Sparkles size={16} /> Moves: {moves}
-              </span>
-              <span className={`px-3 py-1 rounded-full text-sm font-semibold capitalize shadow
-                ${difficulty === "easy" ? "bg-green-100 text-green-700"
-                  : difficulty === "medium" ? "bg-yellow-100 text-yellow-700"
-                  : "bg-blue-100 text-blue-700"}
-              `}>
-                {difficulty}
-              </span>
-            </div>
-          </div>
-
-          {/* Progress Bar */}
-          <div className="mb-4">
-            <div className="flex justify-between mb-1 text-xs font-medium text-gray-700">
-              <span>
-                Matched {matchedPairs} / {cards.length / 2} pairs
-              </span>
-              <span>{progress}% Complete</span>
-            </div>
-            <div className="w-full bg-gray-200 rounded h-2">
-              <div
-                className="bg-blue-500 h-2 rounded transition-all duration-500"
-                style={{ width: `${progress}%` }}
+              Easy
+              <Typography variant="body2" sx={{ color: "#888", fontWeight: 400, fontSize: 14 }}>
+                4-2-4-2 Pattern
+              </Typography>
+              <Typography variant="caption" sx={{ color: "#bbb", fontSize: 12 }}>
+                3 min
+              </Typography>
+            </Button>
+            <Button
+              variant="outlined"
+              sx={{
+                borderWidth: 2,
+                borderColor: "#eab308",
+                color: "#713f12",
+                fontWeight: 700,
+                borderRadius: 3,
+                py: 3,
+                fontSize: 18,
+                flexDirection: "column",
+                boxShadow: "0 2px 8px 0 rgba(234,179,8,0.03)",
+                background: "#fefce8",
+                transition: "all 0.2s",
+                "&:hover": {
+                  background: "#fff",
+                  borderColor: "#eab308",
+                  boxShadow: "0 4px 16px 0 #eab30833",
+                },
+              }}
+              onClick={() => initializeExercise("medium")}
+            >
+              Medium
+              <Typography variant="body2" sx={{ color: "#888", fontWeight: 400, fontSize: 14 }}>
+                4-4-6-2 Pattern
+              </Typography>
+              <Typography variant="caption" sx={{ color: "#bbb", fontSize: 12 }}>
+                5 min
+              </Typography>
+            </Button>
+            <Button
+              variant="outlined"
+              sx={{
+                borderWidth: 2,
+                borderColor: "#2563eb",
+                color: "#1e3a8a",
+                fontWeight: 700,
+                borderRadius: 3,
+                py: 3,
+                fontSize: 18,
+                flexDirection: "column",
+                boxShadow: "0 2px 8px 0 rgba(37,99,235,0.03)",
+                background: "#eff6ff",
+                transition: "all 0.2s",
+                "&:hover": {
+                  background: "#fff",
+                  borderColor: "#2563eb",
+                  boxShadow: "0 4px 16px 0 #2563eb33",
+                },
+              }}
+              onClick={() => initializeExercise("hard")}
+            >
+              Deep
+              <Typography variant="body2" sx={{ color: "#888", fontWeight: 400, fontSize: 14 }}>
+                6-6-8-2 Pattern
+              </Typography>
+              <Typography variant="caption" sx={{ color: "#bbb", fontSize: 12 }}>
+                7 min
+              </Typography>
+            </Button>
+          </Box>
+        </Box>
+      ) : (
+        <Box sx={{ width: "100%" }}>
+          {/* Game Header */}
+          <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 2, mb: 4 }}>
+            <Button variant="outlined" onClick={() => setGameStarted(false)} startIcon={<ArrowLeft size={20} />}>
+              Back
+            </Button>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1, bgcolor: "grey.100", p: 1, borderRadius: 1 }}>
+                <Clock size={18} color="#1976d2" />
+                <Typography fontWeight={500}>
+                  {formatTime(timer)} / {formatTime(totalTime)}
+                </Typography>
+              </Box>
+              <Chip
+                label={difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
+                color={difficulty === "easy" ? "success" : difficulty === "medium" ? "warning" : "primary"}
+                variant="outlined"
               />
-            </div>
-          </div>
-
-          {/* Card Grid */}
-          <div
-            className={`grid gap-3 ${
-              difficulty === "easy"
-                ? "grid-cols-3 sm:grid-cols-4"
-                : difficulty === "medium"
-                ? "grid-cols-4 sm:grid-cols-4"
-                : "grid-cols-4 sm:grid-cols-6"
-            } mb-6`}
-          >
-            {cards.map((card) => (
-              <div
-                key={card.id}
-                className={`aspect-square rounded-xl cursor-pointer transition-transform duration-200 shadow-md hover:scale-105
-                  ${card.matched ? "opacity-40 grayscale" : ""}
-                  ${card.justMatched ? "ring-4 ring-green-400 scale-110 z-10" : ""}
-                `}
-                onClick={() => handleCardClick(card.id)}
-              >
-                <div className="relative w-full h-full" style={{ perspective: 1000 }}>
-                  <div
-                    className={`absolute inset-0 transition-transform duration-500 rounded-xl border-2 border-white shadow
-                      ${flippedCards.includes(card.id) || card.matched ? "[transform:rotateY(180deg)]" : ""}
-                    `}
-                    style={{ transformStyle: "preserve-3d" }}
+            </Box>
+          </Box>
+          {/* Breathing Exercise */}
+          <Card variant="outlined" sx={{ border: 0, boxShadow: 3, overflow: "hidden" }}>
+            <CardContent sx={{ p: 0 }}>
+              {/* Progress Bar */}
+              <Box sx={{ height: 4, bgcolor: "primary.light", width: `${getOverallProgress()}%` }} />
+              <Box sx={{ p: 4, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 500, position: "relative", overflow: "hidden" }}>
+                {/* Background Elements */}
+                <Box sx={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none" }}>
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      width: 800,
+                      height: 800,
+                      borderRadius: "50%",
+                      bgcolor: "primary.light",
+                      opacity: 0.1,
+                      animation: "pulse 10s infinite"
+                    }}
+                  />
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      width: 600,
+                      height: 600,
+                      borderRadius: "50%",
+                      bgcolor: "primary.light",
+                      opacity: 0.1,
+                      animation: "pulse 15s infinite",
+                      animationDelay: "1s"
+                    }}
+                  />
+                </Box>
+                {/* Breathing Circle */}
+                <Box
+                  ref={circleRef}
+                  sx={{
+                    position: "relative",
+                    width: 256,
+                    height: 256,
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mb: 6,
+                    zIndex: 1,
+                    bgcolor:
+                      breathPhase === "inhale"
+                        ? "success.light"
+                        : breathPhase === "hold"
+                        ? "primary.light"
+                        : breathPhase === "exhale"
+                        ? "info.light"
+                        : "grey.100",
+                  }}
+                >
+                  <Box sx={{ position: "absolute", inset: 0, borderRadius: "50%", border: "4px solid", borderColor: "primary.light" }} />
+                  <Box sx={{ textAlign: "center", zIndex: 2 }}>
+                    <Typography variant="h5" sx={{ mb: 1 }}>{getInstructionText()}</Typography>
+                    <Typography variant="h3" color="primary">
+                      {Math.max(
+                        0,
+                        Math.ceil(
+                          breathPhase === "inhale"
+                            ? breathingPatterns[difficulty].inhale - phaseTime
+                            : breathPhase === "hold"
+                            ? breathingPatterns[difficulty].hold - phaseTime
+                            : breathPhase === "exhale"
+                            ? breathingPatterns[difficulty].exhale - phaseTime
+                            : breathingPatterns[difficulty].rest - phaseTime
+                        )
+                      )}
+                    </Typography>
+                  </Box>
+                </Box>
+                {/* Controls */}
+                <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2, zIndex: 2 }}>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <IconButton color="primary" size="large" sx={{ width: 56, height: 56 }} onClick={toggleExercise}>
+                      {exerciseStarted ? <Pause size={32} /> : <Play size={32} />}
+                    </IconButton>
+                  </Box>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 2, mt: 2 }}>
+                    <IconButton color="default" onClick={toggleMute}>
+                      {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
+                    </IconButton>
+                    <Slider
+                      value={volume}
+                      min={0}
+                      max={100}
+                      step={1}
+                      onChange={handleVolumeChange}
+                      disabled={isMuted}
+                      sx={{ width: 120 }}
+                    />
+                  </Box>
+                  <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+                    Breath cycle: {breathCount + 1} of {breathingPatterns[difficulty].cycles}
+                  </Typography>
+                </Box>
+                {/* Audio Element */}
+                <div style={{ display: "none" }}>
+                  <audio
+                    ref={audioRef}
+                    loop
+                    preload="auto"
+                    onError={() => setIsMuted(true)}
                   >
-                    {/* Back */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-200 to-blue-100 rounded-xl flex items-center justify-center text-3xl font-bold text-blue-700 backface-hidden select-none">
-                      ?
-                    </div>
-                    {/* Front */}
-                    <div
-                      className={`absolute inset-0 ${cardTypes[card.type].color} rounded-xl flex items-center justify-center text-5xl [transform:rotateY(180deg)] backface-hidden select-none`}
-                    >
-                      {cardTypes[card.type].emoji}
-                    </div>
-                  </div>
+                    <source src="/audio/ambient-sound.mp3" type="audio/mpeg" />
+                    <source src="/audio/ambient-sound.ogg" type="audio/ogg" />
+                    Your browser does not support the audio element.
+                  </audio>
                 </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Game Completed Modal */}
-          {gameCompleted && (
-            <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-              <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 space-y-6 text-center border-2 border-blue-100">
-                <div className="text-4xl text-yellow-400 mb-2">
-                  <Trophy size={56} className="mx-auto mb-2" />
-                </div>
-                <h2 className="font-extrabold text-2xl text-blue-700 mb-1">Congratulations!</h2>
-                <p className="text-gray-600 mb-4">You've completed the game</p>
-                <div className="flex justify-center gap-2 text-3xl mb-4">
-                  {[...Array(3)].map((_, i) => (
-                    <span key={i} className={i < calculateStars() ? "text-yellow-400" : "text-gray-300"}>
-                      ★
-                    </span>
-                  ))}
-                </div>
-                <div className="space-y-2 text-left text-base">
-                  <div className="flex justify-between">
-                    <span>⏱️ Time:</span> <span>{formatTime(timer)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>🔄 Moves:</span> <span>{moves}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>🏆 Score:</span> <span className="text-blue-600 font-bold">{score}</span>
-                  </div>
-                </div>
-                <div className="flex gap-2 mt-6">
-                  <button
-                    onClick={() => setGameStarted(false)}
-                    className="flex-1 border py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition"
-                  >
-                    Main Menu
-                  </button>
-                  <button
-                    onClick={() => initializeGame(difficulty)}
-                    className="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-                  >
-                    Play Again
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
+              </Box>
+            </CardContent>
+            <CardActions sx={{ bgcolor: "grey.100", p: 2, justifyContent: "center" }}>
+              <Typography variant="body2" color="text.secondary">
+                {difficulty === "easy"
+                  ? "This gentle 4-2-4-2 pattern is perfect for beginners and quick stress relief."
+                  : difficulty === "medium"
+                  ? "The 4-4-6-2 pattern helps deepen your practice and increase relaxation."
+                  : "This advanced 6-6-8-2 pattern promotes deep relaxation and mindfulness."}
+              </Typography>
+            </CardActions>
+          </Card>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 }

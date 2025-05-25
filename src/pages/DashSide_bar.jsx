@@ -161,7 +161,7 @@ const [selectedGame, setSelectedGame] = React.useState(null);
           <Item2 onGameSelect={setSelectedGame} />
         ) : selectedGame === 'Memory Match' ? (
           <Memory_Game />
-        ) : selectedGame === 'Focus' ? (
+        ) : selectedGame === 'Focus Trainer' ? (
           <Focus_traninig/>
         ) : selectedGame === 'Emotion Recognition' ? (
           <Emotion />
@@ -246,22 +246,32 @@ const [selectedGame, setSelectedGame] = React.useState(null);
                 },
               }}
             >
-              {tabsData.map((tab, index) => (
-                <StyledTab
-                  key={index}
-                  label={tab.label}
-                  icon={tab.icon}
-                  {...a11yProps(index)}
-                  sx={tab.isCheckin ? {
-                    color: '#43a047',
-                    fontWeight: 700,
-                    border: '1px solid #e0e0e0',
-                    background: '#e8f5e9',
-                    borderRadius: 2,
-                    mb: 2,
-                  } : {}}
-                />
-              ))}
+            {tabsData.map((tab, index) => (
+  <StyledTab
+    key={index}
+    label={tab.label}
+    icon={tab.icon}
+    {...a11yProps(index)}
+    sx={{
+      mx: 1,
+      my: 0.5,
+      borderRadius: 2,
+      transition: 'background 0.2s, color 0.2s, box-shadow 0.2s',
+      boxShadow: 'none',
+      '&:hover': {
+        backgroundColor: 'rgba(76, 175, 80, 0.08)', // subtle green hover
+        color: 'primary.main',
+        boxShadow: '0 2px 8px 0 rgba(76,175,80,0.08)',
+      },
+      '&.Mui-selected': {
+        backgroundColor: 'success.light',
+        color: 'success.main',
+        fontWeight: 700,
+        boxShadow: '0 4px 16px 0 rgba(76,175,80,0.10)',
+      },
+    }}
+  />
+))}
             </Tabs>
           </Box>
         )}
