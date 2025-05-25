@@ -7,6 +7,10 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 import { useTheme, useMediaQuery } from '@mui/material';
+import Memory_Game from '../games/Memory_Game'; 
+import Focus_traninig from '../games/Focus_training';
+import Emotion from '../games/Emotion';
+import Breathing from "../games/Breathing"
 
 // Import your Item components
 import Item1 from './Item1';
@@ -133,6 +137,7 @@ export default function VerticalTabs() {
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
   const [showTabsState, setShowTabsState] = React.useState(false);
+const [selectedGame, setSelectedGame] = React.useState(null);
 
   // State to trigger check-in UI in Dashboard
   const [showCheckinTabs, setShowCheckinTabs] = React.useState(false);
@@ -148,10 +153,28 @@ export default function VerticalTabs() {
   // Pass check-in state to Dashboard tab
   const tabsData = [
     { label: 'Dashboard', icon: <FaHome />, component: <Item1 showCheckinTabsFromSidebar={showCheckinTabs} setShowCheckinTabsFromSidebar={setShowCheckinTabs} /> },
+    { 
+      label: 'Games', 
+      icon: <CgGames />, 
+      component: (
+        selectedGame === null ? (
+          <Item2 onGameSelect={setSelectedGame} />
+        ) : selectedGame === 'Memory Match' ? (
+          <Memory_Game />
+        ) : selectedGame === 'Focus' ? (
+          <Focus_traninig/>
+        ) : selectedGame === 'Emotion Recognition' ? (
+          <Emotion />
+        ) : selectedGame === 'Breathing Zen' ? (
+          <Breathing />
+        ) : (
+          <Item2 onGameSelect={setSelectedGame} />
+        )
+      )
+    },
     { label: 'Library', icon: <MdOutlineLocalLibrary />, component: <Item4 /> },
     { label: 'AI Suggestion', icon: <LuBot />, component: <Item5 /> },
     { label: 'Community', icon: <MdPeopleAlt />, component: <Item6 /> },
-    { label: 'Games', icon: <CgGames />, component: <Item2 /> },
     { label: 'Support', icon: <IoSettingsOutline />, component: <Item3 /> },
     { label: 'Profile', icon: <CgProfile />, component: <Item7 /> },
     {
@@ -253,13 +276,27 @@ export default function VerticalTabs() {
             flexDirection: 'column',
           }}
         >
-          {tabsData.map((tab, index) => (
-            <TabPanel key={index} value={value} index={index}>
-              <Box sx={{ width: '100%', height: '100%' }}>
-                {tab.component}
-              </Box>
-            </TabPanel>
-          ))}
+         {tabsData.map((tab, index) => (
+  <TabPanel key={index} value={value} index={index}>
+    <div className="w-full h-full px-4 py-2">
+      {tab.label === 'Games' && selectedGame !== null && (
+        <div className="mb-4">
+          <button
+            className="fixed right-5 text-sm font-medium px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition"
+            onClick={() => setSelectedGame(null)}
+          >
+            ← Back to Game List
+          </button>
+        </div>
+      )}
+
+      <div className="w-full">
+        {tab.component}
+      </div>
+    </div>
+  </TabPanel>
+))}
+
         </Box>
       </Box>
     </ThemeProvider>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { IoMdStopwatch } from "react-icons/io";
+import { ArrowLeft } from "lucide-react";
 
 const gamesData = [
   {
@@ -10,6 +11,7 @@ const gamesData = [
     tag: 'Daily Challenge',
     tagColor: 'green',
     description: 'Train your memory with card matching',
+    active: true,
   },
   {
     title: 'Focus Trainer',
@@ -19,6 +21,7 @@ const gamesData = [
     tag: 'Popular',
     tagColor: 'blue',
     description: 'Improve concentration with timed exercises',
+    active: true,
   },
   {
     title: 'Emotion Recognition',
@@ -28,6 +31,7 @@ const gamesData = [
     tag: 'New',
     tagColor: 'green',
     description: 'Practice identifying emotional expressions',
+    active: true,
   },
   {
     title: 'Breathing Zen',
@@ -35,6 +39,7 @@ const gamesData = [
     difficulty: 'Easy',
     duration: '7 min',
     description: 'Follow the pattern for deep relaxation',
+    active: true,
   },
   {
     title: 'Word Association',
@@ -42,7 +47,9 @@ const gamesData = [
     difficulty: 'Hard',
     duration: '6 min',
     description: 'Connect related words to boost creativity',
+    tag: 'Coming Soon',
     tagColor: 'purple',
+    active: false,
   },
   {
     title: 'Pattern Recall',
@@ -50,15 +57,68 @@ const gamesData = [
     difficulty: 'Medium',
     duration: '4 min',
     description: 'Remember and recreate visual patterns',
+    tag: 'Coming Soon',
+    tagColor: 'purple',
+    active: false,
   },
 ];
 
-const Item2 = () => {
+
+const ComingSoon = ({ title, onBack }) => (
+  <div className="relative bg-white dark:bg-gray-900 rounded-xl shadow-md p-6 sm:p-8 md:p-10 min-h-[300px] flex flex-col items-center justify-center ">
+    {/* Sticky Back Button */}
+    <div className="sticky top-4 self-end z-50">
+      <button
+        onClick={onBack}
+        className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 shadow-lg rounded-full p-3 sm:p-4 hover:bg-gray-100 dark:hover:bg-gray-700 transition flex items-center gap-2"
+        style={{ minWidth: 0 }}
+      >
+        <ArrowLeft className="w-5 h-5" />
+      </button>
+    </div>
+
+    {/* Content */}
+    <div className="mt-8 text-center ">
+      <div className="text-5xl sm:text-6xl mb-4">🚧</div>
+      <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-gray-800 dark:text-white">
+        {title}
+      </h2>
+      <p className="text-gray-600 dark:text-gray-300 mb-6">
+        This game is coming soon. Stay tuned!
+      </p>
+
+      {/* Back Button (Bottom) */}
+      <button
+        onClick={onBack}
+        className=" bg-gradient-to-r  text-black bg-green-400 px-6 sm:px-8 py-3 sm:py-4 rounded-xl shadow-lg font-semibold text-base sm:text-lg transition-all duration-200 transform hover:scale-105 flex items-center gap-2"
+      >
+        <ArrowLeft className="w-5 h-5" />
+        Back to Game List
+      </button>
+    </div>
+  </div>
+);
+
+
+const Item2 = ({ onGameSelect = (title) => console.log('Selected game:', title) }) => {
   const [filter, setFilter] = useState('All');
+  const [comingSoonGame, setComingSoonGame] = useState(null);
+
+  const handleGameSelect = (title) => {
+    onGameSelect(title);
+  };
 
   const filteredGames = filter === 'All'
     ? gamesData
     : gamesData.filter(game => game.category === filter);
+
+  if (comingSoonGame) {
+    return (
+      <div className="max-w-2xl mx-auto p-4">
+        <ComingSoon title={comingSoonGame} onBack={() => setComingSoonGame(null)} />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto p-4 space-y-8">
@@ -73,9 +133,13 @@ const Item2 = () => {
           </div>
           <h2 className="text-2xl font-semibold">Memory Match</h2>
           <p className="text-sm">Train your memory with card matching</p>
-          <p className="text-sm text-gray-500 flex items-center"><IoMdStopwatch />
- 3 min</p>
-          <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Play Now</button>
+          <p className="text-sm text-gray-500 flex items-center"><IoMdStopwatch /> 3 min</p>
+          <button
+            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+            onClick={() => handleGameSelect('Memory Match')}
+          >
+            Play Now
+          </button>
         </div>
       </div>
 
@@ -109,8 +173,9 @@ const Item2 = () => {
             <div className="bg-gray-200 h-36 rounded-lg flex items-center justify-center">
               <span className="text-gray-500">Image</span>
             </div>
-            <div className="text-sm text-gray-500 flex justify-start gap-1.5 items-center"><IoMdStopwatch />
- {game.duration}</div>
+            <div className="text-sm text-gray-500 flex justify-start gap-1.5 items-center">
+              <IoMdStopwatch /> {game.duration}
+            </div>
             <div className="flex justify-between items-center">
               <h3 className="font-semibold">{game.title}</h3>
               <span
@@ -126,9 +191,21 @@ const Item2 = () => {
               </span>
             </div>
             <p className="text-sm">{game.description}</p>
-            <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full">
-              Play Now
-            </button>
+            {game.active ? (
+              <button
+                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full"
+                onClick={() => handleGameSelect(game.title)}
+              >
+                Play Now
+              </button>
+            ) : (
+              <button
+                className="bg-gray-300 text-gray-600 px-4 py-2 rounded w-full"
+                onClick={() => setComingSoonGame(game.title)}
+              >
+                Coming Soon
+              </button>
+            )}
           </div>
         ))}
       </div>
