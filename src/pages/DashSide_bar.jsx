@@ -178,7 +178,7 @@ const [selectedGame, setSelectedGame] = React.useState(null);
     { label: 'Support', icon: <IoSettingsOutline />, component: <Item3 /> },
     { label: 'Profile', icon: <CgProfile />, component: <Item7 /> },
     {
-      label: 'Daily Check-in',
+      label: 'Daily Check',
       icon: <LuSmilePlus />,
       isCheckin: true,
       component: null,
@@ -231,6 +231,7 @@ const [selectedGame, setSelectedGame] = React.useState(null);
               backgroundColor: { xs: 'background.paper', md: 'transparent' },
               zIndex: { xs: 1200, md: 'auto' },
               height: '100vh',
+              
             }}
           >
             <Tabs
