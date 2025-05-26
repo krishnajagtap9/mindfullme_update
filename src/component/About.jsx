@@ -216,7 +216,7 @@ const About = () => {
       <GradientAnimationStyle />
       {/* Section 1: Gradient only, no particles */}
       <section className="max-w-full h-screen flex flex-col-reverse sm:flex-row md:flex-row pure-gradient-bg" style={{position: "relative", zIndex: 1}}>
-        <div className=" h-screen w-full flex items-center justify-center  bg-[#DFF5E8] bg-opacity-70">
+        <div className=" h-screen w-full flex items-center justify-center  bg-transperent bg-opacity-70">
           <div className='w-4/5  h-3/4 lg:h-3/6  ' data-aos="fade">
             <h1 className='text-xl font-bold h-1/3 text-shadow-lg sm:min-h-1/6 md:text-4xl'>
               Your Holistic Mental
