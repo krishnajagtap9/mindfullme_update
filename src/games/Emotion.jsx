@@ -10,9 +10,10 @@ import {
   FaMeh,
   FaGrinBeam,
   FaGrinStars,
-  BiConfused ,
+  
 } from "react-icons/fa";
 import confetti from "canvas-confetti";
+import { TbMoodConfuzed } from "react-icons/tb";
 
 const emotions = [
   {
@@ -88,7 +89,7 @@ const emotionIcons = {
   Neutral: <FaMeh className="text-gray-400" size={90} />,
   Contempt: <FaGrinBeam className="text-pink-400" size={90} />,
   Content: <FaGrinStars className="text-green-400" size={90} />,
-  Confused: <BiConfused  className="text-blue-400" size={90} />,
+  Confused: <TbMoodConfuzed   className="text-blue-400" size={90} />,
 };
 
 export default function EmotionRecognition() {

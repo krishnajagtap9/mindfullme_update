@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import NavResponsive_Drawer from '../pages/NavResponsive_Drawer';
 import StarIcon from '@mui/icons-material/Star';
 import { useUser, SignOutButton } from '@clerk/clerk-react';
+import Logo from "../images/Mindfull_logo.png"; // Assuming you have a logo image
 
 const linkStyle = {
   textDecoration: 'none',
@@ -36,7 +37,7 @@ function ResponsiveAppBar() {
       }}
     >
       <Container maxWidth="xl">
-        <Toolbar disableGutters sx={{ width: '100%', display: 'flex' }}>
+        <Toolbar disableGutters sx={{ width: '100%', display: 'flex'  }}>
           {/* Logo / Brand */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography
@@ -53,7 +54,7 @@ function ResponsiveAppBar() {
                 marginLeft: 2,
               }}
             >
-              <StarIcon sx={{ color: 'green', mr: 1 }} />
+             <img src={Logo} alt=""  className='h-12 ml-4'/>
               Mindfullme
             </Typography>
           </Box>

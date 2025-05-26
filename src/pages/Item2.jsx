@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { IoMdStopwatch } from "react-icons/io";
 import { ArrowLeft } from "lucide-react";
+import DotPlay from "../games/Dot_play";
+import Monkey from "../games/Monkey";
 
 const gamesData = [
   {
@@ -61,8 +63,18 @@ const gamesData = [
     tagColor: 'purple',
     active: false,
   },
+  {
+    title: 'Dot Play',
+    category: 'Focus',
+    difficulty: 'Easy',
+    duration: '1 min',
+    tag: 'New',
+    tagColor: 'yellow',
+    description: 'Click the moving dot as many times as you can in 20 seconds!',
+    active: true,
+  },
+  
 ];
-
 
 const ComingSoon = ({ title, onBack }) => (
   <div className="relative bg-white dark:bg-gray-900 rounded-xl shadow-md p-6 sm:p-8 md:p-10 min-h-[300px] flex flex-col items-center justify-center ">
@@ -99,18 +111,30 @@ const ComingSoon = ({ title, onBack }) => (
   </div>
 );
 
-
 const Item2 = ({ onGameSelect = (title) => console.log('Selected game:', title) }) => {
   const [filter, setFilter] = useState('All');
   const [comingSoonGame, setComingSoonGame] = useState(null);
+  const [activeGame, setActiveGame] = useState(null);
 
   const handleGameSelect = (title) => {
-    onGameSelect(title);
+    if (title === "Dot Play") {
+      setActiveGame("Dot Play");
+    } else {
+      onGameSelect(title);
+    }
   };
 
   const filteredGames = filter === 'All'
     ? gamesData
     : gamesData.filter(game => game.category === filter);
+
+  if (activeGame === "Dot Play") {
+    return (
+      <div className="max-w-2xl mx-auto p-4">
+        <DotPlay onBack={() => setActiveGame(null)} />
+      </div>
+    );
+  }
 
   if (comingSoonGame) {
     return (
@@ -146,7 +170,9 @@ const Item2 = ({ onGameSelect = (title) => console.log('Selected game:', title) 
       <div className="flex flex-wrap gap-2 justify-between items-center">
         <h1 className="font-bold text-xl md:text-2xl">Game Collection</h1>
         <div className="flex flex-wrap gap-2 justify-between items-center">
-          {['All', 'Focus', 'Memory', 'Emotion', 'Relaxation'].map(category => (
+          {['All', 'Focus', 'Memory', 'Emotion', 'Relaxation'].concat(
+            gamesData.some(g => g.category === 'Strategy') ? ['Strategy'] : []
+          ).map(category => (
             <button
               key={category}
               className={`px-4 py-2 rounded-full hover:bg-gray-300 ${
@@ -194,7 +220,13 @@ const Item2 = ({ onGameSelect = (title) => console.log('Selected game:', title) 
             {game.active ? (
               <button
                 className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full"
-                onClick={() => handleGameSelect(game.title)}
+                onClick={() => {
+                  if (game.title === "Dot Play") {
+                    setActiveGame("Dot Play");
+                  } else {
+                    handleGameSelect(game.title);
+                  }
+                }}
               >
                 Play Now
               </button>

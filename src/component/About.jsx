@@ -76,7 +76,7 @@ tools.
 
      <div className=" h-full w-full flex items-center justify-center relative " data-aos="fade">
  
-  <img className='w-full h-full object-contain' src="https://rehabtechsolutions.com/wp-content/uploads/2024/09/placeholder.jpg" alt="" />
+  <img className='w-full h-full object-contain' src="https://www.holy-cross.com/sites/default/files/hg_features/hg_post/fb2498a8dc4aaf1298a6dd96f17aa6b4.jpg" alt="" />
 </div>
 
       </section>
