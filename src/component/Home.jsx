@@ -202,14 +202,19 @@ const ParticlesBackground = () => {
 const Home = () => {
   const images = [Image1, Image2, Image3, Image4, Image5, Image6, Image7];
   const [currentImage, setCurrentImage] = useState(0);
+  const [fade, setFade] = useState(true);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImage((prev) => (prev + 1) % images.length);
+      setFade(false);
+      setTimeout(() => {
+        setCurrentImage((prev) => (prev + 1) % images.length);
+        setFade(true);
+      }, 300); // fade out before changing
     }, 3000); // Change image every 3 seconds
 
     return () => clearInterval(interval);
-  }, []);
+  }, [images.length]);
 
   const features = [
     {
@@ -290,7 +295,19 @@ const Home = () => {
           <img
             src={images[currentImage]}
             alt="Slideshow"
-            className="h-[60%] object-contain rounded-2xl transition-opacity duration-1000 ease-in-out"
+            className={`
+              rounded-2xl
+              transition-all duration-700 ease-in-out
+              ${fade ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
+              object-contain
+               h-[60%] max-w-xs max-h-60
+              sm:h-[70%]  sm:max-w-md sm:max-h-72
+              lg:w-full lg:h-full 
+            `}
+            style={{
+              minWidth: 120,
+              minHeight: 80,
+            }}
             key={currentImage}
           />
         </div>
