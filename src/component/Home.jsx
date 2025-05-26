@@ -300,8 +300,8 @@ const Home = () => {
               transition-all duration-700 ease-in-out
               ${fade ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
               object-contain
-               h-[60%] max-w-xs max-h-60
-              sm:h-[70%]  sm:max-w-md sm:max-h-72
+               h-[60%] 
+              sm:h-[70%]  
               lg:w-full lg:h-full 
             `}
             style={{
