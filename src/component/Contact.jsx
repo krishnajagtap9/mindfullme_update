@@ -160,8 +160,8 @@ const ParticlesBackground = () => {
   );
 };
 
-const gold = "#FFD700";
-const black = "#111";
+const purple = "#ccccff";
+const black = "#181818";
 
 const Contact = () => {
   return (
@@ -172,13 +172,13 @@ const Contact = () => {
         <div style={{ position: "relative", zIndex: 1 }}>
           <section className="w-full px-4 py-12 md:py-20 bg-transparent">
             <div className="max-w-5xl mx-auto text-center">
-              <h2 className="text-3xl md:text-4xl font-bold mb-2" style={{color: gold}}>Contact MindfullMe</h2>
-              <p className="text-sm mt-2 mb-4" style={{color: gold}}>
+              <h2 className="text-3xl md:text-4xl font-bold mb-2" style={{color: purple}}>Contact MindfullMe</h2>
+              <p className="text-sm mt-2 mb-4" style={{color: purple}}>
                 Reach out for support, feedback, or partnership. Our team will respond as soon as possible.
               </p>
             </div>
 
-            <div className="mt-10 max-w-5xl mx-auto rounded-md shadow-md overflow-hidden md:flex" style={{background: "#181818"}}>
+            <div className="mt-10 max-w-5xl mx-auto rounded-md shadow-md overflow-hidden md:flex" style={{background: black}}>
               {/* Left Image */}
               <div className="md:w-1/2 w-full">
                 <img
@@ -191,25 +191,25 @@ const Contact = () => {
 
               {/* Form */}
               <div className="md:w-1/2 w-full p-6 md:p-10">
-                <h3 className="text-xl md:text-2xl font-bold mb-4 text-left" style={{color: gold}}>
+                <h3 className="text-xl md:text-2xl font-bold mb-4 text-left" style={{color: purple}}>
                   Let's Connect
                 </h3>
 
                 <form className="space-y-3">
-                  <input type="text" placeholder="Your Name" className="w-full border border-gray-700 rounded px-4 py-2 bg-black text-white" />
-                  <input type="email" placeholder="Email" className="w-full border border-gray-700 rounded px-4 py-2 bg-black text-white" />
-                  <input type="text" placeholder="Phone Number (optional)" className="w-full border border-gray-700 rounded px-4 py-2 bg-black text-white" />
-                  <textarea placeholder="How can we help you?" rows="3" className="w-full border border-gray-700 rounded px-4 py-2 bg-black text-white" />
+                  <input type="text" placeholder="Your Name" className="w-full border border-gray-700 rounded px-4 py-2 bg-black" style={{color: purple}} />
+                  <input type="email" placeholder="Email" className="w-full border border-gray-700 rounded px-4 py-2 bg-black" style={{color: purple}} />
+                  <input type="text" placeholder="Phone Number (optional)" className="w-full border border-gray-700 rounded px-4 py-2 bg-black" style={{color: purple}} />
+                  <textarea placeholder="How can we help you?" rows="3" className="w-full border border-gray-700 rounded px-4 py-2 bg-black" style={{color: purple}} />
 
-                  <div className="flex items-start gap-2 text-sm" style={{color: gold}}>
-                    <input type="checkbox" className="mt-1 accent-yellow-400" />
+                  <div className="flex items-start gap-2 text-sm" style={{color: purple}}>
+                    <input type="checkbox" className="mt-1 accent-purple-400" />
                     <p>
                       By sending this form I confirm that I have read and accept the{' '}
-                      <span className="underline" style={{color: gold}}>Privacy Policy</span>
+                      <span className="underline" style={{color: purple}}>Privacy Policy</span>
                     </p>
                   </div>
 
-                  <button type="submit" className="w-full py-2 rounded font-semibold transition" style={{background: gold, color: black}}>
+                  <button type="submit" className="w-full py-2 rounded font-semibold transition" style={{background: purple, color: black}}>
                     Send Message
                   </button>
                 </form>

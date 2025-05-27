@@ -32,7 +32,7 @@ const GradientAnimationStyle = () => (
   <style>
     {`
       .pure-gradient-bg {
-        background: linear-gradient(-45deg, #8f99fb, #ccccff, #8f99fb, #ccccff);
+        background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
         background-size: 400% 400%;
         animation: gradient 15s ease infinite;
       }
@@ -233,9 +233,9 @@ const team = [
   }
 ];
 
-const teal = "#8f99fb";
+const teal = '#95e8c7';
 const purple = "#ccccff";
-const gold = teal; // Use teal for highlight
+const gold = purple; // All text in purple
 const black = "#181818";
 
 const About = () => {
@@ -259,7 +259,7 @@ const About = () => {
       <GradientAnimationStyle />
       {/* Section 1: Gradient only, no particles */}
       <section className="max-w-full h-screen flex flex-col-reverse sm:flex-row md:flex-row pure-gradient-bg" style={{position: "relative", zIndex: 1}}>
-        <div className=" h-screen w-full flex items-center justify-center  bg-transperent bg-opacity-70">
+        <div className=" h-screen w-full flex items-center justify-center  bg-transperent bg-opacity-70 text-white">
           <div className='w-4/5  h-3/4 lg:h-3/6  ' data-aos="fade">
             <h1 className='text-xl font-bold h-1/3 text-shadow-lg sm:min-h-1/6 md:text-4xl'>
               Your Holistic Mental
@@ -271,7 +271,7 @@ const About = () => {
               tools.
             </p>
             <div className="flex space-x-4">
-              <button className="px-3 py-2 text-xs md:px-4  md:py-2 md:text-xl mt-3 lg:mt-7 rounded-full bg-green-500 text-white transition">
+              <button className="px-3 py-2 text-xs md:px-4  md:py-2 md:text-xl mt-3 lg:mt-7 rounded-full  text-white transition" style={{background: purple}}>
                 Get started
               </button>
             </div>
@@ -298,7 +298,7 @@ const About = () => {
                   connecting with a community
                 </p>
                 <div className="flex space-x-4">
-                  <button className="px-3 py-2 text-xs md:px-6 md:py-2 md:text-xl rounded-full mt-6 bg-green-500 text-white transition">
+                  <button className="px-3 py-2 text-xs md:px-6 md:py-2 md:text-xl rounded-full mt-6  text-white transition" style={{background: purple}}> 
                     Get started for free
                   </button>
                 </div>
@@ -526,7 +526,7 @@ const About = () => {
                   placeholder="Your email"
                   className="px-4 py-2 rounded-full sm:rounded-l-full sm:rounded-r-none bg-white w-72 text-black focus:outline-none"
                 />
-                <button className=" text-white font-bold px-4 py-2 rounded-full sm:rounded-r-full sm:rounded-l-none -ml-0 sm:-ml-2 bg-green-400" >
+                <button className=" text-white font-bold px-4 py-2 rounded-full sm:rounded-r-full sm:rounded-l-none -ml-0 sm:-ml-2" style={{background:purple }}>
                   Subscribe
                 </button>
               </form>
