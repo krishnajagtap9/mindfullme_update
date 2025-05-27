@@ -32,8 +32,8 @@ function ResponsiveAppBar() {
       position="sticky"
       elevation={1}
       sx={{
-        backgroundColor: isSignedIn ? '#FFFFFF' : '#CCCCFF',
-        color: isSignedIn ? '#FFFFFF' : '#000000',
+        backgroundColor: "white",
+        color:isSignedIn ? '#CCCCFF' : 'white',
         borderBottom: '1px solid #e0e0e0',
         zIndex: (theme) => theme.zIndex.drawer + 1,
       }}
@@ -41,7 +41,7 @@ function ResponsiveAppBar() {
       <Container maxWidth="xl" >
         <Toolbar disableGutters sx={{ width: '100%', display: 'flex'  }}>
           {/* Logo / Brand */}
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' ,}}>
             <Typography
               component={Link}
               to="/"
@@ -51,7 +51,7 @@ function ResponsiveAppBar() {
                 display: 'flex',
                 alignItems: 'center',
                 textDecoration: 'none',
-                color: 'green',
+               color:isSignedIn ? 'black' : '#CCCCFF',
                 fontSize: { xs: '1.3rem', md: '1.5rem' },
                 marginLeft: 2,
               }}
@@ -155,13 +155,14 @@ function ResponsiveAppBar() {
                   to="/login?mode=signin"
                   variant="outlined"
                   sx={{
-                    borderColor: 'green',
-                    color: 'green',
+                    borderColor: "purple",
                     textTransform: 'none',
+                    color:"black",
                     fontWeight: 500,
                     '&:hover': {
-                      backgroundColor: '#e8f5e9',
-                      borderColor: 'darkgreen',
+                      backgroundColor: isSignedIn? '#e8f5e9':"#ccccff",
+                       borderColor: 'purple',
+                       color: 'white',
                     },
                   }}
                 >
@@ -171,13 +172,16 @@ function ResponsiveAppBar() {
                   component={Link}
                   to="/login?mode=signup"
                   variant="contained"
-                  sx={{
-                    backgroundColor: 'green',
-                    color: '#fff',
+                 sx={{
+                    borderColor: "purple",
                     textTransform: 'none',
+                    color:"black",
                     fontWeight: 500,
+                    backgroundColor: "#ccccff",
                     '&:hover': {
-                      backgroundColor: '#2e7d32',
+                      backgroundColor: "#ccccff",
+                       borderColor: 'purple',
+                       color: 'white',
                     },
                   }}
                 >

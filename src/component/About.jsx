@@ -27,6 +27,8 @@ import Icon1 from "../assets/icon1"
 import Aboutimg1 from "../images/Aboutimg1.png";
 import Aboutimg3 from "../images/Aboutimg3.png";
 import Aboutimg2 from "../images/Aboutimg2.jpeg";
+import Aboutsection from "../images/AboutSection.png"
+import Svg1 from "../All_svg/Svg1.jsx"
 // --- Particle Background (copied from Home.jsx) ---
 const GradientAnimationStyle = () => (
   <style>
@@ -271,14 +273,14 @@ const About = () => {
               tools.
             </p>
             <div className="flex space-x-4">
-              <button className="px-3 py-2 text-xs md:px-4  md:py-2 md:text-xl mt-3 lg:mt-7 rounded-full  text-white transition" style={{background: purple}}>
+              <button className="px-3 py-2 text-xs md:px-4  md:py-2 md:text-xl mt-3 lg:mt-7 rounded-full  text-black transition" style={{background: purple}}>
                 Get started
               </button>
             </div>
           </div>
         </div>
         <div className=" h-full w-full flex items-center justify-center relative " data-aos="fade">
-          <img className='w-full h-full object-contain' src="https://www.holy-cross.com/sites/default/files/hg_features/hg_post/fb2498a8dc4aaf1298a6dd96f17aa6b4.jpg" alt="" />
+          <img className='w-full h-full object-contain' src={Aboutsection} alt="" />
         </div>
       </section>
 
@@ -298,7 +300,7 @@ const About = () => {
                   connecting with a community
                 </p>
                 <div className="flex space-x-4">
-                  <button className="px-3 py-2 text-xs md:px-6 md:py-2 md:text-xl rounded-full mt-6  text-white transition" style={{background: purple}}> 
+                  <button className="px-3 py-2 text-xs md:px-6 md:py-2 md:text-xl rounded-full mt-6  text-black transition" style={{background: purple}}> 
                     Get started for free
                   </button>
                 </div>
@@ -336,23 +338,23 @@ const About = () => {
             </p>
             <div className="flex flex-col md:flex-row items-center justify-center gap-16" >
               <div className="flex flex-col items-center text-center md:text-2xl" data-aos="fade">
-                <div className="bg-gray-200 rounded-2xl p-4 mb-4">
+                <div className=" rounded-2xl p-4 mb-4">
                   <FaMapMarkerAlt className="text-gold text-5xl" />
                 </div>
                 <h3 className="font-semibold  mb-2 text-2xl" style={{color: gold}}>Sep 2024</h3>
                 <p className="max-w-xs" style={{color: gold}}>Idea sparked by a group of students looking for a self-care space</p>
               </div>
-              <div className="hidden md:block w-16 h-1 bg-gray-300 rounded-full"></div>
+              <div className="hidden md:block w-16 h-1  rounded-full"></div>
               <div className="flex flex-col items-center text-center md:text-2xl" data-aos="fade">
-                <div className="bg-gray-200 rounded-2xl p-4 mb-4">
+                <div className=" rounded-2xl p-4 mb-4">
                   <FaCalendarAlt className="text-gold text-5xl" />
                 </div>
                 <h3 className="font-semibold text-lg mb-2 md:text-2xl" style={{color: gold}}>May 2025</h3>
                 <p className="max-w-xs" style={{color: gold}}>First launch with AI-powered mood tracker + calming content</p>
               </div>
-              <div className="hidden md:block w-16 h-1 bg-gray-300 rounded-full"></div>
+              <div className="hidden md:block w-16 h-1  rounded-full"></div>
               <div className="flex flex-col items-center text-center md:text-2xl" data-aos="fade">
-                <div className="bg-gray-200 rounded-2xl p-4 mb-4">
+                <div className=" rounded-2xl p-4 mb-4">
                   <FaCar className="text-gold text-5xl" />
                 </div>
                 <h3 className="font-semibold text-lg mb-2 md:text-2xl" style={{color: gold}}>Future</h3>
@@ -449,28 +451,24 @@ const About = () => {
               We welcome everyone, from every background.
             </p>
             <div className="mt-12 flex flex-col md:flex-row items-center justify-between gap-20 md:gap-50">
-              <div className="w-full md:w-1/2 bg-slate-300 aspect-square flex items-center justify-center" data-aos="zoom-in">
-                <img src=" https://i.pinimg.com/236x/eb/80/0a/eb800a3f92e7a2d131c747b77256b03e.jpg" alt="" />
+              <div className="w-full md:w-1/2  aspect-square flex items-center justify-center" data-aos="zoom-in">
+                <img src="https://img.freepik.com/free-vector/flat-international-human-solidarity-day-illustration_23-2149844032.jpg" alt="" />
               </div>
               <div className="w-full md:w-1/2 flex flex-col gap-8 text-left">
                 <div className="flex items-center gap-4" data-aos="fade">
-                  <div className="w-8 h-8 border-2 border-gray-400 rounded-md"></div>
                   <div>
                     <h3 className="text-lg font-semibold md:text-2xl">Empathy</h3>
                     <p className="text-sm md:text-xl">Every emotional journey is valid.</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4" data-aos="fade">
-                  <div className="w-8 h-8 bg-gray-400 rounded-md flex items-center justify-center">
-                    <span className="text-white text-sm">🏷️</span>
-                  </div>
+                
                   <div>
                     <h3 className="text-lg font-semibold md:text-2xl">Privacy</h3>
                     <p className="text-sm  md:text-xl">Your data is yours — always.</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4" data-aos="fade">
-                  <div className="w-8 h-8 bg-gray-300 rounded-md "></div>
                   <div>
                     <h3 className="text-lg font-semibold md:text-2xl">Engagement</h3>
                     <p className="text-sm  md:text-xl">Healing can be interactive and rewarding.</p>
@@ -526,7 +524,7 @@ const About = () => {
                   placeholder="Your email"
                   className="px-4 py-2 rounded-full sm:rounded-l-full sm:rounded-r-none bg-white w-72 text-black focus:outline-none"
                 />
-                <button className=" text-white font-bold px-4 py-2 rounded-full sm:rounded-r-full sm:rounded-l-none -ml-0 sm:-ml-2" style={{background:purple }}>
+                <button className=" text-black font-bold px-4 py-2 rounded-full sm:rounded-r-full sm:rounded-l-none -ml-0 sm:-ml-2" style={{background:purple }}>
                   Subscribe
                 </button>
               </form>

@@ -369,7 +369,7 @@ const Home = () => {
               Track moods, explore calming resources, and connect with a supportive community
             </p>
 
-            <div className="flex md:text-xl   text-white space-x-4">
+            <div className="flex md:text-xl   text-black space-x-4">
               <button className="px-6 py-2 rounded-full" style={{background: purple, fontWeight: 600}}>
                 Get started
               </button>
