@@ -292,7 +292,7 @@ const [selectedGame, setSelectedGame] = React.useState(null);
       {tab.label === 'Games' && selectedGame !== null && (
         <div className="mb-4">
           <button
-            className="fixed right-5 text-sm font-medium px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition"
+            className="fixed lg:left-50  left-2 text-sm font-medium px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition"
             onClick={() => setSelectedGame(null)}
           >
             ← Back to Game List

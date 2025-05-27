@@ -12,6 +12,7 @@ import StarIcon from '@mui/icons-material/Star';
 import { useUser, SignOutButton } from '@clerk/clerk-react';
 import Logo from "../images/Mindfull_logo.png"; // Assuming you have a logo image
 
+
 const linkStyle = {
   textDecoration: 'none',
   color: 'inherit',
@@ -27,16 +28,17 @@ function ResponsiveAppBar() {
   const { isSignedIn } = useUser();
 
   return (
-    <AppBar
+      <AppBar
       position="sticky"
       elevation={1}
       sx={{
-        backgroundColor: '#ffffff',
+        backgroundColor: isSignedIn ? '#FFFFFF' : '#CCCCFF',
+        color: isSignedIn ? '#FFFFFF' : '#000000',
         borderBottom: '1px solid #e0e0e0',
         zIndex: (theme) => theme.zIndex.drawer + 1,
       }}
     >
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" >
         <Toolbar disableGutters sx={{ width: '100%', display: 'flex'  }}>
           {/* Logo / Brand */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -55,7 +57,7 @@ function ResponsiveAppBar() {
               }}
             >
              <img src={Logo} alt=""  className='h-12 ml-4'/>
-              Mindfullme
+              Mindful-Me
             </Typography>
           </Box>
 

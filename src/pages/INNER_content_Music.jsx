@@ -17,7 +17,6 @@ const tracks = [
   { title: 'Deep Relaxation Music 1', src: music1, image: image1 },
   { title: 'Tranquil Mind Meditation', src: music2, image: image2 },
   { title: 'Healing Soundscapes', src: music3, image: image3 },
-  { title: 'Calming Waves Meditation', src: Music4, image: image1 },
   { title: 'Shri Hanumanji bhajan ', src: Music4, image: image4 },
 ];
 

@@ -304,7 +304,7 @@ const About = () => {
                 </div>
               </div>
             </div>
-            <div className="relative h-screen w-full flex items-center justify-center overflow-hidden">
+            <div className="relative h-screen w-full flex items-center justify-center ">
   <img
     className="absolute w-2/4 h-3/4 object-fit border shadow-md rounded-md hover:z-40 hover:scale-110 transition-transform duration-300 ease-in-out cursor-pointer sm:w-4/6 sm:h-3/5 lg:h-9/12 lg:w-[60%]"
     src={Aboutimg1}

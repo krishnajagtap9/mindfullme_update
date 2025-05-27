@@ -75,7 +75,7 @@ const GradientAnimationStyle = () => (
         justify-content: center;
       }
       .cube__container {
-        animation: rotationBox 20s linear infinite forwards;
+        animation: rotationBox 60s linear infinite forwards;
         height: 100%;
         position: relative;
         transform-style: preserve-3d;
@@ -90,7 +90,7 @@ const GradientAnimationStyle = () => (
         overflow: hidden;
         position: absolute;
         width: 20rem;
-        border-radius: 1.5rem;
+       
         box-shadow: 0 2px 16px #0004;
       }
       .cube__face img {
@@ -365,17 +365,17 @@ const Home = () => {
               />
             </h1>
 
-            <p className="my-3 text-shadow-lg" style={{color: "white"}}>
+            <p className="my-3  md:text-2xl text-shadow-lg" style={{color: "white"}}>
               Track moods, explore calming resources, and connect with a supportive community
             </p>
 
-            <div className="flex space-x-4">
-              <button className="px-6 py-2 rounded-full" style={{background: purple, color: black, fontWeight: 600}}>
+            <div className="flex md:text-xl   text-white space-x-4">
+              <button className="px-6 py-2 rounded-full" style={{background: purple, fontWeight: 600}}>
                 Get started
               </button>
             </div>
 
-            <p className="my-3 text-shadow-lg" style={{color: "white"}}>"Healing begins with awareness."</p>
+            <p className="my-3 text-shadow-lg md:text-2xl" style={{color: "white"}}>"Healing begins with awareness."</p>
           </div>
         </div>
 
