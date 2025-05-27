@@ -3,6 +3,11 @@ import { IoMdStopwatch } from "react-icons/io";
 import { ArrowLeft } from "lucide-react";
 import DotPlay from "../games/Dot_play";
 import Monkey from "../games/Monkey";
+import Memory_match from "../images/memory_match.png";
+import Emotion_Recognination from "../images/Emotion.png";
+import Pattern_recall from "../images/pattern.png";
+import Word_association from "../images/word_association.png";
+import FocusTrainer_game from '../images/Mindfull_logo.png';
 
 const gamesData = [
   {
@@ -14,6 +19,7 @@ const gamesData = [
     tagColor: 'green',
     description: 'Train your memory with card matching',
     active: true,
+    image: Memory_match,
   },
   {
     title: 'Focus Trainer',
@@ -24,6 +30,7 @@ const gamesData = [
     tagColor: 'blue',
     description: 'Improve concentration with timed exercises',
     active: true,
+    image: FocusTrainer_game,
   },
   {
     title: 'Emotion Recognition',
@@ -34,6 +41,7 @@ const gamesData = [
     tagColor: 'green',
     description: 'Practice identifying emotional expressions',
     active: true,
+    image: Emotion_Recognination,
   },
   {
     title: 'Breathing Zen',
@@ -42,6 +50,7 @@ const gamesData = [
     duration: '7 min',
     description: 'Follow the pattern for deep relaxation',
     active: true,
+    image: FocusTrainer_game, // Placeholder, replace with actual image if available
   },
   {
     title: 'Word Association',
@@ -52,6 +61,7 @@ const gamesData = [
     tag: 'Coming Soon',
     tagColor: 'purple',
     active: false,
+    image: Word_association,
   },
   {
     title: 'Pattern Recall',
@@ -62,18 +72,19 @@ const gamesData = [
     tag: 'Coming Soon',
     tagColor: 'purple',
     active: false,
+    image: Pattern_recall,
   },
-  {
-    title: 'Dot Play',
-    category: 'Focus',
-    difficulty: 'Easy',
-    duration: '1 min',
-    tag: 'New',
-    tagColor: 'yellow',
-    description: 'Click the moving dot as many times as you can in 20 seconds!',
-    active: true,
-  },
-  
+  // {
+  //   title: 'Dot Play',
+  //   category: 'Focus',
+  //   difficulty: 'Easy',
+  //   duration: '1 min',
+  //   tag: 'New',
+  //   tagColor: 'yellow',
+  //   description: 'Click the moving dot as many times as you can in 20 seconds!',
+  //   active: true,
+  //   image: FocusTrainer_game,
+  // },
 ];
 
 const ComingSoon = ({ title, onBack }) => (
@@ -148,7 +159,7 @@ const Item2 = ({ onGameSelect = (title) => console.log('Selected game:', title) 
     <div className="max-w-7xl mx-auto p-4 space-y-8">
       <div className="bg-white rounded-xl shadow-md p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-gray-200 h-48 rounded-lg flex items-center justify-center">
-          <span className="text-gray-500">Image</span>
+          <img src={Memory_match} alt="Memory Match" className="h-40 object-contain" />
         </div>
         <div className="space-y-2">
           <div className="flex items-center space-x-2 text-sm">
@@ -197,7 +208,11 @@ const Item2 = ({ onGameSelect = (title) => console.log('Selected game:', title) 
               </span>
             )}
             <div className="bg-gray-200 h-36 rounded-lg flex items-center justify-center">
-              <span className="text-gray-500">Image</span>
+              {game.image ? (
+                <img src={game.image} alt={game.title} className="h-full object-contain" />
+              ) : (
+                <span className="text-gray-500">Image</span>
+              )}
             </div>
             <div className="text-sm text-gray-500 flex justify-start gap-1.5 items-center">
               <IoMdStopwatch /> {game.duration}

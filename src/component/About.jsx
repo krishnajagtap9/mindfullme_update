@@ -24,7 +24,9 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { FaMapMarkerAlt, FaCalendarAlt, FaCar, FaLinkedin, FaGithub, FaInstagram } from 'react-icons/fa';
 import Icon1 from "../assets/icon1"
-
+import Aboutimg1 from "../images/Aboutimg1.png";
+import Aboutimg3 from "../images/Aboutimg3.png";
+import Aboutimg2 from "../images/Aboutimg2.jpeg";
 // --- Particle Background (copied from Home.jsx) ---
 const GradientAnimationStyle = () => (
   <style>
@@ -300,28 +302,29 @@ const About = () => {
                 </div>
               </div>
             </div>
-            <div className="relative h-screen w-full flex items-center justify-center">
-              <img
-                className="absolute w-2/4 h-3/4 object-contain border shadow-md rounded-md hover:z-40 hover:scale-110 transition-transform duration-300 ease-in-out cursor-pointer sm:w-4/6  sm:h-3/5 lg:h-9/12 lg:w-[60%]"
-                src="https://rehabtechsolutions.com/wp-content/uploads/2024/09/placeholder.jpg"
-                alt=""
-                data-aos="zoom-in"
-              />
-              <img
-                className="absolute w-1/4 lg:w-2/5 h-1/3 object-contain border shadow-md rounded-md bottom-12 left-12 z-20 hover:z-20 hover:scale-110 transition-transform duration-300 ease-in-out cursor-pointer sm:min-w-[45%] sm:left-0 sm:bottom-20"
-                src="https://rehabtechsolutions.com/wp-content/uploads/2024/09/placeholder.jpg"
-                alt=""
-                data-aos="fade"
-                data-aos-delay="200"
-              />
-              <img
-                className="absolute w-1/4 h-1/3 object-contain border shadow-md rounded-md top-20 md:top-43  right-12 z-30 hover:z-20 hover:scale-110 transition-transform duration-300 ease-in-out cursor-pointer  sm:h-1/4 sm:top-40 sm:right-5 lg:h-1/3 lg:top-35"
-                src="https://rehabtechsolutions.com/wp-content/uploads/2024/09/placeholder.jpg"
-                alt=""
-                data-aos="fade"
-                data-aos-delay="200"
-              />
-            </div>
+            <div className="relative h-screen w-full flex items-center justify-center overflow-hidden">
+  <img
+    className="absolute w-2/4 h-3/4 object-fit border shadow-md rounded-md hover:z-40 hover:scale-110 transition-transform duration-300 ease-in-out cursor-pointer sm:w-4/6 sm:h-3/5 lg:h-9/12 lg:w-[60%]"
+    src={Aboutimg1}
+    alt=""
+    data-aos="zoom-in"
+  />
+  <img
+    className="absolute w-1/3 lg:w-2/5 h-1/3 object-conatin border shadow-md rounded-md bottom-12 left-12 z-20 hover:z-30 hover:scale-110 transition-transform duration-300 ease-in-out cursor-pointer sm:min-w-[45%] sm:left-0 sm:bottom-20"
+    src={Aboutimg2}
+    alt=""
+    data-aos="fade"
+    data-aos-delay="200"
+  />
+  <img
+    className="absolute w-1/4 h-1/3 object-fit border shadow-md rounded-md top-20 md:top-43 right-12 z-30 hover:z-40 hover:scale-110 transition-transform duration-300 ease-in-out cursor-pointer sm:h-1/4 sm:top-40 sm:right-5 lg:h-1/3 lg:top-35"
+    src={Aboutimg3}
+    alt=""
+    data-aos="fade"
+    data-aos-delay="200"
+  />
+</div>
+
           </section>
 
           <section className="bg-transperent py-16 px-4 text-center" >
@@ -332,7 +335,7 @@ const About = () => {
             <div className="flex flex-col md:flex-row items-center justify-center gap-16" >
               <div className="flex flex-col items-center text-center md:text-2xl" data-aos="fade">
                 <div className="bg-gray-200 rounded-2xl p-4 mb-4">
-                  <FaMapMarkerAlt className="text-green-500 text-5xl" />
+                  <FaMapMarkerAlt className="text-gold text-5xl" />
                 </div>
                 <h3 className="font-semibold  mb-2 text-2xl" style={{color: gold}}>Sep 2024</h3>
                 <p className="max-w-xs" style={{color: gold}}>Idea sparked by a group of students looking for a self-care space</p>
@@ -340,7 +343,7 @@ const About = () => {
               <div className="hidden md:block w-16 h-1 bg-gray-300 rounded-full"></div>
               <div className="flex flex-col items-center text-center md:text-2xl" data-aos="fade">
                 <div className="bg-gray-200 rounded-2xl p-4 mb-4">
-                  <FaCalendarAlt className="text-green-500 text-5xl" />
+                  <FaCalendarAlt className="text-gold text-5xl" />
                 </div>
                 <h3 className="font-semibold text-lg mb-2 md:text-2xl" style={{color: gold}}>May 2025</h3>
                 <p className="max-w-xs" style={{color: gold}}>First launch with AI-powered mood tracker + calming content</p>
@@ -348,7 +351,7 @@ const About = () => {
               <div className="hidden md:block w-16 h-1 bg-gray-300 rounded-full"></div>
               <div className="flex flex-col items-center text-center md:text-2xl" data-aos="fade">
                 <div className="bg-gray-200 rounded-2xl p-4 mb-4">
-                  <FaCar className="text-green-500 text-5xl" />
+                  <FaCar className="text-gold text-5xl" />
                 </div>
                 <h3 className="font-semibold text-lg mb-2 md:text-2xl" style={{color: gold}}>Future</h3>
                 <p className="max-w-xs" style={{color: gold}}>Expansion with licensed therapists, real-time support groups</p>
@@ -488,7 +491,7 @@ const About = () => {
             <div className="w-full px-4 lg:px-0 mb-10">
               <div className="flex flex-col md:flex-row items-stretch justify-center gap-6 w-full lg:w-4/5 mx-auto">
                 <div className="shadow-2xl flex flex-col items-center text-center bg-black rounded-2xl p-8 flex-1 min-w-[300px] md:min-w-[200px] transition-transform hover:scale-105" style={{border: `1px solid ${gold}`}}>
-                  <h2 className="font-semibold text-3xl md:text-5xl text-green-400 mb-4 min-h-[80px]">
+                  <h2 className="font-semibold text-3xl md:text-5xl text-gold mb-4 min-h-[80px]">
                     {inView ? <CountUp end={500000} duration={2} separator="," /> : '0'}+
                   </h2>
                   <p className="text-base md:text-2xl flex-grow flex items-center justify-center">
@@ -496,7 +499,7 @@ const About = () => {
                   </p>
                 </div>
                 <div className="shadow-2xl flex flex-col items-center text-center bg-black rounded-2xl p-8 flex-1 min-w-[300px] md:min-w-[200px] transition-transform hover:scale-105" style={{border: `1px solid ${gold}`}}>
-                  <h2 className="font-semibold text-3xl md:text-5xl text-green-400 mb-4 min-h-[80px]">
+                  <h2 className="font-semibold text-3xl md:text-5xl text-gold mb-4 min-h-[80px]">
                     {inView ? <CountUp end={2000000} duration={2.5} separator="," /> : '0'}+
                   </h2>
                   <p className="text-base md:text-2xl flex-grow flex items-center justify-center">
@@ -504,7 +507,7 @@ const About = () => {
                   </p>
                 </div>
                 <div className="shadow-2xl flex flex-col items-center text-center bg-black rounded-2xl p-8 flex-1 min-w-[300px] md:min-w-[200px] transition-transform hover:scale-105" style={{border: `1px solid ${gold}`}}>
-                  <h2 className="font-semibold text-3xl md:text-5xl text-green-400 mb-4 min-h-[80px]">
+                  <h2 className="font-semibold text-3xl md:text-5xl text-gold mb-4 min-h-[80px]">
                     {inView ? <CountUp end={25000} duration={2} separator="," /> : '0'}+
                   </h2>
                   <p className="text-base md:text-2xl flex-grow flex items-center justify-center">
@@ -521,7 +524,7 @@ const About = () => {
                   placeholder="Your email"
                   className="px-4 py-2 rounded-full sm:rounded-l-full sm:rounded-r-none bg-white w-72 text-black focus:outline-none"
                 />
-                <button className="bg-green-500 text-white px-4 py-2 rounded-full sm:rounded-r-full sm:rounded-l-none -ml-0 sm:-ml-2">
+                <button className="bg-amber-300 text-white font-bold px-4 py-2 rounded-full sm:rounded-r-full sm:rounded-l-none -ml-0 sm:-ml-2">
                   Subscribe
                 </button>
               </form>

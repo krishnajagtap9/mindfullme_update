@@ -65,6 +65,78 @@ const GradientAnimationStyle = () => (
         top: 0;
         pointer-events: none;
       }
+      /* Rotating Cube Styles */
+      .cube {
+        height: 20rem;
+        width: 20rem;
+        perspective: 60rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .cube__container {
+        animation: rotationBox 20s linear infinite forwards;
+        height: 100%;
+        position: relative;
+        transform-style: preserve-3d;
+        width: 100%;
+      }
+      .cube__face {
+        align-items: center;
+        background-color: #222;
+        display: flex;
+        height: 20rem;
+        justify-content: center;
+        overflow: hidden;
+        position: absolute;
+        width: 20rem;
+        border-radius: 1.5rem;
+        box-shadow: 0 2px 16px #0004;
+      }
+      .cube__face img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center;
+        display: block;
+      }
+      .cube__face--front  { transform: rotateY(0deg) translateZ(10rem);}
+      .cube__face--back   { transform: rotateY(180deg) translateZ(10rem);}
+      .cube__face--left   { transform: rotateY(-90deg) translateZ(10rem);}
+      .cube__face--right  { transform: rotateY(90deg) translateZ(10rem);}
+      .cube__face--top    { transform: rotateX(90deg) translateZ(10rem);}
+      .cube__face--bottom { transform: rotateX(-90deg) translateZ(10rem);}
+      @keyframes rotationBox {
+        0%   { transform: rotate3d(0, 0, 0, 0deg);}
+        25%  { transform: rotate3d(0, 1, 1, 90deg);}
+        50%  { transform: rotate3d(1, 0, 1, 180deg);}
+        75%  { transform: rotate3d(1, 1, 0, 240deg);}
+        100% { transform: rotate3d(1, 1, 1, 360deg);}
+      }
+      @media only screen and (max-width: 900px) {
+        .cube, .cube__face {
+          width: 12rem;
+          height: 12rem;
+        }
+        .cube__face--front  { transform: rotateY(0deg) translateZ(6rem);}
+        .cube__face--back   { transform: rotateY(180deg) translateZ(6rem);}
+        .cube__face--left   { transform: rotateY(-90deg) translateZ(6rem);}
+        .cube__face--right  { transform: rotateY(90deg) translateZ(6rem);}
+        .cube__face--top    { transform: rotateX(90deg) translateZ(6rem);}
+        .cube__face--bottom { transform: rotateX(-90deg) translateZ(6rem);}
+      }
+      @media only screen and (max-width: 640px) {
+        .cube, .cube__face {
+          width: 7.5rem;
+          height: 7.5rem;
+        }
+        .cube__face--front  { transform: rotateY(0deg) translateZ(3.75rem);}
+        .cube__face--back   { transform: rotateY(180deg) translateZ(3.75rem);}
+        .cube__face--left   { transform: rotateY(-90deg) translateZ(3.75rem);}
+        .cube__face--right  { transform: rotateY(90deg) translateZ(3.75rem);}
+        .cube__face--top    { transform: rotateX(90deg) translateZ(3.75rem);}
+        .cube__face--bottom { transform: rotateX(-90deg) translateZ(3.75rem);}
+      }
     `}
   </style>
 );
@@ -199,22 +271,34 @@ const ParticlesBackground = () => {
   );
 };
 
+// RotatingCube component
+const RotatingCube = ({ images }) => (
+  <div className="cube">
+    <div className="cube__container">
+      <div className="cube__face cube__face--front">
+        <img src={images[0]} alt="cube-front" />
+      </div>
+      <div className="cube__face cube__face--back">
+        <img src={images[1] || images[0]} alt="cube-back" />
+      </div>
+      <div className="cube__face cube__face--right">
+        <img src={images[2] || images[0]} alt="cube-right" />
+      </div>
+      <div className="cube__face cube__face--left">
+        <img src={images[3] || images[0]} alt="cube-left" />
+      </div>
+      <div className="cube__face cube__face--top">
+        <img src={images[4] || images[0]} alt="cube-top" />
+      </div>
+      <div className="cube__face cube__face--bottom">
+        <img src={images[5] || images[0]} alt="cube-bottom" />
+      </div>
+    </div>
+  </div>
+);
+
 const Home = () => {
   const images = [Image1, Image2, Image3, Image4, Image5, Image6, Image7];
-  const [currentImage, setCurrentImage] = useState(0);
-  const [fade, setFade] = useState(true);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setFade(false);
-      setTimeout(() => {
-        setCurrentImage((prev) => (prev + 1) % images.length);
-        setFade(true);
-      }, 300); // fade out before changing
-    }, 3000); // Change image every 3 seconds
-
-    return () => clearInterval(interval);
-  }, [images.length]);
 
   const features = [
     {
@@ -258,7 +342,7 @@ const Home = () => {
       <section className="max-w-full h-screen flex flex-col sm:flex-row pure-gradient-bg" style={{position: "relative", zIndex: 1}}>
         <div className="h-full w-full flex items-center justify-center">
           <div className="w-4/5 h-3/4 lg:h-3/6" data-aos="fade">
-            <h1 className="text-3xl font-bold h-32 text-shadow-lg sm:min-h-1/6" style={{color: gold}}>
+            <h1 className="text-3xl font-bold h-32 text-shadow-lg sm:min-h-1/6" style={{color: "white"}}>
               <TypeAnimation
                 sequence={[
                   'Take Charge of Your Mental Wellness',
@@ -277,7 +361,7 @@ const Home = () => {
               />
             </h1>
 
-            <p className="my-3 text-shadow-lg" style={{color: gold}}>
+            <p className="my-3 text-shadow-lg" style={{color: "white"}}>
               Track moods, explore calming resources, and connect with a supportive community
             </p>
 
@@ -287,29 +371,13 @@ const Home = () => {
               </button>
             </div>
 
-            <p className="my-3 text-shadow-lg" style={{color: gold}}>"Healing begins with awareness."</p>
+            <p className="my-3 text-shadow-lg" style={{color: "white"}}>"Healing begins with awareness."</p>
           </div>
         </div>
 
+        {/* Rotating cube replaces the image transition */}
         <div className="h-full w-full flex items-center justify-center relative">
-          <img
-            src={images[currentImage]}
-            alt="Slideshow"
-            className={`
-              rounded-2xl
-              transition-all duration-700 ease-in-out
-              ${fade ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
-              object-contain
-               h-[60%] 
-              sm:h-[70%]  
-              lg:w-full lg:h-full 
-            `}
-            style={{
-              minWidth: 120,
-              minHeight: 80,
-            }}
-            key={currentImage}
-          />
+          <RotatingCube images={images} />
         </div>
       </section>
 

@@ -139,7 +139,7 @@ export default function VerticalTabs() {
   const [showTabsState, setShowTabsState] = React.useState(false);
 const [selectedGame, setSelectedGame] = React.useState(null);
 
-  // State to trigger check-in UI in Dashboard
+  
   const [showCheckinTabs, setShowCheckinTabs] = React.useState(false);
 
   const toggleTabs = () => {
@@ -150,7 +150,7 @@ const [selectedGame, setSelectedGame] = React.useState(null);
 
   const showTabs = isLargeScreen || showTabsState;
 
-  // Pass check-in state to Dashboard tab
+  
   const tabsData = [
     { label: 'Dashboard', icon: <FaHome />, component: <Item1 showCheckinTabsFromSidebar={showCheckinTabs} setShowCheckinTabsFromSidebar={setShowCheckinTabs} /> },
     { 
@@ -186,10 +186,9 @@ const [selectedGame, setSelectedGame] = React.useState(null);
   ];
 
   const handleChange = (event, newValue) => {
-    // If Daily Check-in tab is clicked, trigger check-in and switch to Dashboard tab
     if (tabsData[newValue].isCheckin) {
       setShowCheckinTabs(true);
-      setValue(0); // Switch to Dashboard tab
+      setValue(0); 
       return;
     }
     setValue(newValue);
