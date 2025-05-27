@@ -32,7 +32,7 @@ const GradientAnimationStyle = () => (
   <style>
     {`
       .pure-gradient-bg {
-        background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+        background: linear-gradient(-45deg, #8f99fb, #ccccff, #8f99fb, #ccccff);
         background-size: 400% 400%;
         animation: gradient 15s ease infinite;
       }
@@ -233,7 +233,9 @@ const team = [
   }
 ];
 
-const gold = "#FFD700";
+const teal = "#8f99fb";
+const purple = "#ccccff";
+const gold = teal; // Use teal for highlight
 const black = "#181818";
 
 const About = () => {
@@ -524,7 +526,7 @@ const About = () => {
                   placeholder="Your email"
                   className="px-4 py-2 rounded-full sm:rounded-l-full sm:rounded-r-none bg-white w-72 text-black focus:outline-none"
                 />
-                <button className="bg-amber-300 text-white font-bold px-4 py-2 rounded-full sm:rounded-r-full sm:rounded-l-none -ml-0 sm:-ml-2">
+                <button className=" text-white font-bold px-4 py-2 rounded-full sm:rounded-r-full sm:rounded-l-none -ml-0 sm:-ml-2 bg-green-400" >
                   Subscribe
                 </button>
               </form>
