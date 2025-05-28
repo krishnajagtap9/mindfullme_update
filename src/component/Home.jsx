@@ -26,6 +26,7 @@ import Image7 from '../images/image7.png';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import "../index.css"
+import { Link } from 'react-router-dom';
 
 // Add this component at the top level of your file
 const GradientAnimationStyle = () => (
@@ -370,9 +371,14 @@ const Home = () => {
             </p>
 
             <div className="flex md:text-xl   text-black space-x-4">
-              <button className="px-6 py-2 rounded-full" style={{background: purple, fontWeight: 600}}>
-                Get started
-              </button>
+             
+                
+          <a
+  href="/login?mode=signin"
+  class="inline-flex items-center justify-center px-6 py-2 rounded-full border-2 border-black text-black font-semibold bg-[#ccccff]  transition no-underline"
+>
+  Get started
+</a>  
             </div>
 
             <p className="my-3 text-shadow-lg md:text-2xl" style={{color: "white"}}>"Healing begins with awareness."</p>
@@ -432,7 +438,12 @@ const Home = () => {
 
           <section className='w-full h-[60vh] flex gap-y-8 justify-center items-center text-center flex-col bg-transparent' style={{color: purple}}>
             <h1 className='text-3xl font-bold text-shadow-lg'>Track Your Mood Journey</h1>
-            <button className='button_css2' style={{background: purple, color: black, fontWeight: 600}}>Try Mood Tracker</button>
+             <a
+  href="/login?mode=signin"
+  class="inline-flex items-center justify-center px-6 py-2 rounded-full border-2 border-black text-black font-semibold bg-[#ccccff]  transition no-underline"
+>
+ Try Mood Tracker
+</a>  
           </section>
 
           {/* Resource Highlights Section with Card Hover Animation */}
@@ -511,9 +522,13 @@ const Home = () => {
               ))}
             </div>
             <div className="flex justify-center mt-8">
-              <button className="px-6 py-2 font-semibold rounded-full transition border" style={{borderColor: purple, color: purple}}>
-                View Full Library
-              </button>
+                <a
+  href="/login?mode=signin"
+  class="inline-flex items-center justify-center px-6 py-2 rounded-full border-2 border-[#ccccff] text-[#ccccff] font-semibold bg-transperent  transition no-underline"
+>
+   View Full Library
+</a>  
+              
             </div>
           </section>
 

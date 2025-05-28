@@ -274,9 +274,12 @@ const About = () => {
               tools.
             </p>
             <div className="flex space-x-4">
-              <button className="px-3 py-2 text-xs md:px-4  md:py-2 md:text-xl mt-3 lg:mt-7 rounded-full  text-black transition" style={{background: purple}}>
-                Get started
-              </button>
+            <a
+  href="/login?mode=signin"
+  class="inline-flex items-center justify-center px-6 py-2 rounded-full border-2 border-black text-black font-semibold bg-[#ccccff]  transition no-underline"
+>
+  Get started
+</a>  
             </div>
           </div>
         </div>
@@ -301,9 +304,12 @@ const About = () => {
                   connecting with a community
                 </p>
                 <div className="flex space-x-4">
-                  <button className="px-3 py-2 text-xs md:px-6 md:py-2 md:text-xl arounded-full mt-6  text-black transition" style={{background: purple}}> 
-                    Get started for free
-                  </button>
+                  <a
+  href="/login?mode=signin"
+  class="inline-flex items-center justify-center px-6 py-2 rounded-full border-2 border-black text-black font-semibold bg-[#ccccff]  transition no-underline"
+>
+  Get started
+</a>  
                 </div>
               </div>
             </div>

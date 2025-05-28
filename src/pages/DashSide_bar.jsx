@@ -139,6 +139,7 @@ export default function VerticalTabs() {
   const [showTabsState, setShowTabsState] = React.useState(false);
 const [selectedGame, setSelectedGame] = React.useState(null);
 
+
   
   const [showCheckinTabs, setShowCheckinTabs] = React.useState(false);
 
@@ -150,9 +151,9 @@ const [selectedGame, setSelectedGame] = React.useState(null);
 
   const showTabs = isLargeScreen || showTabsState;
 
-  
+  const [GoToLibrary, setGoToLibrary] = React.useState(false);
   const tabsData = [
-    { label: 'Dashboard', icon: <FaHome />, component: <Item1 showCheckinTabsFromSidebar={showCheckinTabs} setShowCheckinTabsFromSidebar={setShowCheckinTabs} /> },
+    { label: 'Dashboard', icon: <FaHome />, component: <Item1 showCheckinTabsFromSidebar={showCheckinTabs} setShowCheckinTabsFromSidebar={setShowCheckinTabs}   goToLibraryTab={() => setValue(2)} setgotolibrary={setGoToLibrary} playnow={()=>setValue(1)} joindiscussion={()=>setValue(4)} /> },
     { 
       label: 'Games', 
       icon: <CgGames />, 
@@ -172,10 +173,10 @@ const [selectedGame, setSelectedGame] = React.useState(null);
         )
       )
     },
-    { label: 'Library', icon: <MdOutlineLocalLibrary />, component: <Item4 /> },
+    { label: 'Library', icon: <MdOutlineLocalLibrary />, component: <Item4  /> },
     { label: 'AI Suggestion', icon: <LuBot />, component: <Item5 /> },
     { label: 'Community', icon: <MdPeopleAlt />, component: <Item6 /> },
-    { label: 'Support', icon: <IoSettingsOutline />, component: <Item3 /> },
+    { label: 'Support', icon: <IoSettingsOutline />, component: <Item3  ChatwithAi={()=>setValue(3)} viewallresource={()=>setValue(2)}/> },
     { label: 'Profile', icon: <CgProfile />, component: <Item7 /> },
     {
       label: 'Daily Check',

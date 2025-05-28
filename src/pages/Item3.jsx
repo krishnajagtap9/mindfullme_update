@@ -9,7 +9,7 @@ import { MdOutlineMail } from "react-icons/md";
 import { IoChatbox } from "react-icons/io5";
 
 
-export default function HelpSupport() {
+export default function HelpSupport({ChatwithAi,viewallresource}) {
   const [openIndex, setOpenIndex] = useState(null);
 
   const toggleAccordion = (index) => {
@@ -56,7 +56,7 @@ export default function HelpSupport() {
           </div>
           <p class="text-gray-900 font-medium">Text HOME to 741741</p>
         </div>
-        <div class="p-4 pt-0 mt-auto">
+        <div class="p-4 pt-0 mt-auto "onClick={viewallresource}>
           <a href="#" class="inline-block w-full text-center bg-transparent border border-red-500 text-red-500 py-2 px-4 rounded-md text-sm font-medium hover:bg-red-50 hover:text-red-600 transition duration-300">
             View All Resources
           </a>
@@ -84,7 +84,7 @@ export default function HelpSupport() {
         </div>
         <p class="text-gray-600 text-sm mb-1">Get immediate guidance and support</p>
         <p class="text-gray-700 text-sm mb-2">Our AI can provide coping strategies, exercises, and basic mental health support.</p>
-        <div class="mt-auto">
+        <div class="mt-auto" onClick={ChatwithAi}>
           <a href="#" class="inline-block w-full text-center bg-gray-100 text-gray-800 py-2 px-4 rounded-md text-sm font-medium hover:bg-gray-200 transition duration-300">
             Start Chat
           </a>
@@ -99,9 +99,9 @@ export default function HelpSupport() {
         <p class="text-gray-600 text-sm mb-1">Help with app issues and questions</p>
         <p class="text-gray-700 text-sm mb-2">Having trouble with the app? Our technical team is ready to help.</p>
         <div class="mt-auto">
-          <a href="#" class="inline-block w-full text-center bg-gray-100 text-gray-800 py-2 px-4 rounded-md text-sm font-medium hover:bg-gray-200 transition duration-300">
-            Get Help
-          </a>
+       <a href="https://wa.me/917440780233" class="inline-block w-full text-center bg-gray-100 text-gray-800 py-2 px-4 rounded-md text-sm font-medium hover:bg-gray-200 transition duration-300" target="_blank" rel="noopener noreferrer">
+  Get Help
+</a>
         </div>
       </div>
     </div>
@@ -162,9 +162,14 @@ export default function HelpSupport() {
             </div>
           </div>
         </div>
-        <button className="bg-green-600 hover:bg-green-700 text-white w-full py-2 rounded-md font-medium">
-          Send us a message
-        </button>
+       <a 
+  href="https://wa.me/917440780233" 
+  class="inline-block bg-green-600 hover:bg-green-700 text-white w-full py-2 rounded-md font-medium text-center no-underline" 
+  target="_blank" 
+  rel="noopener noreferrer"
+>
+  Send us a message
+</a>
       </div>
     </div>
   );

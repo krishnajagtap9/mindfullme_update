@@ -108,7 +108,7 @@ function formatFeedbackContent(content) {
   return result;
 }
 
-export default function Dashboard({ showCheckinTabsFromSidebar, setShowCheckinTabsFromSidebar }) {
+export default function Dashboard({ showCheckinTabsFromSidebar, setShowCheckinTabsFromSidebar ,goToLibraryTab,playnow,joindiscussion}) {
   const [showCheckinTabs, setShowCheckinTabs] = useState(false);
   const [tabValue, setTabValue] = useState(0);
 
@@ -169,6 +169,8 @@ export default function Dashboard({ showCheckinTabsFromSidebar, setShowCheckinTa
     if (showCheckinTabsFromSidebar) setShowCheckinTabs(true);
   }, [showCheckinTabsFromSidebar]);
 
+
+ 
 
   return (
     <div className="p-2 sm:p-4 md:p-6 lg:p-8 min-h-screen font-sans bg-[#F0F0F0] w-full max-w-full">
@@ -281,7 +283,7 @@ export default function Dashboard({ showCheckinTabsFromSidebar, setShowCheckinTa
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2 sm:mb-4 space-y-2 sm:space-y-0">
               <h2 className="text-base sm:text-lg md:text-xl font-semibold text-gray-800">Calming Resources</h2>
               <button className="text-green-600 flex items-center space-x-1 hover:underline text-sm">
-                <span>Go to Library</span>
+                <span    onClick={goToLibraryTab}>Go to Library</span>
                 <FaChevronRight />
               </button>
             </div>
@@ -339,7 +341,7 @@ export default function Dashboard({ showCheckinTabsFromSidebar, setShowCheckinTa
                 </div>
               </div>
               <div className='w-full flex justify-center items-center mt-4 sm:mt-6'>
-                <button className="w-fit sm:w-auto px-4 sm:px-6 py-2 sm:py-3 rounded-md bg-green-500 text-white font-medium hover:bg-green-600 transition-all duration-300 shadow-lg text-sm sm:text-base">
+                <button onClick={playnow} className="w-fit sm:w-auto px-4 sm:px-6 py-2 sm:py-3 rounded-md bg-green-500 text-white font-medium hover:bg-green-600 transition-all duration-300 shadow-lg text-sm sm:text-base">
                   Play Now
                 </button>
               </div>
@@ -364,7 +366,7 @@ export default function Dashboard({ showCheckinTabsFromSidebar, setShowCheckinTa
                 ))}
               </ul>
               <div className='flex justify-center items-center '>
-                <button className="mt-4 sm:mt-6 w-fit px-4 sm:px-6 py-2 sm:py-3 rounded-md border border-gray-300 text-gray-700 font-medium hover:bg-gray-100 transition-all duration-300 shadow-sm text-sm sm:text-base">
+                <button onClick={joindiscussion}className="mt-4 sm:mt-6 w-fit px-4 sm:px-6 py-2 sm:py-3 rounded-md border border-gray-300 text-gray-700 font-medium hover:bg-gray-100 transition-all duration-300 shadow-sm text-sm sm:text-base">
                   Join the Discussion
                 </button>
               </div>
