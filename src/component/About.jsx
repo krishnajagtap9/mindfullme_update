@@ -29,6 +29,7 @@ import Aboutimg3 from "../images/Aboutimg3.png";
 import Aboutimg2 from "../images/Aboutimg2.jpeg";
 import Aboutsection from "../images/AboutSection.png"
 import Svg1 from "../All_svg/Svg1.jsx"
+import Faq from '../pages/FAQ.jsx';
 // --- Particle Background (copied from Home.jsx) ---
 const GradientAnimationStyle = () => (
   <style>
@@ -300,7 +301,7 @@ const About = () => {
                   connecting with a community
                 </p>
                 <div className="flex space-x-4">
-                  <button className="px-3 py-2 text-xs md:px-6 md:py-2 md:text-xl rounded-full mt-6  text-black transition" style={{background: purple}}> 
+                  <button className="px-3 py-2 text-xs md:px-6 md:py-2 md:text-xl arounded-full mt-6  text-black transition" style={{background: purple}}> 
                     Get started for free
                   </button>
                 </div>
@@ -516,6 +517,9 @@ const About = () => {
                 </div>
               </div>
             </div>
+
+
+          <Faq/>
             <div className="w-full h-2/5 py-6 text-white text-center flex flex-col justify-center items-center gap-4 px-4" style={{background: black}}>
               <h1 className="text-lg md:text-2xl font-bold" style={{color: gold}}>Stay informed about mental wellness</h1>
               <form className="flex flex-col sm:flex-row justify-center items-center gap-2">

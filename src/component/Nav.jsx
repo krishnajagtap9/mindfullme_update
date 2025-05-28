@@ -51,7 +51,7 @@ function ResponsiveAppBar() {
                 display: 'flex',
                 alignItems: 'center',
                 textDecoration: 'none',
-               color:isSignedIn ? 'black' : '#CCCCFF',
+               color:"black",
                 fontSize: { xs: '1.3rem', md: '1.5rem' },
                 marginLeft: 2,
               }}
