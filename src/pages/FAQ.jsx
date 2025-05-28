@@ -1,62 +1,64 @@
-import React from 'react';
-import { Accordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import React from "react";
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-// Dummy data for FAQs
 const faqs = [
   {
-    question: "What is your return policy?",
-    answer: "You can return items within 30 days of purchase for a full refund, provided they are in their original condition."
+    question: "What is MindfulMe?",
+    answer:
+      "MindfulMe is a web platform that helps users manage and improve mental wellbeing through journaling, guided breathing, mood tracking, and community connection.",
   },
   {
-    question: "How do I track my order?",
-    answer: "Once your order is shipped, you will receive an email with a tracking number and a link to track your package."
+    question: "Is MindfulMe free to use?",
+    answer:
+      "Yes, MindfulMe offers a free plan with essential features to support your mental health journey.",
   },
   {
-    question: "Do you offer international shipping?",
-    answer: "Yes, we offer international shipping to most countries. Shipping costs and delivery times vary by destination."
+    question: "Can I track my mood with MindfulMe?",
+    answer:
+      "Absolutely! MindfulMe includes an AI-powered mood tracker that helps you reflect on your emotions over time.",
   },
   {
-    question: "How can I contact customer support?",
-    answer: "You can reach our customer support team via email at support@example.com or by calling us at 1-800-123-4567."
-  }
+    question: "Is my personal data safe?",
+    answer:
+      "Your data is yours — always. We ensure complete privacy and data ownership to keep your journey secure.",
+  },
+  {
+    question: "What features are planned for the future?",
+    answer:
+      "We're working on integrating licensed therapists, real-time support groups, and expanding culturally sensitive tools.",
+  },
 ];
 
-export default function App() {
+const Faq = () => {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-10 font-sans"> {/* Added font-sans for Inter font */}
-      <h2 className="text-3xl font-bold text-center mb-6 text-purple-800">Frequently Asked Questions</h2> {/* Changed heading color */}
+    <div className="w-70%  px-4 py-10">
+      <h2 className="text-3xl font-bold text-center mb-6">Frequently Asked Questions</h2>
       <div className="space-y-4">
         {faqs.map((faq, index) => (
-          <Accordion
-            key={index}
-            className="rounded-2xl shadow-md bg-transparent border-2 border-purple-500" // Added bg-transparent and purple border
-            sx={{
-              '&.Mui-expanded': {
-                margin: '0', // Ensure no extra margin when expanded
-              },
-              '&:before': {
-                display: 'none', // Remove default Mui Accordion border
-              },
-            }}
-          >
+          <Accordion key={index} className=" rounded-2xl shadow-md"sx={{backgroundColor:"transparent" ,borderColor:"#CCCCFF",borderWidth:"1px" ,color:"#CCCCFF"}}>
             <AccordionSummary
-              expandIcon={<ExpandMoreIcon className="text-purple-700" />} // Changed expand icon color
+              expandIcon={<ExpandMoreIcon sx={{color:"#ccccff"}} />}
               aria-controls={`panel${index}-content`}
-              id={`panel${index}-header`}
+              id={`panel${index}-header`} 
             >
-              <Typography className="text-lg font-medium text-purple-700"> {/* Changed question text color */}
+              <Typography className="text-lg font-medium">
                 {faq.question}
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography className="text-purple-800"> {/* Changed answer text color */}
-                {faq.answer}
-              </Typography>
+              <Typography className="text-gray-700" sx={{color:"#ccccff"}}>{faq.answer}</Typography>
             </AccordionDetails>
           </Accordion>
         ))}
       </div>
     </div>
   );
-}
+};
+
+export default Faq;

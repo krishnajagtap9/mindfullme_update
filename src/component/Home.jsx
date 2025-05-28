@@ -391,7 +391,7 @@ const Home = () => {
         <div style={{position: "relative", zIndex: 1}}>
           <section className="w-full bg-transparent" style={{color: purple}}>
             <div className="w-full h-1/2 flex flex-col items-center justify-center text-center lg:h-1/6">
-              <h1 className="text-3xl font-bold text-shadow-lg mb-2" style={{color: purple}}>Why MindfullMe?</h1>
+              <h1 className="text-3xl font-bold text-shadow-lg mb-2 mt-[10%]" style={{color: purple}}>Why MindfullMe?</h1>
               <p className="my-3 text-shadow-lg max-w-xl p-4" style={{color: purple}}>
                 Discover how MindfullMe can help you on your mental health journey
               </p>

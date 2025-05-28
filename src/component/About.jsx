@@ -518,8 +518,13 @@ const About = () => {
               </div>
             </div>
 
+<section 
+            className="w-full   flex flex-col items-center justify-end bg-transparent md:mt-0"
+>
 
           <Faq/>
+
+</section>
             <div className="w-full h-2/5 py-6 text-white text-center flex flex-col justify-center items-center gap-4 px-4" style={{background: black}}>
               <h1 className="text-lg md:text-2xl font-bold" style={{color: gold}}>Stay informed about mental wellness</h1>
               <form className="flex flex-col sm:flex-row justify-center items-center gap-2">
